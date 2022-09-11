@@ -1,0 +1,97 @@
+<div class="Chat">
+  <div class="Left-side-chat">
+    <div class="Chat-container">
+      <h2>Chats</h2>
+      <div class="Chat-list" *ngIf="(messageService.chatUser$ | async).length > 0">
+
+
+        <div class="follower conversation" *ngFor="let user of (messageService.chatUser$ | async)">
+          <div (click)="loadmessage(user.chatid,user.id)">
+            <div *ngIf="isUserOnline(user.id)" class="online-dot"></div>
+            <img
+              src="{{user.image || './assets/user.png'}}"
+              alt="Profile"
+              class="followerImage"
+
+            />
+            <div class="name" >
+              <span>{{user.name}}</span>
+
+            </div>
+          </div>
+        </div>
+        <hr />
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="Right-side-chat">
+
+
+
+
+
+    <div class="ChatBox-container" *ngIf="(messageService.userMessage$ | async).length > 0">
+
+          <div class="chat-header" *ngIf="MessagedUser">
+            <div class="follower">
+              <div>
+                <img
+                  src='../assets/user.png'
+                  alt="Profile"
+                  class="followerImage"
+
+                />
+                <div class="name">
+                  <span>
+                   {{MessagedUser.name}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <hr
+
+            />
+          </div>
+
+          <div #content class="chat-body" >
+
+
+                <div
+                #messages
+                *ngFor="let msg of (messageService.userMessage$ | async)"
+                  [ngClass]="msg.senderid == this.UserId ? 'message own' : 'message'"
+
+                >
+                  <h4>{{msg.message}}</h4>
+                  <h6 >{{msg.date | timeago}}</h6>
+                </div>
+
+
+          </div>
+
+          <div class="chat-sender">
+
+            <form #msgForm="ngForm" (ngSubmit)="sendmsg()" >
+              <input
+              [(ngModel)]="message.message"
+              label="Message"
+              placeholder="Write Your Message"
+              name="msg" />
+
+              <button class="send-button button" >Send</button>
+
+            </form>
+
+          </div>
+
+    </div>
+
+
+
+  </div>
+</div>

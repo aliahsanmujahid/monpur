@@ -1,0 +1,173 @@
+
+<div>
+  <form  #ProductForm="ngForm" (ngSubmit)="createProduct()">
+    <label>Name</label>
+    <input
+          [(ngModel)]="product.name"
+          label="Email"
+          placeholder="Product Name"
+          name="name"
+          type="text" />
+
+          <label>Details</label>
+    <input
+          [(ngModel)]="product.details"
+          label="Email"
+          placeholder="Product details"
+          name="details"
+          type="text" />
+          <label>orgprice</label>
+    <input
+          [(ngModel)]="product.orgprice"
+          label="Email"
+          placeholder="Product orgprice"
+          name="orgprice"
+          type="text" />
+          <label>discprice</label>
+    <input
+          [(ngModel)]="product.discprice"
+          label="Email"
+          placeholder="Product discprice"
+          name="discprice"
+          type="text" />
+
+          <button
+          type="submit"
+          class=""
+          >
+            Create Product
+          </button>
+
+  </form>
+
+</div>
+
+
+
+<div class="row" style="margin-bottom:15px;">
+
+
+  <ul>
+    <li>
+      <div  *ngIf="product.file1 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,1)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file1 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file1}}" alt=""></p>
+        <span (click)="deleteimage(product.file1,1)">Delete</span>
+      </div>
+
+    </li>
+
+
+    <li>
+      <div  *ngIf="product.file2 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,2)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file2 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file2}}" alt=""></p>
+        <span (click)="deleteimage(product.file2,2)">Delete</span>
+      </div>
+
+    </li>
+
+
+    <li>
+      <div  *ngIf="product.file3 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,3)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file3 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file3}}" alt=""></p>
+        <span (click)="deleteimage(product.file3,3)">Delete</span>
+      </div>
+
+    </li>
+
+    <li>
+      <div  *ngIf="product.file4 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,4)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file4 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file4}}" alt=""></p>
+        <span (click)="deleteimage(product.file4,4)">Delete</span>
+      </div>
+
+    </li>
+
+    <li>
+      <div  *ngIf="product.file5 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,5)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file5 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file5}}" alt=""></p>
+        <span (click)="deleteimage(product.file5,5)">Delete</span>
+      </div>
+
+    </li>
+
+    <li>
+      <div  *ngIf="product.file6 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,6)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file6 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file6}}" alt=""></p>
+        <span (click)="deleteimage(product.file6,6)">Delete</span>
+      </div>
+
+    </li>
+
+    <li>
+      <div  *ngIf="product.file7 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,7)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file7 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file7}}" alt=""></p>
+        <span (click)="deleteimage(product.file7,7)">Delete</span>
+      </div>
+
+    </li>
+
+    <li>
+      <div  *ngIf="product.file8 == '' " class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,8)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="product.file8 !== '' ">
+        <p ><img src="{{'http://localhost:8000/'+product.file8}}" alt=""></p>
+        <span (click)="deleteimage(product.file8,8)">Delete</span>
+      </div>
+
+    </li>
+
+
+
+  </ul>
+
+
+  <div class="margin-top">
+    <span class="upload" *ngIf="progress > 0">
+      {{progress}}%
+    </span>
+    <span class="upload" *ngIf="message">
+      {{message}}
+    </span>
+  </div>
+
+
+
+</div>

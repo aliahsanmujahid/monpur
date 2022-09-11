@@ -1,0 +1,57 @@
+img{
+  width: 100px;
+}
+
+.upload{
+ width:100px;
+}
+span{
+  padding: 10px;
+  background-color: coral;
+  margin-right: 5px;
+}
+
+.margin-top{
+  margin-top: 23px;
+}
+
+
+
+form {
+  width: 300px;
+  margin: 0 auto;
+}
+
+form label {
+  display: flex;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+form input {
+  width: 100%;
+  padding: 7px;
+  margin: 7px;
+  border: 1px solid gray;
+  border-radius: 6px;
+  outline: none;
+}
+button{
+  width: 320px;
+  height: 35px;
+  margin-top: 20px;
+  border: none;
+  background-color: #49c1a2;
+  color: white;
+  font-size: 18px;
+}
+
+.row{
+  margin-top: 40px;
+}
+
+ul li{
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 10px;
+}
