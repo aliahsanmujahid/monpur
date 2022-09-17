@@ -1,0 +1,124 @@
+<div class="column">
+
+    <form #OrderForm="ngForm"  (ngSubmit)="createorder()">
+      <label for="fname">Name</label>
+      <input  [(ngModel)]="orderCreate.name" type="text" id="fname" required minlength="3" name="firstname" placeholder="Your name..">
+
+      <label for="lname">Phone Number</label>
+      <input  [(ngModel)]="orderCreate.phone" type="text" id="lname" required minlength="11" maxlength="11" name="lastname" placeholder="Phone Number..">
+
+      <label for="lname">Address</label>
+      <textarea  [(ngModel)]="orderCreate.address" id="w3review" required minlength="10" name="w3review" rows="4" cols="50">
+      </textarea>
+
+      <label for="lname">district</label>
+      <input  [(ngModel)]="orderCreate.district" type="text" id="district" required  name="district" placeholder="district..">
+
+
+      <label for="lname">upazila</label>
+      <input  [(ngModel)]="orderCreate.upazila" type="text" id="upazila" required  name="upazila" placeholder="upazila..">
+
+      <input  type="submit" value="Submit">
+    </form>
+  </div>
+
+
+
+  <div class="column">
+    <span *ngIf="basket$ | async">
+      <span *ngFor="let item of (basket$ | async).items" class="row">
+
+        <span *ngIf="(basketService.basket$ | async) as basket" >
+              <span *ngIf="basket.items.length == 1">
+                <div  class="card_item width100">
+                  <div  >
+                  <div class="card_inner">
+                    <div class="card_top">
+                      <img src="{{'http://localhost:8000/'+item.pictureUrl}}"  alt="">
+                  </div>
+                  </div>
+                  <table id="customers2" style="table-layout: fixed; width: 100%">
+                    <tr>
+                      <td>Name</td>
+                      <td>{{item.productName}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>Quantity</td>
+                      <td>{{item.quantity}}</td>
+                    </tr>
+                    <tr>
+                      <td>Price</td>
+                      <td>৳{{item.price}}</td>
+                    </tr>
+                    <tr>
+                      <td>Total</td>
+                      <td>৳{{item.price * item.quantity}}</td>
+                    </tr>
+                  </table>
+                </div>
+                </div>
+              </span>
+
+        <span *ngIf="basket.items.length > 1">
+          <div  class="card_item">
+            <div  >
+            <div class="card_inner">
+              <div class="card_top">
+                <img src="{{'http://localhost:8000/'+item.pictureUrl}}"   alt="">
+            </div>
+            </div>
+            <table id="customers2" style="table-layout: fixed; width: 100%">
+              <tr>
+                <td>Name</td>
+                <td>{{item.productName}}</td>
+              </tr>
+
+              <tr>
+                <td>Quantity</td>
+                <td>{{item.quantity}}</td>
+              </tr>
+              <tr>
+                <td>Price</td>
+                <td>৳{{item.price}}</td>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td>৳{{item.price * item.quantity}}</td>
+              </tr>
+            </table>
+          </div>
+          </div>
+        </span>
+      </span>
+
+
+      </span>
+
+
+
+
+        <ul class="summery" *ngIf="(basketTotal$ | async)">
+          <h2>Order Summary</h2>
+          <li>
+              <table id="customers2" style="table-layout: fixed; width: 100%">
+                <tr>
+                  <td>Order SubTotal</td>
+                  <td>৳{{(basketTotal$ | async).subtotal}}</td>
+                </tr>
+                <tr>
+                  <td>Delivery Charge</td>
+                  <td>৳{{(basketTotal$ | async).delevary}}</td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td>৳{{(basketTotal$ | async).total }}</td>
+                </tr>
+              </table>
+          </li>
+        </ul>
+
+
+    </span>
+  </div>
+

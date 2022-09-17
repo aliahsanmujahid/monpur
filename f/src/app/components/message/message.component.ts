@@ -18,6 +18,7 @@ export class MessageComponent implements OnInit {
   ChatId:string;
   ReceiverId:string;
   MessagedUser:Conversation;
+  active:any;
 
   message: MessageSend ={
     chatid:'',
@@ -52,8 +53,12 @@ export class MessageComponent implements OnInit {
     //console.log("chat id ", this.message);
   }
 
-  loadmessage(id,receiveid){
+  activeclass(userid){
+    this.active = userid;
+  }
 
+
+  loadmessage(id,receiveid){
    this.ChatId = id
    this.ReceiverId = receiveid;
 
@@ -65,7 +70,7 @@ export class MessageComponent implements OnInit {
 
    this.messageService.loadmessage(id);
 
-   
+
   }
 
   isUserOnline(id){

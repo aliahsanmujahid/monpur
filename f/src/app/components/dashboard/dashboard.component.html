@@ -1,0 +1,29 @@
+
+<input type="checkbox" id="check3">
+
+<div class="row">
+
+
+  <div class="column1" >
+    <ul>
+      <li (click)="viewprofile()" >Profile</li>
+      <li (click)="createproduct()" >Create Product</li>
+      <li (click)="sellerproduct()" >Your Products</li>
+      <li (click)="viewmessage()" >Message</li>
+      <li class="logout" (click)="logout()">Log Out</li>
+    </ul>
+  </div>
+  <div class="column2">
+    <div class="showhide">
+      <label for="check3">
+        <img src="../assets/bar.png" alt="">
+      </label>
+    </div>
+
+  <app-createproduct *ngIf="createproductview"></app-createproduct>
+  <app-sellerproduct *ngIf="sellerproductview"></app-sellerproduct>
+  <app-profile *ngIf="profileview"></app-profile>
+  <app-message *ngIf="messageview"></app-message>
+
+</div>
+</div>

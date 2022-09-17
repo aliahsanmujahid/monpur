@@ -1,173 +1,355 @@
 
-<div>
-  <form  #ProductForm="ngForm" (ngSubmit)="createProduct()">
-    <label>Name</label>
+<div class="container">
+
+<div class="row firstrow">
+  <div class="column">
+  <form  #ProductForm="ngForm" >
+    <label>Product Name</label>
     <input
           [(ngModel)]="product.name"
-          label="Email"
           placeholder="Product Name"
           name="name"
-          type="text" />
+          type="text"
+          required  />
 
           <label>Details</label>
-    <input
+    <textarea
           [(ngModel)]="product.details"
-          label="Email"
+          required
           placeholder="Product details"
           name="details"
-          type="text" />
-          <label>orgprice</label>
+          type="text"> </textarea>
+          <label>Original Price</label>
     <input
           [(ngModel)]="product.orgprice"
-          label="Email"
-          placeholder="Product orgprice"
+          required
+          placeholder="Original Price"
           name="orgprice"
-          type="text" />
-          <label>discprice</label>
+          oninput="this.value =
+          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+          type="number" />
+          <label>Discount Price</label>
     <input
           [(ngModel)]="product.discprice"
-          label="Email"
-          placeholder="Product discprice"
+          required
+          placeholder="Discount Price"
           name="discprice"
-          type="text" />
+          oninput="this.value =
+          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+          type="number" />
+          <h3 *ngIf="!quantityShow()" class="qty" >Total Quantity: {{this.product.qty}}</h3>
 
-          <button
-          type="submit"
-          class=""
-          >
-            Create Product
-          </button>
+          <div  *ngIf="quantityShow()">
+            <label>Quantity</label>
+            <input
+                  [(ngModel)]="product.qty"
+                  required
+                  placeholder="Quantity"
+                  name="quantity"
+                  oninput="this.value =
+                  !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                  type="number" />
+          </div>
+
+
 
   </form>
+  </div>
+  <div class="column" >
+
+    <div class="row " style="margin-top: 47px;">
+      <div  (click)="addColors(1)" [ngClass]="{'active' : active === 1}" class="addc" style="background-color:rgb(255, 239, 239);">
+        <h3 *ngIf="active1 || !isColor">Add Colors
+          <span *ngIf="product.colors.length > 0" >{{product.colors.length}}</span>
+        </h3>
+        <h3 *ngIf="!active1 && isColor">Hide
+          <span *ngIf="product.colors.length > 0" >{{product.colors.length}}</span>
+        </h3>
+      </div>
+      <div  (click)="addSizes(2)"  [ngClass]="{'active' : active === 2}" class="adds" style="background-color:rgb(255, 239, 239);">
+        <h3 *ngIf="active2 || !isSize">Add Variable
+          <span *ngIf="product.sizes.length > 0" >{{product.sizes.length}}</span>
+        </h3>
+        <h3 *ngIf="!active2 && isSize">Hide
+          <span *ngIf="product.sizes.length > 0" >{{product.sizes.length}}</span>
+        </h3>
+      </div>
+    </div>
+
+    <div class="row">
+
+    <div *ngIf="isColor">
+
+
+      <div *ngIf="product.colors" class="padding">
+        <ul >
+          <li *ngFor="let item of product.colors">
+            <div
+            style="width:50px;height:45px;margin:10px 0px 10px 0px;"
+            [ngStyle]="{'background-color': item.colorCode}"
+            >
+            </div>
+              <h4>Color Name: {{item.name}}</h4>
+              <h4>Qty: {{item.quantity}}</h4>
+              <br>
+             <a (click)="removeColor(item.name)">Remove</a>
+          </li>
+      </ul>
+      </div>
+
+
+      <div>
+        <form #SetColor="ngForm"  (ngSubmit)="setColor()" autocomplete="off">
+        <h3 >Select Color</h3>
+        <input class="color" [(colorPicker)]="colors.colorCode" required
+        [style.background]="colors.colorCode" />
+        <br>
+        <label for="lname">Color Name</label>
+        <input  [(ngModel)]="colors.name" required minlength="3" type="text" name="colorName" oninput="this.value = this.value.toUpperCase()" placeholder="Color Name..">
+
+        <label for="lname">Quantity</label>
+        <input [(ngModel)]="colors.quantity" required
+        oninput="this.value =
+        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+        type="number" name="colorquantity" placeholder="Quantity..">
+
+        <!-- [disabled]="SetColor.invalid" -->
+        <input   [disabled]="SetColor.invalid"  type="submit" value="Add">
+      </form>
+      </div>
+
+    </div>
+
+
+
+  <div class="row" *ngIf="!isSize && !isColor">
+    <button class="only" >You Can Add Only Color or Size</button>
+  </div>
+
+
+  <div *ngIf="isSize">
+    <div class="padding">
+      <h3 *ngIf="hasvari == true" class="qty">
+        Variable Name: <span>{{sizes.name}}</span>
+        <span style="background-color: darkslategrey;color: aliceblue;" (click)="changevari()">Change</span>
+      </h3>
+
+       <h3 *ngIf="product.sizes.length == 0 && hasvari" class="qty">Now Add Some Varibles</h3>
+      </div>
+
+    <div *ngIf="product.sizes.length > 0" class="padding">
+      <ul >
+        <li *ngFor="let item of product.sizes">
+          <h4>Vari:{{item.variCode}}</h4>
+          <h4>Qty: {{item.quantity}}</h4>
+          <br>
+        <a (click)="removeSize(item.name)">Remove</a>
+        </li>
+    </ul>
+    </div>
+
+    <div>
+           <form *ngIf="hasvari == false" #SetVariName="ngForm" (ngSubmit)="setVariname()" novalidate>
+            <label for="size">Variable Name</label>
+            <input [(ngModel)]="sizes.name" type="text" name="size" required minlength="1" oninput="this.value = this.value.toUpperCase()" placeholder="Variable Name..">
+            <!-- [disabled]="SetSize.invalid"  -->
+
+            <input [disabled]="SetVariName.invalid"  type="submit" value="Add">
+            </form>
+
+
+
+            <form *ngIf="hasvari == true" #SetVari="ngForm" (ngSubmit)="setSize()" novalidate>
+
+            <label for="variCode">Variable</label>
+            <input [(ngModel)]="sizes.variCode" type="text" name="variCode" required minlength="1" oninput="this.value = this.value.toUpperCase()" placeholder="Variable..">
+
+            <label for="sizeQuantity">Quantity</label>
+            <input   [(ngModel)]="sizes.quantity" required
+            oninput="this.value =
+            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+            type="number" name="sizeQuantity" placeholder="Quantity..">
+
+            <!-- [disabled]="SetSize.invalid"  -->
+
+            <input [disabled]="SetVari.invalid"  type="submit" value="Add">
+            </form>
+  </div>
+   </div>
+  </div>
+
 
 </div>
 
 
 
-<div class="row" style="margin-bottom:15px;">
+
+<div class="row">
+
+  <div class="box">
+
+    <div class="margin-top">
+      <span class="upload" *ngIf="progress > 0" >
+        {{progress}}%
+      </span>
+      <span class="upload" *ngIf="message">
+        {{message}}
+      </span>
+    </div>
 
 
-  <ul>
+  <ul class="imgul">
     <li>
-      <div  *ngIf="product.file1 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,1)" style="display:none;">
+      <div  class="border" *ngIf="product.file1 == '' "   >
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,1)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file1 !== '' ">
+      <div  class="border" *ngIf="product.file1 !== '' ">
         <p ><img src="{{'http://localhost:8000/'+product.file1}}" alt=""></p>
-        <span (click)="deleteimage(product.file1,1)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file1,1)">Delete</p>
+        </div>
       </div>
 
     </li>
 
 
     <li>
-      <div  *ngIf="product.file2 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,2)" style="display:none;">
+      <div  class="border" *ngIf="product.file2 == '' " >
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,2)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file2 !== '' ">
+      <div class="border" *ngIf="product.file2 !== '' ">
         <p ><img src="{{'http://localhost:8000/'+product.file2}}" alt=""></p>
-        <span (click)="deleteimage(product.file2,2)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file2,2)">Delete</p>
+        </div>
       </div>
 
     </li>
 
 
     <li>
-      <div  *ngIf="product.file3 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,3)" style="display:none;">
+      <div class="border" *ngIf="product.file3 == '' " >
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,3)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file3 !== '' ">
+      <div class="border" *ngIf="product.file3 !== '' ">
         <p ><img src="{{'http://localhost:8000/'+product.file3}}" alt=""></p>
-        <span (click)="deleteimage(product.file3,3)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file3,3)">Delete</p>
+        </div>
       </div>
 
     </li>
 
     <li>
-      <div  *ngIf="product.file4 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,4)" style="display:none;">
+      <div  *ngIf="product.file4 == '' " class="border">
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,4)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file4 !== '' ">
+      <div class="border" *ngIf="product.file4 !== '' ">
         <p ><img src="{{'http://localhost:8000/'+product.file4}}" alt=""></p>
-        <span (click)="deleteimage(product.file4,4)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file4,4)">Delete</p>
+        </div>
       </div>
 
     </li>
 
     <li>
-      <div  *ngIf="product.file5 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,5)" style="display:none;">
+      <div  *ngIf="product.file5 == '' " class="border" >
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,5)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file5 !== '' ">
+      <div *ngIf="product.file5 !== '' " class="border">
         <p ><img src="{{'http://localhost:8000/'+product.file5}}" alt=""></p>
-        <span (click)="deleteimage(product.file5,5)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file5,5)">Delete</p>
+        </div>
       </div>
 
     </li>
 
     <li>
-      <div  *ngIf="product.file6 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,6)" style="display:none;">
+      <div  *ngIf="product.file6 == '' " class="border">
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,6)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file6 !== '' ">
+      <div *ngIf="product.file6 !== '' " class="border">
         <p ><img src="{{'http://localhost:8000/'+product.file6}}" alt=""></p>
-        <span (click)="deleteimage(product.file6,6)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file6,6)">Delete</p>
+        </div>
       </div>
 
     </li>
 
     <li>
-      <div  *ngIf="product.file7 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,7)" style="display:none;">
+      <div  *ngIf="product.file7 == '' " class="border">
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,7)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file7 !== '' ">
+      <div *ngIf="product.file7 !== '' " class="border">
         <p ><img src="{{'http://localhost:8000/'+product.file7}}" alt=""></p>
-        <span (click)="deleteimage(product.file7,7)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file7,7)">Delete</p>
+        </div>
       </div>
 
     </li>
 
     <li>
-      <div  *ngIf="product.file8 == '' " class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,8)" style="display:none;">
+      <div  *ngIf="product.file8 == '' " class="border">
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,8)" style="display:none;">
         <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
       </div>
 
-      <div *ngIf="product.file8 !== '' ">
+      <div *ngIf="product.file8 !== '' " class="border">
         <p ><img src="{{'http://localhost:8000/'+product.file8}}" alt=""></p>
-        <span (click)="deleteimage(product.file8,8)">Delete</span>
+        <div class="delete">
+          <p (click)="deleteimage(product.file8,8)">Delete</p>
+        </div>
       </div>
 
     </li>
-
-
 
   </ul>
 
 
-  <div class="margin-top">
-    <span class="upload" *ngIf="progress > 0">
-      {{progress}}%
-    </span>
-    <span class="upload" *ngIf="message">
-      {{message}}
-    </span>
-  </div>
+
+
+<div class="row">
+  <button *ngIf="product.id == 0" (click)="createProduct(ProductForm)"
+          type="submit"
+          class="submit"
+          [disabled]="ProductForm.invalid"
+          >
+            Create Product
+          </button>
+  <button *ngIf="product.id !== 0" (click)="createProduct(ProductForm)"
+          type="submit"
+          class="submit"
+          [disabled]="ProductForm.invalid"
+          >
+            Update Product
+          </button>
+</div>
+
+
+</div>
+
+
+</div>
 
 
 
+</div>
 </div>

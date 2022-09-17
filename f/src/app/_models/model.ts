@@ -1,18 +1,15 @@
-export interface Model {
-    username: string;
-    email: string;
-    image:string;
+export interface OTP {
+    otpsended: Boolean;
+    message: string;
 }
 
 export interface ModelS {
-    username: string;
-    phonenumber: string;
-    password:string;
-    image:string;
+    phonenumber: Number;
+    otp:Number
 }
 
 export interface ModelL {
-    email: string;
+    pnumber: Number;
     password:string;
 }
 

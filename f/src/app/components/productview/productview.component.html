@@ -1,0 +1,99 @@
+
+<div class="row">
+   <div class="column">
+       <div class="div">
+        <div id="slider">
+           <input type="radio" *ngIf="product.file1" name="slider" id="slide1" checked>
+           <input type="radio" *ngIf="product.file2" name="slider" id="slide2">
+           <input type="radio" *ngIf="product.file2" name="slider" id="slide3">
+           <input type="radio" *ngIf="product.file4" name="slider" id="slide4">
+           <div id="slides">
+              <div id="overflow">
+                 <div class="inner">
+                   <div *ngIf="product.file1" class="slide ">
+                       <img class="img" src="{{'http://localhost:8000/'+product.file1}}" alt="">
+                    </div>
+                    <div *ngIf="product.file2" class="slide ">
+                       <img class="img" src="{{'http://localhost:8000/'+product.file2}}" alt="">
+                    </div>
+                    <div *ngIf="product.file3" class="slide ">
+                       <img class="img" src="{{'http://localhost:8000/'+product.file3}}"  alt="">
+                    </div>
+                    <div *ngIf="product.file4" class="slide ">
+                       <img class="img" src="{{'http://localhost:8000/'+product.file4}}"  alt="">
+                    </div>
+                 </div>
+              </div>
+           </div>
+           <!-- <div id="controls">
+              <label  for="slide1"></label>
+              <label  for="slide2"></label>
+              <label  for="slide3"></label>
+              <label  for="slide4"></label>
+           </div> -->
+           <div id="bullets">
+              <label *ngIf="product.file1" for="slide1">
+                 <img class="bulletimg" src="" alt="">
+              </label>
+              <label *ngIf="product.file2" for="slide2">
+                 <img class="bulletimg" src="" alt="">
+              </label>
+              <label *ngIf="product.file3" for="slide3">
+                 <img class="bulletimg" src="" alt="">
+              </label>
+              <label *ngIf="product.file4" for="slide4">
+                 <img class="bulletimg" src="" alt="">
+              </label>
+           </div>
+        </div>
+       </div>
+
+
+   </div>
+
+   <div class="column">
+     <div class="name">
+        <h3>{{product.name}}</h3>
+     </div>
+     <div class="price">
+       <h2 *ngIf="product.discprice >= 1" class="delprice">৳{{product.discprice}}</h2>
+       <h2 class="mainprice">৳{{product.discprice}}</h2>
+       <h2 *ngIf="product.discprice >= 1" style="color: rgb(255, 0, 179);">&#8722;{{product.discprice}}%</h2>
+     </div>
+     <div *ngIf="(product.discprice-product.discprice) >= 1" class="price">
+        <table id="customers2" style="table-layout: fixed; width: 100%;">
+           <tr>
+              <td style="text-align: center!important;font-family:'Courier New', Courier, monospace;padding: 2px;font-size: 11px;
+              ">Save ৳{{product.discprice-product.discprice}} Taka</td>
+            </tr>
+       </table>
+      </div>
+     <div id="header">
+        <ul class="ul">
+          <li   class="highlight">
+            <span class="label warning">ddcw cwecwe</span>
+         </li>
+         <li   class="highlight">
+          <span class="label warning">ddcw cwecwe</span>
+       </li>
+       <li   class="highlight">
+        <span class="label warning">ddcw cwecwe</span>
+     </li>
+     <li   class="highlight">
+      <span class="label warning">ddcw cwecwe</span>
+   </li>
+   <li   class="highlight">
+    <span class="label warning">ddcw cwecwe</span>
+ </li>
+         </ul>
+
+        </div>
+
+        <div id="content">
+
+
+
+
+
+
+        </div>

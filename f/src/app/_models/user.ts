@@ -1,9 +1,14 @@
 export interface User {
-    userid:number;
+    userId:number;
     name: string;
-    email: string;
+    pnumber: string;
     image: string;
     password:string;
     isVerified: string;
     role:string;
+}
+export interface UserS {
+  pnumber:Number;
+  name: string;
+  password:string;
 }

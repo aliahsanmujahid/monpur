@@ -1,5 +1,8 @@
+import { IBasket, IBasketTotals } from './_models/basket';
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AccountService } from './_services/account.service';
+import { BasketService } from './_services/basket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +11,18 @@ import { AccountService } from './_services/account.service';
 })
 export class AppComponent {
 
-  constructor(public accountService: AccountService) { }
+  basket$: Observable<IBasket>;
+  basketTotal$: Observable<IBasketTotals>;
+
+  constructor(public accountService: AccountService,public basketService: BasketService) { }
 
 
   ngOnInit(): void {
 
     this.setCurrentUser();
+    this.basketService.getBasket();
+    this.basket$ = this.basketService.basket$;
+    this.basketTotal$ = this.basketService.basketTotal$;
 
   }
 

@@ -14,10 +14,11 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = localStorage.getItem('monpuruser');
+    
     if(token){
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}`
+          access_token: `Bearer ${token}`
         }
       })
     }

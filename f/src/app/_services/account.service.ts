@@ -1,9 +1,10 @@
+import { ModelS } from 'src/app/_models/model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { User } from '../_models/user';
+import { User, UserS } from '../_models/user';
 import { map } from 'rxjs/operators';
 import { MessageService } from './message.service';
 
@@ -30,23 +31,50 @@ export class AccountService {
     )
   }
 
-  register(model: any) {
-    return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
-      map((user: any) => {
-        if (user) {
-          this.setCurrentUser(user);
-          this.router.navigateByUrl('shop');
-          return user;
-        }
+  signup(model: any) {
+    return this.http.post(this.baseUrl + 'signup', model).pipe(
+      map((res: any) => {
+        return res;
       })
-    )
+    );
+  }
+
+  setac(model: UserS) {
+    return this.http.post(this.baseUrl + 'setac', model).pipe(
+      map((res: any) => {
+        this.setCurrentUser(res.jwtToken);
+        return res;
+      })
+    );
+  }
+
+  sendotp(model) {
+    return this.http.post(this.baseUrl + 'sendotp', model).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+  fsetac(model) {
+    return this.http.post(this.baseUrl + 'fsetac', model).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  fsendotp(model) {
+    return this.http.post(this.baseUrl + 'fsendotp', model).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 
 
 setCurrentUser(token: any) {
 
     const user = this.getDecodedToken(token);
-   // console.log("res user",user);
     localStorage.setItem('monpuruser', token);
     this.currentUserSource.next(user);
   }
@@ -67,7 +95,9 @@ setCurrentUser(token: any) {
   getuserid(){
     var id;
     this.currentUser$.subscribe(user => {
-      id =  user.userid
+      if(user){
+        id =  user.userId
+      }
     })
     return id
   }
@@ -82,12 +112,10 @@ setCurrentUser(token: any) {
     localStorage.removeItem('monpuruser');
     this.currentUserSource.next(null);
     this.messageService.stopHubConnection();
+    this.router.navigateByUrl('/login');
 
   }
-  logout2() {
-    localStorage.removeItem('eidhatuser');
-    this.currentUserSource.next(null);
-  }
+
 
   createaddress(model) {
     return this.http.post(this.baseUrl + 'address/createaddress', model);
@@ -98,41 +126,6 @@ setCurrentUser(token: any) {
   getaddress() {
     return this.http.get(this.baseUrl + 'address/getaddress/');
   }
-
-
-
-
-
-
-  signup(model: any) {
-    return this.http.post(this.baseUrl + 'account/signup', model).pipe(
-      map((response: User) => {
-        this.setCurrentUser(response);
-        return response;
-      //  location.reload();
-      })
-    )
-  }
-  forgetpass(model: any) {
-    return this.http.post(this.baseUrl + 'account/forgetpass', model).pipe(
-      map((response: User) => {
-        this.setCurrentUser(response);
-        return response;
-        // location.reload();
-      })
-    )
-  }
-  phonelogin(model: any) {
-    return this.http.post(this.baseUrl + 'account/phonelogin', model).pipe(
-      map((response: User) => {
-        this.setCurrentUser(response);
-        return response;
-        // location.reload();
-      })
-    )
-  }
-
-
 
 
 

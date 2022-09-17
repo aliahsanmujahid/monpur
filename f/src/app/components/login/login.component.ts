@@ -11,7 +11,7 @@ import { AccountService } from 'src/app/_services/account.service';
 export class LoginComponent implements OnInit {
 
   loginmodel: ModelL ={
-    email:'',
+    pnumber: null,
     password:'',
   };
 
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   login(){
     this.accountService.login(this.loginmodel).subscribe(response => {
       if(response){
-        this.router.navigateByUrl('msg');
+        this.router.navigateByUrl('dash');
        }
     }, error => {
       //this.toastr.error("Wrong Number or Password");

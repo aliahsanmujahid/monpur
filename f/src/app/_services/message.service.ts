@@ -33,10 +33,10 @@ export class MessageService {
 
 
 
-  createHubConnection(userid) {
+  createHubConnection(userId) {
 
     this.socket = io(this.url, {transports: ['websocket', 'polling', 'flashsocket']});
-    this.socket.emit("new-user-add", userid);
+    this.socket.emit("new-user-add", userId);
 
 
     this.socket.on("get-users", (users) => {

@@ -5,14 +5,8 @@ export interface IOrder {
     district: string;
     upazila: string;
     cashOnDelevary:string;
-    bkash: string;
-    bkashTransactionID: string;
-    rocket: string;
-    rocketTransactionID: string;
-    nagad: string;
-    nagadTransactionID: string;
-    seller_id:number;
-    orderItemDto:IOrderItem[]
+    sellerid:number;
+    orderItems:IOrderItem[]
 }
 
 export interface IOrderItem {
@@ -20,8 +14,4 @@ export interface IOrderItem {
     productName: string;
     price: number;
     quantity: number;
-    color_id:number;
-    color_name:string;
-    size_id:number;
-    size_name:string;
 }

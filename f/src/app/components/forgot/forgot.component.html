@@ -1,0 +1,62 @@
+
+<div class="login-box">
+
+  <h3 *ngIf="message">{{message}}</h3>
+
+  <span *ngIf="!verified">
+  <form (ngSubmit)="otpsend()">
+    <label>Phone Number</label>
+    <div class="mobile">
+      <span >+88</span>
+    <input
+    [(ngModel)]="model.pnumber"
+    name="phone"
+    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+    type = "number"
+    maxlength = "11"
+    placeholder="Phone Number"
+    />
+    </div>
+    <button
+          type="submit"
+          class=""
+          >
+            Send OTP
+          </button>
+
+  </form>
+</span>
+
+<span *ngIf="verified">
+  <form (ngSubmit)="setac()">
+    <label>Your OTP</label>
+
+    <input
+    [(ngModel)]="model.pnumber"
+    name="pnumber"
+    type = "text"
+    class="disabled"
+    disabled
+    />
+
+    <input
+    [(ngModel)]="setaccount.otp"
+    name="otp"
+    type = "text"
+    />
+    <input
+    [(ngModel)]="setaccount.password"
+    name="password"
+    type = "text"
+    />
+
+    <button
+          type="submit"
+          class=""
+          >
+            Set Account
+          </button>
+
+  </form>
+ </span>
+  </div>

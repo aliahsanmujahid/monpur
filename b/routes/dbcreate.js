@@ -5,7 +5,13 @@ const {
   createproduct,
   imagewatch,
   chat,
-  message
+  message,
+  orders,
+  orderitems,
+  otpcheck,
+  sizes,
+  colors
+  
 
 } = require("../controllers/dbcreate");
 
@@ -16,6 +22,12 @@ router.get("/createproduct", createproduct);
 router.get("/imagewatch", imagewatch);
 router.get("/chat", chat);
 router.get("/message", message);
+router.get("/orders", orders);
+router.get("/orderitems", orderitems);
+router.get("/otpcheck", otpcheck);
+
+router.get("/sizes", sizes);
+router.get("/colors", colors);
 
 
 

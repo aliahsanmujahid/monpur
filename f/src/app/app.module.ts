@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ColorPickerModule } from 'ngx-color-picker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MessageComponent } from './components/message/message.component';
@@ -13,6 +13,13 @@ import { HomeComponent } from './components/home/home.component';
 import { TimeagoModule } from 'ngx-timeago';
 import { CreateproductComponent } from './components/createproduct/createproduct.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ProductsComponent } from './components/products/products.component';
+import { ProductviewComponent } from './components/productview/productview.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ForgotComponent } from './components/forgot/forgot.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { SellerproductComponent } from './components/sellerproduct/sellerproduct.component';
 
 @NgModule({
   declarations: [
@@ -22,13 +29,21 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     SignupComponent,
     NavbarComponent,
     HomeComponent,
-    CreateproductComponent
+    CreateproductComponent,
+    ProductsComponent,
+    ProductviewComponent,
+    CheckoutComponent,
+    ForgotComponent,
+    DashboardComponent,
+    ProfileComponent,
+    SellerproductComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ColorPickerModule,
     TimeagoModule.forRoot()
   ],
   providers: [

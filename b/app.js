@@ -42,10 +42,10 @@ io.on("connection", (socket) => {
     io.emit("get-users", activeUsers);
   });
 
-  socket.on("disconnect2", (userid) => {
-    console.log(userid);
+  socket.on("disconnect2", (userId) => {
+    console.log(userId);
     console.log(activeUsers);
-    activeUsers = activeUsers.filter((user) => user.userId !== userid);
+    activeUsers = activeUsers.filter((user) => user.userId !== userId);
     io.emit("get-users", activeUsers);
   });
 

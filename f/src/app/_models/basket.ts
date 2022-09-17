@@ -1,8 +1,6 @@
-import {v4 as uuidv4} from 'uuid';
-import { Colors, Sizes } from './product';
 
 export interface IBasket {
-    shopId:Number;
+    sellerid:Number;
     sellername:string;
     items: IBasketItem[];
 }
@@ -14,12 +12,10 @@ export interface IBasketItem {
     price: number;
     quantity: number;
     pictureUrl: string;
-    color : Colors[];
-    size : Sizes[]
 }
 
-export class Basket implements IBasket {
-    shopId:Number;
+export class Basket {
+    sellerid:Number;
     sellername:string;
     items: IBasketItem[] = [];
 }
@@ -28,4 +24,4 @@ export interface IBasketTotals {
     delevary: number;
     subtotal: number;
     total: number;
-} 
+}

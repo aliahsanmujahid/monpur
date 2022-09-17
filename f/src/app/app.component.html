@@ -1,4 +1,96 @@
 
+<input type="checkbox" id="check2">
+
+<span *ngIf="(basketService.basket$ | async) as basket" class="cart-no">
+  <label for="check2">
+  <div class="cart">
+      <h4 *ngIf="basket.items.length == 1">
+        {{basket.items.length}} item
+      </h4>
+      <h4 *ngIf="basket.items.length > 1">
+        {{basket.items.length}} items
+      </h4>
+      <p>
+        ৳{{(basketTotal$ | async).subtotal}}
+      </p>
+  </div>
+  </label>
+  </span>
+
+<div class="rightbar">
+  <label for="check2">
+    <h2 class="close">Close</h2>
+  </label>
+
+  <div class="rightmenu">
+    <label for="check2">
+      <img class="toggle2" src="../assets/left.png" alt="">
+    </label>
+  </div>
+  <div class="cartnull" *ngIf="(basket$ | async) == null">
+    <h3>There are no items in your basket</h3>
+ </div>
+
+  <span *ngIf="basket$ | async">
+  <div *ngFor="let item of (basket$ | async).items" class="row">
+
+    <div class="smcolumn" >
+      <div class="unitControl">
+        <span  class="control icon-plus"></span>
+        <span class="control unitCount">{{item.quantity}}</span>
+        <span  class="control icon-minus"></span>
+      </div>
+    </div>
+    <div class="column" >
+      <img src="{{'http://localhost:8000/'+item.pictureUrl}}"  alt="">
+    </div>
+    <div class="bigcolumn" >
+      <div class="bigcontent">
+        <table id="customers" style="table-layout: fixed; width: 100%">
+          <tr>
+            <td>{{item.productName}}</td>
+          </tr>
+
+          <tr>
+            <td>৳{{item.price * item.quantity}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="smcolumn" >
+      <div class="unitControl">
+        <span  class="control icon-trush"></span>
+      </div>
+    </div>
+  </div>
+</span>
+
+<span *ngIf="(basketTotal$ | async)">
+<h1>Order Summary</h1>
+
+<table id="customers2" style="table-layout: fixed; width: 100%">
+  <tr>
+    <td>Order SubTotal</td>
+    <td>৳{{(basketTotal$ | async).subtotal}}</td>
+  </tr>
+  <tr>
+    <td>Delivery Charge</td>
+    <td>৳{{(basketTotal$ | async).delevary}}</td>
+  </tr>
+  <tr>
+    <td>Total</td>
+    <td>৳{{(basketTotal$ | async).total }}</td>
+  </tr>
+</table>
+</span>
+
+<ul class="items" *ngIf="(basketTotal$ | async)">
+  <label for="check2">
+    <h1 class="checkout" routerLink='checkout' >Place Order</h1>
+  </label>
+</ul>
+</div>
+
 <app-navbar></app-navbar>
 
 <div class="content">

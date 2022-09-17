@@ -5,8 +5,9 @@
       <div class="Chat-list" *ngIf="(messageService.chatUser$ | async).length > 0">
 
 
-        <div class="follower conversation" *ngFor="let user of (messageService.chatUser$ | async)">
-          <div (click)="loadmessage(user.chatid,user.id)">
+        <div class="follower conversation" *ngFor="let user of (messageService.chatUser$ | async)"
+        [ngClass]="{'active' : active === user.id}" (click)="activeclass(user.id)">
+          <div (click)="loadmessage(user.chatid,user.id)" >
             <div *ngIf="isUserOnline(user.id)" class="online-dot"></div>
             <img
               src="{{user.image || './assets/user.png'}}"
