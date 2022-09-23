@@ -4,6 +4,15 @@
   <span *ngIf="(accountService.currentUser$ | async) === null">
     <a routerLinkActive="active" routerLink='/login'>Login</a>
   </span>
+
+
+    <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" novalidate>
+      <span>
+        <input id="search" type="search" [(ngModel)]="search" type="text" name="search" required minlength="3" placeholder="Search..">
+        <button  class="searchbutton" [disabled]="SearchForm.invalid" type="submit" >Search</button>
+      </span>
+    </form>
+
   <a routerLinkActive="active" routerLink='/msg'>Message</a>
   <a routerLinkActive="active" routerLink='/products'>Get Products</a>
   <a routerLink="/dash" >Dashboard</a>

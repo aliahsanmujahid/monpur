@@ -1,5 +1,7 @@
 export interface IProduct {
   id: number;
+  cateid:number;
+  subcateid:number;
   name:string,
   details:string,
   orgprice:number,
@@ -29,6 +31,8 @@ export interface ISizes {
 
 export interface Product {
   id: number;
+  cateid:number;
+  subcateid:number;
   name:string,
   details:string,
   orgprice:number,
@@ -43,6 +47,8 @@ export interface Product {
   file7:string,
   file8:string,
   sellerid:number,
+  hascolor:string,
+  hassize:string,
   colors : Colors[],
   sizes : Sizes[]
 }
@@ -51,13 +57,11 @@ export interface Colors {
     id: number,
     name: string;
     colorCode:string;
-    price: number;
     quantity: number;
 }
 export interface Sizes {
     id: number,
     name: string;
     variCode:string;
-    price: number;
     quantity: number;
 }

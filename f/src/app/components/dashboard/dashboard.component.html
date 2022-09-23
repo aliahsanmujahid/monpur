@@ -8,7 +8,9 @@
     <ul>
       <li (click)="viewprofile()" >Profile</li>
       <li (click)="createproduct()" >Create Product</li>
+      <li (click)="createcate()" >Create Category</li>
       <li (click)="sellerproduct()" >Your Products</li>
+      <li (click)="sellerorder()" >Your Orders</li>
       <li (click)="viewmessage()" >Message</li>
       <li class="logout" (click)="logout()">Log Out</li>
     </ul>
@@ -24,6 +26,8 @@
   <app-sellerproduct *ngIf="sellerproductview"></app-sellerproduct>
   <app-profile *ngIf="profileview"></app-profile>
   <app-message *ngIf="messageview"></app-message>
+  <app-order *ngIf="orderview"></app-order>
+  <app-category *ngIf="cateview"></app-category>
 
 </div>
 </div>

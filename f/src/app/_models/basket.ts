@@ -1,3 +1,4 @@
+import { Colors, Sizes } from './product';
 
 export interface IBasket {
     sellerid:Number;
@@ -12,6 +13,8 @@ export interface IBasketItem {
     price: number;
     quantity: number;
     pictureUrl: string;
+    color : Colors[];
+    size : Sizes[]
 }
 
 export class Basket {

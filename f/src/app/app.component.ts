@@ -1,4 +1,4 @@
-import { IBasket, IBasketTotals } from './_models/basket';
+import { IBasket, IBasketItem, IBasketTotals } from './_models/basket';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccountService } from './_services/account.service';
@@ -31,5 +31,19 @@ export class AppComponent {
     if(token){
       this.accountService.setUser(token);
     }
+  }
+
+
+
+  decrementItemQuantity(item: IBasketItem) {
+    this.basketService.decrementItemQuantity(item);
+  }
+
+  incrementItemQuantity(item: IBasketItem) {
+    this.basketService.incrementItemQuantity(item);
+  }
+
+  removeBasketItem(item: IBasketItem) {
+    this.basketService.removeItemFromBasket(item);
   }
 }

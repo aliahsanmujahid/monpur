@@ -110,7 +110,7 @@ form label {
   font-size: 18px;
 }
 
-form input,textarea {
+form input,textarea,select {
   width: 100%;
   padding: 7px;
   margin: 7px;
@@ -145,6 +145,7 @@ ul li{
   text-decoration: none;
   display: inline-block;
   margin-left: 10px;
+  margin-top: 13px;
 }
 
 .addc ,.adds{

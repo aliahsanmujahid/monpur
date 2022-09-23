@@ -7,6 +7,7 @@ import { IColors, IProduct } from 'src/app/_models/product';
 import { AccountService } from 'src/app/_services/account.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { CategoryService } from 'src/app/_services/category.service';
 
 @Component({
   selector: 'app-createproduct',
@@ -25,6 +26,8 @@ export class CreateproductComponent implements OnInit {
 
   product: IProduct = {
     id: 0,
+    cateid:0,
+    subcateid:0,
     name:'',
     details:'',
     orgprice:null,
@@ -41,6 +44,10 @@ export class CreateproductComponent implements OnInit {
     colors : [],
     sizes : []
   };
+
+  categoryes: any = [];
+  subcategoryes: any = [];
+
   isColor:Boolean = false;
   isSize:Boolean = false;
   qtyshow = false;
@@ -59,8 +66,9 @@ export class CreateproductComponent implements OnInit {
 
 
 
+
   constructor(public accountService: AccountService,private http: HttpClient,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute,public categoryService: CategoryService,
     public productService: ProductService) { }
 
   ngOnInit(): void {
@@ -68,12 +76,33 @@ export class CreateproductComponent implements OnInit {
 
     this.route.params.subscribe(p => {
       if(p['id'] != 0 && p['id'] != null){
-        this.productService.getProduct(p['id']).subscribe(res =>{
+        this.productService.getEditProduct(p['id']).subscribe(res =>{
           this.product = res;
+          if(this.product.sizes.length > 0){
+            this.hasvari = true;
+            this.sizes.name = this.product.sizes[0].name;
+          }
         });
       }
 
     });
+    this.getcate();
+    this.getsubcate();
+  }
+
+  getcate(){
+    this.categoryService.getallcate().subscribe( res => {
+      this.categoryes = res;
+    }),
+    error => {
+    };
+  }
+  getsubcate(){
+    this.categoryService.getallsubcate().subscribe( res => {
+      this.subcategoryes = res;
+    }),
+    error => {
+    };
   }
 
   public uploadFile = (files,val) => {
@@ -312,5 +341,17 @@ if(val == 8){
  changevari(){
   this.hasvari = false;
  }
+
+   onCateChange(){
+    if(this.product.cateid !== 0 && this.product.cateid !== -1){
+      this.categoryService.getsubcatebyid(this.product.cateid).subscribe( res => {
+        this.subcategoryes = res;
+        this.product.subcateid = 0;
+      }),
+      error => {
+      };
+    }
+  }
+  
 
 }

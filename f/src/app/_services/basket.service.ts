@@ -58,18 +58,66 @@ export class BasketService {
   }
 
   private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
-    const index = items.findIndex(i => i.id === itemToAdd.id);
-    if(index === -1){
-      console.log('Product Added 1');
+    const item = items.filter(i => i.id === itemToAdd.id);
+    console.log("item",item)
+    if(item.length === 0){
       itemToAdd.quantity = quantity;
       items.push(itemToAdd);
     }else{
-         items[index].quantity += quantity;
-        console.log('Product Added 2');
+      var notsame:Number = 0;
+      var notsame2:Number = 1;
+      item.forEach( i => {
+      if(JSON.stringify(i.color) === JSON.stringify(itemToAdd.color)
+      && JSON.stringify(i.size) === JSON.stringify(itemToAdd.size)){
+        i.quantity += quantity;
+        notsame = 0;
+        notsame2 = 0;
+
+      }else{
+        notsame = 1;
+      }
+      });
+      if(notsame == 1 && notsame2 == 1){
+        itemToAdd.quantity = quantity;
+        items.push(itemToAdd);
+
+      }
+
     }
 
     return items;
   }
+
+  removeItemFromBasket(item: IBasketItem) {
+    const basket = this.getCurrentBasketValue();
+    if (basket.items.some(x => x.eachid === item.eachid)) {
+      basket.items = basket.items.filter(i => i.eachid !== item.eachid);
+      if (basket.items.length > 0) {
+        this.setBasket(basket);
+      } else {
+        this.deleteBasket();
+      }
+    }
+  }
+  incrementItemQuantity(item: IBasketItem) {
+    const basket = this.getCurrentBasketValue();
+    const foundItemIndex = basket.items.findIndex(x => x.eachid === item.eachid);
+    basket.items[foundItemIndex].quantity++;
+    this.setBasket(basket);
+  }
+
+  decrementItemQuantity(item: IBasketItem) {
+    const basket = this.getCurrentBasketValue();
+    const foundItemIndex = basket.items.findIndex(x => x.eachid === item.eachid);
+    if (basket.items[foundItemIndex].quantity > 1) {
+      basket.items[foundItemIndex].quantity--;
+      this.setBasket(basket);
+    }
+    // else {
+    //   this.removeItemFromBasket(item);
+    // }
+  }
+
 
   private createBasket(){
     const basket = new Basket();
@@ -98,7 +146,9 @@ export class BasketService {
       productName: item.name,
       price: item.discprice,
       pictureUrl: item.file1,
-      quantity
+      quantity,
+      color : item.colors,
+      size : item.sizes,
     }
   }
 }

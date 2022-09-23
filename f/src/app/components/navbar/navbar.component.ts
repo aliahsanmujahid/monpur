@@ -9,9 +9,15 @@ import { AccountService } from 'src/app/_services/account.service';
 })
 export class NavbarComponent implements OnInit {
 
+  search:string;
+
   constructor(public accountService: AccountService,private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  searchProduct(){
+    this.router.navigate(['products', { 'search':this.search }]);
   }
 
 

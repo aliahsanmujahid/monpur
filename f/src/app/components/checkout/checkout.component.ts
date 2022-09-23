@@ -21,6 +21,7 @@ export class CheckoutComponent implements OnInit {
     public accountService: AccountService, private orderService: OrderService) { }
 
   orderCreate: IOrder = {
+    
     name: '',
     phone: '',
     address: '',
@@ -45,7 +46,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   createorder(){
-    // console.log("this.orderCreate",this.orderCreate);
+
+    console.log("orderCreate",this.orderCreate);
+
     this.orderService.orderCreate(this.orderCreate).subscribe(res =>{
 
       console.log("order res",res);
@@ -64,16 +67,33 @@ export class CheckoutComponent implements OnInit {
         productName: '',
         price: 0,
         quantity: 0,
+        color_id:0,
+        color_name:'',
+        size_id:0,
+        vari_name:'',
+        size_name:'',
+
       }
       OrderItem.id = item.id;
       OrderItem.productName = item.productName;
       OrderItem.price = item.price;
       OrderItem.quantity = item.quantity;
+      if(item.color.length !== 0){
+
+        OrderItem.color_id = item.color[0].id;
+        OrderItem.color_name = item.color[0].name;
+      }
+      if(item.size.length !== 0){
+          OrderItem.size_id = item.size[0].id;
+          OrderItem.vari_name = item.size[0].name;
+          OrderItem.size_name = item.size[0].variCode;
+
+      }
 
       this.orderCreate.orderItems.push(OrderItem);
 
     });
-    this.orderCreate.sellerid = basket.shopId;
+    this.orderCreate.sellerid = basket.sellerid;
 
 
   }

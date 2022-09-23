@@ -20,10 +20,14 @@ import { ForgotComponent } from './components/forgot/forgot.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SellerproductComponent } from './components/sellerproduct/sellerproduct.component';
+import { OrderComponent } from './components/order/order.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
+import { CategoryComponent } from './components/category/category.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HasRoleDirective,
     MessageComponent,
     LoginComponent,
     SignupComponent,
@@ -36,7 +40,9 @@ import { SellerproductComponent } from './components/sellerproduct/sellerproduct
     ForgotComponent,
     DashboardComponent,
     ProfileComponent,
-    SellerproductComponent
+    SellerproductComponent,
+    OrderComponent,
+    CategoryComponent
   ],
   imports: [
     BrowserModule,

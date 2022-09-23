@@ -37,22 +37,6 @@ exports.signIn = async (req, res, next) => {
 
 
 
-exports.getallproducts = async (req, res, next) => {
-       var response = productCache.get(Object.values(['userProducts']).join('-'));
-       if(response){
-        //console.log("getting from catching response");
-        res.send(response);
-       }else{
-        //console.log("getting from database");
-        let sql = `SELECT * FROM products`;
-        let query = db.query(sql, (err, result) => {
-          if(err) throw err;
-          productCache.set(Object.values(['userProducts']).join('-'), result);
-         
-          res.send(result);
-      });
-       }
-};
 
 exports.getsellerproducts = async (req, res, next) => {
 
@@ -254,81 +238,6 @@ exports.getsingleuser = async (req, res, next) => {
     if(err) throw err;
      res.send(result[0]);
   });
-
-};
-
-
-exports.createorder = async (req, res, next) => {
-
-  const con = await connection;
-  const orderitems = req.body.orderItems;
-  const newitems = []
-
-
-
-  for (let i = 0; i < orderitems.length; i++) {
-
-    const [data] = await con.execute('SELECT * FROM products WHERE id = ? ', [ orderitems[i].id ]);
-    newitems.push(data[0])
-
-  }
-
-  let orderdata = {
-    name: req.body.name,
-    phone:req.body.phone,
-    address:req.body.address,
-    district:req.body.district,
-    upazila:req.body.upazila,
-
-  };
-
-  const resultInsert = await con.query (
-    "INSERT INTO orders (name, phone,address,district,upazila) VALUES (?, ?,?, ?,?)", 
-    [req.body.name,req.body.phone,req.body.address,req.body.district,req.body.upazila]
-  );
-
-  //console.log(newitems)
-
-
-  for (let i = 0; i < newitems.length; i++) {
-
-     // console.log("newitems",newitems);
-
-        let sql2 = `INSERT INTO orderitems SET ?`;
-  
-        let orderitem = {
-          orderid: resultInsert[0].insertId,
-          name:newitems[i].name,
-          price:newitems[i].discprice,
-          quantity:orderitems[i].quantity,
-        };
-  
-        let query = await db.query(sql2, orderitem, (err, result) => {
-                  if(err){
-                    return sendError(res, "Not Exist!");
-                  }
-                    
-                   
-                  if(result){
-                    var sqle = "UPDATE products SET orgprice = '000' WHERE id = ?";
-                    con.query(sqle, [newitems[i].id], function (err, result) {
-                      if (err){
-                        return sendError(res, "Not Exist!");
-                      };
-                      
-                    });
-                  }  
-                  
-                  
-        });
-      }
-
-      res.send({
-          success:true
-        });
-
-
-
 
 };
 

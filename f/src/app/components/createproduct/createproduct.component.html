@@ -4,6 +4,19 @@
 <div class="row firstrow">
   <div class="column">
   <form  #ProductForm="ngForm" >
+
+    <label>Select Category</label>
+
+    <select (change)="onCateChange()" [(ngModel)]="product.cateid" class="form-control"  name="SubCate" >
+      <option value="0">Select</option>
+      <option *ngFor="let s of categoryes" value="{{ s.id }}" >{{ s.name }}</option>
+    </select>
+
+    <select [(ngModel)]="product.subcateid" class="form-control" name="SubSubCate" >
+      <option value="0">Select</option>
+      <option *ngFor="let ss of subcategoryes" value="{{ ss.id }}">{{ ss.name }}</option>
+    </select>
+
     <label>Product Name</label>
     <input
           [(ngModel)]="product.name"
@@ -55,6 +68,7 @@
 
   </form>
   </div>
+
   <div class="column" >
 
     <div class="row " style="margin-top: 47px;">
@@ -81,7 +95,7 @@
     <div *ngIf="isColor">
 
 
-      <div *ngIf="product.colors" class="padding">
+      <div *ngIf="product.colors" >
         <ul >
           <li *ngFor="let item of product.colors">
             <div
@@ -98,7 +112,7 @@
       </div>
 
 
-      <div>
+      <div class="padding">
         <form #SetColor="ngForm"  (ngSubmit)="setColor()" autocomplete="off">
         <h3 >Select Color</h3>
         <input class="color" [(colorPicker)]="colors.colorCode" required
@@ -137,7 +151,7 @@
        <h3 *ngIf="product.sizes.length == 0 && hasvari" class="qty">Now Add Some Varibles</h3>
       </div>
 
-    <div *ngIf="product.sizes.length > 0" class="padding">
+    <div *ngIf="product.sizes.length > 0" >
       <ul >
         <li *ngFor="let item of product.sizes">
           <h4>Vari:{{item.variCode}}</h4>

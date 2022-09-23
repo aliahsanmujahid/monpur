@@ -7,7 +7,6 @@ const {
   signIn,
   imageupload,
   deleteimage,
-  getallproducts,
   getsellerproducts,
   createchat,
   createmessege,
@@ -18,7 +17,6 @@ const {
   getusers,
   getsingleuser,
   signup,
-  createorder,
   sendotp,
   setac,
   fsendotp,
@@ -31,9 +29,37 @@ const {
 const {
   createproduct,
   getsingleproduct,
-  updateproduct
+  updateproduct,
+  getallproducts,
+  getcolors,
+  getsizes,
+  searchproducts
 
 } = require("../controllers/product");
+
+const {
+  createorder,
+  getSellerOrders,
+  getCustomerOrders
+} = require("../controllers/order");
+
+const {
+  getcategoryes,
+  createcate,
+  createsubcate,
+  getallsubcate,
+  getallcate,
+  getsubcatebyid
+
+} = require("../controllers/category");
+
+const {
+  createreview,
+  getallreviews
+
+} = require("../controllers/review");
+
+
 
 const router = express.Router();
 
@@ -79,12 +105,40 @@ router.post("/updateproduct",
     isAdmin,
     updateproduct
 );
+router.post("/createorder", 
+    isAuth,
+    createorder
+);
+router.get("/getSellerOrders/:id/:page/:status", 
+    isAuth,
+    getSellerOrders
+);
+router.get("/getCustomerOrders/:id/:page/:status", 
+    isAuth,
+    getCustomerOrders
+);
+
+router.post("/createreview", 
+    isAuth,
+    createreview
+);
+
+router.get("/getallreviews/:pid", getallreviews);
+
+
 
 router.post("/imageupload",upload.single('file'), imageupload);
 router.post("/deleteimage",deleteimage);
 router.get("/getallproducts",getallproducts);
 router.get("/getsingleproduct/:id",getsingleproduct);
 router.get("/getsellerproducts/:id",getsellerproducts);
+router.get("/getcolors/:id",getcolors);
+router.get("/getsizes/:id",getsizes);
+
+
+
+router.get("/searchproducts/:text",searchproducts);
+
 
 
 router.post("/createchat",createchat);
@@ -102,8 +156,13 @@ router.get("/getusers",getusers);
 router.get("/getsingleuser/:id",getsingleuser);
 
 
-router.post("/createorder",createorder);
 
+router.get("/getcategoryes",getcategoryes);
+router.get("/getallsubcate",getallsubcate);
+router.get("/getsubcatebyid/:id",getsubcatebyid);
+router.get("/getallcate",getallcate);
+router.post("/createcate",createcate);
+router.post("/createsubcate",createsubcate);
 
 
 

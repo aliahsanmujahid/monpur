@@ -6,9 +6,68 @@ const fs = require('fs');
 const connection = require("../config/db2");
 const { sizes } = require("./dbcreate");
 
+exports.getallproducts = async (req, res, next) => {
 
+   let sql = `SELECT * from products`;
+   let query = db.query(sql, (err, result) => {
+     if(err) throw err;
+    
+     res.send(result);
+  });  
+
+};
+
+exports.searchproducts = async (req, res, next) => {
+
+  const keys = req.params.text.split(" ");
+
+  const con = await connection;    
+
+  console.log("searchproducts",keys);
+
+  var data = [];
+
+  
+  for(let i=0;i<keys.length;i++){
+    const [result] = await con.execute('SELECT * FROM products WHERE name LIKE "%'+keys[i]+'%" OR details LIKE "%'+keys[i]+'%"');
+    
+    for(let i=0;i<result.length;i++){
+      data.push(result[i]);
+    }
+
+  }
+   
+  res.send(data);
+
+};
+
+exports.getcolors = async (req, res, next) => {
+
+  let sql = `SELECT * from colors where pid = ?`;
+  let query = db.query(sql,[req.params.id], (err, result) => {
+    if(err) throw err;
+   
+    res.send(result);
+ });  
+
+};
+exports.getsizes = async (req, res, next) => {
+
+  let sql = `SELECT * from sizes where pid = ?`;
+  let query = db.query(sql,[req.params.id], (err, result) => {
+    if(err) throw err;
+   
+    res.send(result);
+ });  
+
+};
 
 exports.updateproduct = async (req, res, next) => {
+
+     const con = await connection;    
+      
+
+     const { cateid,subcateid,name, details, orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8 } = req.body;
 
       let sqlc = `DELETE FROM  colors WHERE pid = ${req.body.id}`;
       let queryc = db.query(sqlc, (err, result) => {
@@ -21,6 +80,13 @@ exports.updateproduct = async (req, res, next) => {
       });    
   
       if(req.body.colors.length > 0){
+
+        await con.execute (
+          "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? , orgprice = ? , discprice = ? , qty = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hascolor = ?, hassize = ?  WHERE id = ?", 
+          [cateid,subcateid,req.user.id,name,details,orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8,"true","false",req.body.id]
+         ); 
+          
+  
         for (let i = 0; i < req.body.colors.length; i++) {
 
             let sdata = {pid:req.body.id,name: req.body.colors[i].name,
@@ -35,6 +101,13 @@ exports.updateproduct = async (req, res, next) => {
         }
       }
       if(req.body.sizes.length > 0){
+
+        await con.execute (
+          "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? , orgprice = ? , discprice = ? , qty = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hascolor = ?, hassize = ?  WHERE id = ?", 
+          [cateid,subcateid,req.user.id,name,details,orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8,"false","true",req.body.id]
+         ); 
+          
+  
         for (let i = 0; i < req.body.sizes.length; i++) {
 
             let sdata = {pid:req.body.id,name: req.body.sizes[i].name,
@@ -45,21 +118,17 @@ exports.updateproduct = async (req, res, next) => {
             let sql = 'INSERT INTO sizes SET ?';
             let query = db.query(sql, sdata, (err, result) => {
             if(err) throw err;
-        });
+          });
         }
         }
 
-  
-     const con = await connection;
+        if(req.body.colors.length == 0 && req.body.sizes.length == 0){
+          await con.execute (
+            "UPDATE products SET cateid = ?, subcateid = ?,sellerid = ?, name = ? , details = ? , orgprice = ? , discprice = ? , qty = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hascolor = ?, hassize = ?  WHERE id = ?", 
+            [cateid,subcateid,req.user.id,name,details,orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8,"false","false",req.body.id]
+           ); 
+        }
 
-
-   const { name, details, orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8 } = req.body;
-
-
-  const resultInsert = await con.execute (
-      "UPDATE products SET sellerid = ?, name = ? , details = ? , orgprice = ? , discprice = ? , qty = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ? WHERE id = ?", 
-      [req.user.id,name,details,orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8,req.body.id]
-    ); 
 
     if(file1 !== ''){
                 var sql1 = "DELETE FROM imgwatch WHERE url = ?";
@@ -143,11 +212,19 @@ exports.getsingleproduct = async (req, res, next) => {
 
       if(err) throw err;
 
-      var data = result[0]
-      const [sizes] = await con.execute('SELECT * FROM sizes WHERE pid = ? ', [data.id]);
-      const [colors] = await con.execute('SELECT * FROM colors WHERE pid = ? ', [data.id]);
-      data = {...data,sizes,colors}
-      res.send(data);
+      
+      var sizes = [];
+      var colors = []
+
+      if(result[0].hassize == "true"){
+         [sizes] = await con.execute('SELECT * FROM sizes WHERE pid = ? ', [result[0].id]);
+      }
+      if(result[0].hascolor == "true"){
+         [colors] = await con.execute('SELECT * FROM colors WHERE pid = ? ', [result[0].id]);
+      }
+
+      // data = {...data,sizes,colors}
+      res.send({...result[0],sizes,colors});
       
     });
   
@@ -159,15 +236,32 @@ exports.createproduct = async (req, res, next) => {
     const con = await connection;
 
   
-    const { name, details, orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8 } = req.body;
+    const { cateid,subcateid,name, details, orgprice,discprice,qty,file1,file2,file3,file4,file5,file6,file7,file8 } = req.body;
   
-    let product = {sellerid:req.user.id,name: name, details:details,
-      orgprice:orgprice,discprice:discprice,
-      qty:qty,file1:file1,
-      file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
-      file7:file7,file8:file8};
+    let product = {};
   
-  
+      if(req.body.colors.length > 0){
+        product = {cateid:cateid,subcateid:subcateid,sellerid:req.user.id,name: name, details:details,
+          orgprice:orgprice,discprice:discprice,
+          qty:qty,file1:file1,
+          file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
+          file7:file7,file8:file8,hassize:"false", hascolor:"true"};
+      }
+      if(req.body.sizes.length > 0){
+         product = {cateid:cateid,subcateid:subcateid,sellerid:req.user.id,name: name, details:details,
+          orgprice:orgprice,discprice:discprice,
+          qty:qty,file1:file1,
+          file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
+          file7:file7,file8:file8,hassize:"true", hascolor:"false"};
+      }
+      if(req.body.colors.length == 0 && req.body.sizes.length == 0){
+        product = {cateid:cateid,subcateid:subcateid,sellerid:req.user.id,name: name, details:details,
+         orgprice:orgprice,discprice:discprice,
+         qty:qty,file1:file1,
+         file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
+         file7:file7,file8:file8,hassize:"false", hascolor:"false"};
+     }
+
       let sql = 'INSERT INTO products SET ?';
       let query = db.query(sql, product, (err, result) => {
           if(err) throw err;

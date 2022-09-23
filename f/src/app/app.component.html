@@ -36,9 +36,9 @@
 
     <div class="smcolumn" >
       <div class="unitControl">
-        <span  class="control icon-plus"></span>
+        <span (click)="incrementItemQuantity(item)" class="control icon-plus"></span>
         <span class="control unitCount">{{item.quantity}}</span>
-        <span  class="control icon-minus"></span>
+        <span (click)="decrementItemQuantity(item)" class="control icon-minus"></span>
       </div>
     </div>
     <div class="column" >
@@ -50,7 +50,12 @@
           <tr>
             <td>{{item.productName}}</td>
           </tr>
-
+          <tr *ngIf="item.color.length > 0 " >
+            <td>Color: {{item.color[0].name | uppercase }}</td>
+          </tr>
+          <tr *ngIf="item.size.length > 0 ">
+            <td>{{item.size[0].name}}: {{item.size[0].variCode | uppercase }}</td>
+          </tr>
           <tr>
             <td>৳{{item.price * item.quantity}}</td>
           </tr>
@@ -59,7 +64,7 @@
     </div>
     <div class="smcolumn" >
       <div class="unitControl">
-        <span  class="control icon-trush"></span>
+        <span  (click)="removeBasketItem(item)" class="control icon-trush"></span>
       </div>
     </div>
   </div>

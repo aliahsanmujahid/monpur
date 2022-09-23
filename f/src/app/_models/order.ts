@@ -14,4 +14,9 @@ export interface IOrderItem {
     productName: string;
     price: number;
     quantity: number;
+    color_id:number;
+    color_name:string;
+    size_id:number;
+    vari_name:string;
+    size_name:string;
 }

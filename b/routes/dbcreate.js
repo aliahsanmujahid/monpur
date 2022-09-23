@@ -10,7 +10,10 @@ const {
   orderitems,
   otpcheck,
   sizes,
-  colors
+  colors,
+  cate,
+  subcate,
+  reviews
   
 
 } = require("../controllers/dbcreate");
@@ -28,6 +31,11 @@ router.get("/otpcheck", otpcheck);
 
 router.get("/sizes", sizes);
 router.get("/colors", colors);
+
+
+router.get("/cate", cate);
+router.get("/subcate", subcate);
+router.get("/reviews", reviews);
 
 
 

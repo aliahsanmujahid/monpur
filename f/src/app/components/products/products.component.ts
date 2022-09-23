@@ -14,6 +14,7 @@ export class ProductsComponent implements OnInit {
 
   products: any = [];
   Activeuser: User;
+  params: any = {};
 
   constructor(private route: ActivatedRoute,public productService: ProductService,
     public accountService: AccountService,public basketService: BasketService) { }
@@ -26,8 +27,35 @@ export class ProductsComponent implements OnInit {
       this.Activeuser = res;
     });
 
-    this.getProducts();
+    this.route.params.subscribe(params => {
 
+      window.scrollTo(0, 0);
+
+      if (Object.keys(params).length === 0) {
+        this.products = [];
+        this.getProducts();
+      }else{
+        this.params = params;
+        this.products = [];
+        this.paramsproducts(this.params);
+      }
+
+    });
+
+  }
+
+  paramsproducts(params){
+    if(params.search){
+
+      this.productService.searchProducts(params.search).subscribe( res =>{
+        this.products = res;
+        console.log(this.products);
+
+      }),
+      error => {
+
+      };
+    }
   }
 
 
@@ -37,7 +65,7 @@ export class ProductsComponent implements OnInit {
     this.products = [];
      this.productService.getallproducts().subscribe( res =>{
        this.products = res;
-
+  //  console.log(res)
      }),
      error => {
       console.log(error)

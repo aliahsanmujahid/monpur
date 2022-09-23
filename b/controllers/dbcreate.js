@@ -12,7 +12,7 @@ exports.createuser = async (req, res) => {
 
 exports.createproduct = async (req, res) => {
     let sql = 
-       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int, name VARCHAR(255), details VARCHAR(255),orgprice int,discprice int, qty int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int,cateid int,subcateid int, name VARCHAR(255), details VARCHAR(255),orgprice int,discprice int, qty int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),hassize VARCHAR(255),hascolor VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("product table creatd");
@@ -52,7 +52,7 @@ exports.message = async (req, res) => {
 
 exports.orders = async (req, res) => {
     let sql = 
-       'CREATE TABLE orders(id int AUTO_INCREMENT, name VARCHAR(255), phone VARCHAR(255),address VARCHAR(255),district VARCHAR(255),upazila VARCHAR(255),delivery VARCHAR(255),subtotal VARCHAR(255),total VARCHAR(255),status VARCHAR(255),customerid VARCHAR(255),sellerid VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE orders(id int AUTO_INCREMENT, name VARCHAR(255), phone VARCHAR(255),address VARCHAR(255),district VARCHAR(255),upazila VARCHAR(255),delivery VARCHAR(255),subtotal VARCHAR(255),total VARCHAR(255),status VARCHAR(255),customerid int,sellerid int,PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("orders table creatd");
@@ -62,7 +62,7 @@ exports.orders = async (req, res) => {
 
 exports.orderitems = async (req, res) => {
     let sql = 
-       'CREATE TABLE orderitems(id int AUTO_INCREMENT, orderid int,name VARCHAR(255), price VARCHAR(255),quantity VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE orderitems(id int AUTO_INCREMENT, pid int, orderid int,name VARCHAR(255), price int,quantity int,totalprice int,color VARCHAR(255),variname VARCHAR(255),vari VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("orderitems table creatd");
@@ -99,6 +99,40 @@ exports.colors = async (req, res) => {
         res.send('otpcheck table creatd');
     });
 };
+
+
+exports.cate = async (req, res) => {
+    let sql = 
+       'CREATE TABLE cate(id int AUTO_INCREMENT,name VARCHAR(255),image VARCHAR(255),PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("otpcheck table creatd");
+        res.send('otpcheck table creatd');
+    });
+};
+
+
+exports.subcate = async (req, res) => {
+    let sql = 
+       'CREATE TABLE subcate(id int AUTO_INCREMENT, cateid int,name VARCHAR(255),image VARCHAR(255),PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("otpcheck table creatd");
+        res.send('otpcheck table creatd');
+    });
+};
+
+
+exports.reviews = async (req, res) => {
+    let sql = 
+       'CREATE TABLE reviews(id int AUTO_INCREMENT, pid int,ratting int,review VARCHAR(255),image1 VARCHAR(255),image2 VARCHAR(255),image3 VARCHAR(255),image4 VARCHAR(255), PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("otpcheck table creatd");
+        res.send('otpcheck table creatd');
+    });
+};
+
 
 
 
