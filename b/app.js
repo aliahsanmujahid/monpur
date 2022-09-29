@@ -56,6 +56,15 @@ io.on("connection", (socket) => {
       io.to(user.socketId).emit("recieve-message", data);
     }
   });
+  socket.on("chat-send", (data) => {
+    const { receiverId } = data;
+    const user = activeUsers.find((user) => user.userId == receiverId);
+    if (user) {
+      io.to(user.socketId).emit("chat-get", data);
+    }
+  });  
+
+
 });
 
 

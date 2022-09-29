@@ -59,15 +59,17 @@ export class OrderComponent implements OnInit {
     this.accountService.currentUser$.subscribe(res =>{
 
         //  console.log(res);
-         if(res.role == "admin"){
-          this.sellerid = res.userId;
-          this.customerid = null;
-          this.getorders();
-         }
-         if(res.role == "user"){
-          this.sellerid = null;
-          this.customerid = res.userId;
-          this.getorders();
+         if(res){
+          if(res.role == "admin"){
+            this.sellerid = res.userId;
+            this.customerid = null;
+            this.getorders();
+           }
+           if(res.role == "user"){
+            this.sellerid = null;
+            this.customerid = res.userId;
+            this.getorders();
+           }
          }
 
     });
@@ -159,7 +161,6 @@ export class OrderComponent implements OnInit {
     if(this.sellerid){
        this.orderService.getSellerOrders(this.sellerid,this.page,this.status).subscribe(res =>{
          this.orders  = res;
-         console.log(res)
          if(this.orders.length === 0 || res.length < 10 ){
           this.noorder = true;
           this.stopscroll = true;

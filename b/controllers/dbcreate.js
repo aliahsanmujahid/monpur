@@ -31,8 +31,9 @@ exports.imagewatch = async (req, res) => {
 };
 
 exports.chat = async (req, res) => {
+    // flag1 int,flag2 int, unread int
     let sql = 
-       'CREATE TABLE chat(id int AUTO_INCREMENT, senderid VARCHAR(255), receiverid VARCHAR(255),date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(id))';
+       'CREATE TABLE chat(id int AUTO_INCREMENT,senderid int, receiverid int, date VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("chat table creatd");
@@ -40,9 +41,19 @@ exports.chat = async (req, res) => {
     });
 };
 
+exports.chatwatch = async (req, res) => {
+    let sql = 
+       'CREATE TABLE chatwatch(id int AUTO_INCREMENT,chatid int, userid int,flag int,unread int ,PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("chatwatch table creatd");
+        res.send('chatwatch table creatd');
+    });
+};
+
 exports.message = async (req, res) => {
     let sql = 
-       'CREATE TABLE message(id int AUTO_INCREMENT, chatid VARCHAR(255), senderid VARCHAR(255),message VARCHAR(255),date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(id))';
+       'CREATE TABLE message(id int AUTO_INCREMENT, chatid int, senderid int, message VARCHAR(255),date VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("message table creatd");

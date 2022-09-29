@@ -1,6 +1,6 @@
 import { Conversation, MessageSend } from './../../_models/message';
 import { MessageService } from './../../_services/message.service';
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { AccountService } from 'src/app/_services/account.service';
 
 @Component({
@@ -14,40 +14,136 @@ export class MessageComponent implements OnInit {
 
   constructor(public accountService: AccountService,public messageService: MessageService) { }
 
+  @Input() ChatId: any;
+  @Input() ReceiverId: any;
+
   UserId: string;
-  ChatId:string;
-  ReceiverId:string;
-  MessagedUser:Conversation;
+  // ChatId:string;
+  // ReceiverId:string;
+  MessagedUser:any;
   active:any;
 
   message: MessageSend ={
     chatid:'',
     senderid:'',
+    receiverid:'',
     message:''
   };
 
-  ngOnInit(): void {
+  ngOnChanges() {
 
     this.UserId = this.accountService.getuserid()
+
     if(this.UserId !== undefined){
       this.messageService.createHubConnection(this.UserId);
-      this.messageService.getConversation(this.UserId);
+      //this.messageService.getConversation(this.UserId);
     }
+
+    if(this.ChatId){
+      this.messageService.chatUser$.subscribe(res => {
+        this.MessagedUser = res.find(x => x.chatid == this.ChatId);
+      });
+    }
+
+    if(this.ReceiverId){
+
+
+      this.messageService.getChatUsers(this.ReceiverId).subscribe(res => {
+        this.MessagedUser = res;
+      });
+      this.messageService.haschat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
+
+        //console.log("haschat res",res);
+
+        if(!res.error){
+          this.ChatId = res[0].id
+          console.log("this.ChatId ",this.ChatId );
+          this.messageService.loadmessage(this.ChatId,this.UserId);
+        }else{
+          this.messageService.nullmessage();
+        }
+
+      });
+
+    }
+  }
+
+  ngOnInit(): void {
+
+    // this.UserId = this.accountService.getuserid()
+
+    // if(this.UserId !== undefined){
+    //   this.messageService.createHubConnection(this.UserId);
+    //   //this.messageService.getConversation(this.UserId);
+    // }
+
+    // if(this.ChatId){
+    //   this.messageService.chatUser$.subscribe(res => {
+    //     this.MessagedUser = res.find(x => x.chatid == this.ChatId);
+    //   });
+    // }
+
+    // if(this.ReceiverId){
+
+
+    //   this.messageService.getChatUsers(this.ReceiverId).subscribe(res => {
+    //     this.MessagedUser = res;
+    //   });
+    //   this.messageService.haschat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
+
+    //     // console.log("res",res);
+    //     if(!res.error){
+    //       this.ChatId = res[0].id
+    //       this.messageService.loadmessage(this.ChatId);
+    //     }
+    //   });
+
+    // }
 
     // console.log(this.accountService.currentUserSource)
 
   }
+
   sendmsg(){
 
-    this.message.senderid = this.UserId
-    this.message.chatid = this.ChatId
-    if(this.message.message != ''){
-      this.messageService.sendmsg(this.message,this.ReceiverId);
-      this.message = {
-        chatid:'',
-        senderid:'',
-        message:''
+    // console.log(this.ChatId)
+
+    if(this.ChatId){
+
+      this.message.senderid = this.UserId;
+      this.message.receiverid = this.ReceiverId;
+      this.message.chatid = this.ChatId;
+      if(this.message.message != ''){
+        this.messageService.sendmsg(this.message,this.ReceiverId);
+        this.message = {
+          chatid:'',
+          senderid:'',
+          receiverid:'',
+          message:''
+        }
       }
+
+    }else{
+      this.messageService.createchat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
+
+        console.log("again chat ",res);
+        if(!res.error){
+          this.message.senderid = this.UserId;
+          this.message.receiverid = this.ReceiverId;
+          this.message.chatid = res[0].id;
+          this.ChatId =  res[0].id;
+          if(this.message.message != ''){
+          this.messageService.sendmsg(this.message,this.ReceiverId);
+          this.message = {
+          chatid:'',
+          senderid:'',
+          receiverid:'',
+          message:''
+        }
+        }
+        }
+
+      });
     }
 
     //console.log("chat id ", this.message);
@@ -58,20 +154,20 @@ export class MessageComponent implements OnInit {
   }
 
 
-  loadmessage(id,receiveid){
-   this.ChatId = id
-   this.ReceiverId = receiveid;
+  // loadmessage(id,receiveid){
+  //  this.ChatId = id
+  //  this.ReceiverId = receiveid;
 
-   this.messageService.chatUser$.subscribe(res => {
+  //  this.messageService.chatUser$.subscribe(res => {
 
-   this.MessagedUser = res.find(x => x.chatid == id);
+  //  this.MessagedUser = res.find(x => x.chatid == id);
 
-   });
+  //  });
+  //  console.log(this.MessagedUser);
 
-   this.messageService.loadmessage(id);
+  //  this.messageService.loadmessage(id);
 
-
-  }
+  // }
 
   isUserOnline(id){
     var  online = false;

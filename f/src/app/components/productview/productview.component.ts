@@ -104,7 +104,6 @@ export class ProductviewComponent implements OnInit {
   getreviews(){
   this.reviewService.getallreviews(this.product.id).subscribe( res =>{
     this.reviews = res;
-    console.log(res);
   });
   }
   alerttoggle(){

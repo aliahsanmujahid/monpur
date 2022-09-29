@@ -3,14 +3,7 @@
   <div (click)="alerttoggle()"  *ngIf="malert" class="backdrop"></div>
   <div *ngIf="malert" class="alert-box">
     <div class="menualert">
-      <form  #messageForm="ngForm"  (ngSubmit)="sendmessage()">
-
-        <label for="size">Send Message</label>
-        <input  type="text" name="name" required minlength="1" oninput="this.value = this.value.toUpperCase()" placeholder="Variable Name..">
-
-
-        <input [disabled]="messageForm.invalid"  type="submit" value="Send">
-        </form>
+      <app-message [ReceiverId]="product.sellerid"></app-message>
     </div>
     </div>
 
@@ -105,7 +98,7 @@
 
 
                  <button (click)="addItemToBasket()" *ngIf="product.qty !== 0"  class="glow-on-hover" type="button">
-                    Add To Create</button>
+                    Add To Cart</button>
                  <button *ngIf="product.qty == 0" class="glow-on-hover" type="button">
                     No Quantity
                   </button>

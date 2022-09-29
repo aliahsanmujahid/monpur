@@ -6,12 +6,12 @@
   </span>
 
 
-    <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" novalidate>
+    <!-- <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" novalidate>
       <span>
         <input id="search" type="search" [(ngModel)]="search" type="text" name="search" required minlength="3" placeholder="Search..">
         <button  class="searchbutton" [disabled]="SearchForm.invalid" type="submit" >Search</button>
       </span>
-    </form>
+    </form> -->
 
   <a routerLinkActive="active" routerLink='/msg'>Message</a>
   <a routerLinkActive="active" routerLink='/products'>Get Products</a>

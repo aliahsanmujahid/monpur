@@ -8,6 +8,7 @@ export interface Message {
 
   export interface MessageSend {
     senderid : string,
+    receiverid : string,
     message: string,
     chatid: string,
   }
@@ -20,6 +21,9 @@ export interface Message {
   export interface Conversation {
     chatid:number;
     id:number;
+    unread:number;
+    flag:number;
+    date:string;
     name: string;
     image: string;
   }

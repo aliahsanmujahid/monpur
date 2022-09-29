@@ -23,6 +23,7 @@ import { SellerproductComponent } from './components/sellerproduct/sellerproduct
 import { OrderComponent } from './components/order/order.component';
 import { HasRoleDirective } from './_directives/has-role.directive';
 import { CategoryComponent } from './components/category/category.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CategoryComponent } from './components/category/category.component';
     ProfileComponent,
     SellerproductComponent,
     OrderComponent,
-    CategoryComponent
+    CategoryComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

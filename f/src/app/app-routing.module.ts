@@ -1,3 +1,4 @@
+import { ChatComponent } from './components/chat/chat.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ForgotComponent } from './components/forgot/forgot.component';
@@ -18,9 +19,9 @@ const routes: Routes = [
   {path: 'login',  component: LoginComponent},
   {path: 'signup',  component: SignupComponent},
   {path: 'forgot',  component: ForgotComponent},
-  {path: 'msg',  component: MessageComponent},
+  {path: 'chat',  component: MessageComponent},
 
-  {path: 'msg',  component: MessageComponent},
+  {path: 'msg',  component: ChatComponent},
   {path: 'dash',  component: DashboardComponent},
   {path: 'profile',  component: ProfileComponent},
 

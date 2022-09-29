@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit {
 
       this.accountService.currentUser$.subscribe( user => {
         if(user){
+          console.log(user)
         }
       });
 

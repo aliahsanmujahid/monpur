@@ -97,13 +97,13 @@ exports.createchat = async (req, res, next) => {
     return sendError(res, "Same Chat Not Allowed");
   }
 
-  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid}`;
+  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid} or senderid = ${receiverid} && receiverid = ${senderid}`;
 
                   let query1 = db.query(sql1, (err, result) => {
                     if(err) throw err;
                     if(result.length !== 0){
                       console.log("chat exist");
-                      return sendError(res, "Chat Already Exists");
+                      res.send(result);
                     }else{
                       console.log("cretting chat");
 
@@ -117,7 +117,7 @@ exports.createchat = async (req, res, next) => {
                         let sql = `SELECT * FROM chat WHERE id = ${result.insertId}`;
                                   let query = db.query(sql, (err, result) => {
                                     if(err) throw err;
-                                      res.send(result[0]);
+                                      res.send(result);
                                 });
                       });    
                     }
@@ -131,18 +131,24 @@ exports.haschat = async (req, res, next) => {
 
   const { senderid, receiverid } = req.body;
 
-  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid}`;
+  if(senderid == receiverid){
+    return sendError(res, "Same Chat Not Allowed");
+  }
+
+  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid} or senderid = ${receiverid} && receiverid = ${senderid}`;
                   let query1 = db.query(sql1, (err, result) => {
                     if(err) throw err;
                     if(result.length !== 0){
                       console.log("has chat");
-                      let sql = `SELECT * FROM message WHERE chatid = ${result[0].id}`;
-                      let query = db.query(sql, (err, result) => {
-                        if(err) throw err;
-                          res.send(result);
-                      }); 
+                      // let sql = `SELECT * FROM message WHERE chatid = ${result[0].id}`;
+                      // let query = db.query(sql, (err, result) => {
+                      //   if(err) throw err;
+                      //     res.send(result);
+                      // }); 
+                      res.send(result);
+
                     }else{
-                      res.send(null);   
+                      return sendError(res, "Chat Not exists");
                     }
                 });
 };
@@ -300,11 +306,12 @@ exports.setac = async (req, res, next) => {
 
     let query = db.query(sql, (err, result) => {
       if(err) throw err;
+       
       const jwtToken = jwt.sign({ userId: result[0].id
-        ,name: result[0].name,email: result[0].email,
+        ,name: result[0].name,pnumber: result[0].pnumber,
         isVerified:result[0].isVerified,role:result[0].role }, process.env.JWT_SECRET);
       
-        return res.send({
+       return res.send({
           jwtToken
         });
     });                

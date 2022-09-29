@@ -5,6 +5,7 @@ const {
   createproduct,
   imagewatch,
   chat,
+  chatwatch,
   message,
   orders,
   orderitems,
@@ -25,6 +26,7 @@ router.get("/createproduct", createproduct);
 router.get("/imagewatch", imagewatch);
 router.get("/chat", chat);
 router.get("/message", message);
+router.get("/chatwatch", chatwatch);
 router.get("/orders", orders);
 router.get("/orderitems", orderitems);
 router.get("/otpcheck", otpcheck);

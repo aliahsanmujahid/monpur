@@ -8,10 +8,6 @@ const {
   imageupload,
   deleteimage,
   getsellerproducts,
-  createchat,
-  createmessege,
-  getchats,
-  getmessages,
   getsellers,
   getsingleseller,
   getusers,
@@ -23,8 +19,18 @@ const {
   fsetac
 
 
-
 } = require("../controllers/user");
+
+const {
+  createchat,
+  createmessege,
+  getchats,
+  getmessages,
+  haschat,
+  getflagchats,
+  flagchat,
+  unflagchat
+} = require("../controllers/message");
 
 const {
   createproduct,
@@ -142,9 +148,13 @@ router.get("/searchproducts/:text",searchproducts);
 
 
 router.post("/createchat",createchat);
+router.post("/haschat",haschat);
 router.post("/createmessege",createmessege);
+router.post("/flagchat",flagchat);
+router.post("/unflagchat",unflagchat);
 router.get("/getchats/:id",getchats);
-router.get("/getmessages/:id",getmessages);
+router.get("/getflagchats/:id",getflagchats);
+router.get("/getmessages/:chatid/:userid",getmessages);
 
 
 router.get("/getsellers",getsellers);
