@@ -17,8 +17,19 @@ export class CategoryService {
     return this.http.post(this.baseUrl + 'createcate/', model);
   }
 
+  detetecate(id) {
+    return this.http.post<any>(this.baseUrl + 'detetecate/', {id:id});
+  }
+  detetesubcate(id) {
+    return this.http.post<any>(this.baseUrl + 'detetesubcate/', {id:id});
+  }
+
   createsubcate(model) {
-    return this.http.post(this.baseUrl + 'createsubcate/', model);
+    return this.http.post<any>(this.baseUrl + 'createsubcate/', model);
+  }
+
+  getmixedcates(){
+    return this.http.get(this.baseUrl + 'getmixedcates/');
   }
 
   getcategoryes() {

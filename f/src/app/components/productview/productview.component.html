@@ -1,99 +1,178 @@
 
 
-  <div (click)="alerttoggle()"  *ngIf="malert" class="backdrop"></div>
+
+<div>
+  <app-navbar></app-navbar>
+</div>
+
+
+  <div (click)="alerttoggle()"  *ngIf="malert" class="backdrop "></div>
   <div *ngIf="malert" class="alert-box">
-    <div class="menualert">
-      <app-message [ReceiverId]="product.sellerid"></app-message>
-    </div>
-    </div>
+    <!-- <div class="cross">
+      <i (click)="alerttoggle()" class="fa fa-times icon-carusel pcontrols-prev"
+      ></i>
+    </div> -->
+    <!-- [pcontrols]="true" -->
+      <app-carousel [images] = "images" ></app-carousel>
 
-
-<div class="row">
-  <div class="column1" >
-    <div class="row">
-
-      <div *ngIf="product.file1 !== '' " class="column" >
-
-          <img class="img" src="{{'http://localhost:8000/'+product.file1}}" alt="">
-
-      </div>
-
-      <div *ngIf="product.file2  !== '' " class="column" >
-
-          <img class="img" src="{{'http://localhost:8000/'+product.file2}}" alt="">
-
-      </div>
-
-      <div *ngIf="product.file3 !== '' "  class="column" >
-
-          <img class="img" src="{{'http://localhost:8000/'+product.file3}}" alt="">
-
-      </div>
-
-      <div *ngIf="product.file4 !== '' "  class="column" >
-
-          <img class="img" src="{{'http://localhost:8000/'+product.file4}}" alt="">
-
-      </div>
-
-    </div>
   </div>
+
+
+  <div (click)="reviewtoggle()"  *ngIf="review" class="backdrop "></div>
+  <div *ngIf="review" class="review-box">
+    <!-- <div class="cross">
+      <i (click)="alerttoggle()" class="fa fa-times icon-carusel pcontrols-prev"
+      ></i>
+    </div> -->
+    <!-- [pcontrols]="true" -->
+      <app-carousel [images] = "images" ></app-carousel>
+
+  </div>
+
+<div class="row padding-top">
+
+  <div class="column1" >
+      <div *ngIf="product.file1 !== '' " class="column" (click)="alerttoggle()">
+
+          <img class="img" src="{{imglink+product.file1}}" alt="">
+
+      </div>
+
+      <div *ngIf="product.file2  !== '' " class="column" (click)="alerttoggle()">
+
+          <img class="img" src="{{imglink+product.file2}}" alt="">
+
+      </div>
+
+      <div *ngIf="product.file3 !== '' "  class="column" (click)="alerttoggle()">
+
+          <img class="img" src="{{imglink+product.file3}}" alt="">
+
+      </div>
+
+      <div *ngIf="product.file4 !== '' " class="column" (click)="alerttoggle()">
+
+          <img class="img" src="{{imglink+product.file4}}" alt="">
+
+      </div>
+
+      <div *ngIf="product.file5 !== '' " class="column" (click)="alerttoggle()">
+
+        <img class="img" src="{{imglink+product.file5}}" alt="">
+
+    </div>
+    <div *ngIf="product.file6 !== '' " class="column" (click)="alerttoggle()">
+
+      <img class="img" src="{{imglink+product.file6}}" alt="">
+
+  </div>
+  <div *ngIf="product.file7 !== '' " class="column" (click)="alerttoggle()">
+
+    <img class="img" src="{{imglink+product.file7}}" alt="">
+
+</div>
+<div *ngIf="product.file8 !== '' " class="column" (click)="alerttoggle()">
+
+  <img class="img" src="{{imglink+product.file8}}" alt="">
+
+</div>
+
+  </div>
+
+  <div class="column1_m" (click)="alerttoggle()">
+    <app-carousel [images] = "images" ></app-carousel>
+ </div>
 
   <div class="column2" >
     <div class="name">
-      <h3>{{product.name}}</h3>
+      <h1>{{product.name}}</h1>
     </div>
     <div class="price">
-      <h2 *ngIf="product.orgprice" class="delprice">৳{{product.orgprice}}</h2>
-      <h2 class="mainprice">৳{{product.discprice}}</h2>
-      <h2 *ngIf="product.discprice >= 1" style="color: rgb(255, 0, 179);">&#8722;{{(product.orgprice-(100-product.discprice)) / 100}}%</h2>
+      <h2 *ngIf="product.price" class="delprice">৳{{product.price}}</h2>
+      <h2 *ngIf="product.tempprice && !product.price" class="delprice">৳{{product.tempprice}}</h2>
+      <h2 *ngIf="product.discount > 0" class="mainprice">৳{{product.price * ( (100-this.product.discount) / 100 )}}</h2>
+      <h2 *ngIf="product.discount > 0" style="color: rgb(255, 0, 179);">
+        {{product.discount}}
+      </h2>
     </div>
-    <div *ngIf="(product.orgprice-product.discprice) >= 1" class="price">
-       <table id="customers2" style="table-layout: fixed; width: 100%;">
-          <tr>
-             <td style="text-align: center!important;font-family:'Courier New', Courier, monospace;padding: 2px;font-size: 11px;
-             ">Save ৳{{product.discprice-product.orgprice}} Taka</td>
-           </tr>
-      </table>
+
+
+
+     <!-- vari1 sextion -->
+     <div  class="row" *ngIf="product.vari1.values.length > 0 && product.mixedvari.values.length == 0 ">
+
+      <div class="column">
+        <p>{{product.vari1.name}}</p>
+        <select name="format" id="format">
+          <option selected disabled>Select {{product.vari1.name}}</option>
+          <option *ngFor="let s of product.vari1.values" value="{{ s.name }}" >{{ s.name }}</option>
+       </select>
+      </div>
+
+    </div>
+
+   <!-- vari2 sextion -->
+
+      <div  class="row" *ngIf="product.vari2.values.length > 0 && product.mixedvari.values.length == 0 ">
+
+        <div class="column">
+          <p>{{product.vari2.name}}</p>
+          <select name="format" id="format">
+            <option selected disabled>Select {{product.vari2.name}}</option>
+            <option *ngFor="let s of product.vari2.values" value="{{ s.name }}" >{{ s.name }}</option>
+         </select>
+        </div>
+
      </div>
 
-     <div  class="row" *ngIf="product.colors && product.colors.length > 0">
 
-      <ul class="vari">
-         <li *ngFor="let c of product.colors">
-            <label *ngIf="c.quantity !== 0" class="container2">
-              <input (click)="setColor(c, $event)" type="radio" name="radio"
-               >
-              <span [ngStyle]="{'background-color': c.colorCode}"
-               class="checkmark"></span>
-             </label>
-         </li>
-     </ul>
+
+     <!-- Mixed--1 sextion -->
+
+     <ng-container *ngIf="product.mixedvari.values.length > 0 ">
+
+     <div  class="row">
+
+      <div class="column">
+        <p>{{product.mixedvari.vari1}}</p>
+        <select (change)="onMixedChange()" [(ngModel)]="selectedmixed" name="format" id="format">
+          <option selected disabled value='' >Select {{product.mixedvari.vari1}}</option>
+          <option *ngFor="let s of Mixvalues1" value="{{ s.vari1name }}" >{{ s.vari1name }}</option>
+       </select>
+      </div>
+    </div>
+
+  </ng-container>
+
+   <!-- Mixed--2 sextion -->
+
+  <ng-container *ngIf="product.mixedvari.values.length > 0 ">
+
+    <div  class="row">
+
+     <div class="column">
+       <p>{{product.mixedvari.vari2}}</p>
+       <select (change)="onMixedChange2()" [(ngModel)]="selectedmixed2" name="format" id="format">
+         <option *ngIf="selectedmixed == '' " selected disabled value= 0 >Select {{product.mixedvari.vari1}} First</option>
+         <option *ngIf="selectedmixed !== '' " selected disabled  value= 0>Select {{product.mixedvari.vari2}}</option>
+         <option *ngFor="let s of Mixvalues2" value="{{ s.id }}" >{{ s.vari2name }}({{ s.price }}$)</option>
+      </select>
+     </div>
    </div>
 
+ </ng-container>
 
-      <div  class="row" *ngIf="product.sizes && product.sizes.length > 0">
 
-        <ul class="vari">
-           <li *ngFor="let c of product.sizes">
-              <label *ngIf="c.quantity !== 0" class="container2">
-                 <input (click)="setSize(c, $event)" type="radio" name="radio" >
-                 <span class="checkmark2">{{c.variCode}}</span>
-               </label>
-           </li>
-       </ul>
-     </div>
 
-     <div class="row" >
-      <p>{{product.details}}</p>
-     </div>
+
      <div class="row">
-      <div id="footer">
-        <div class="div">
+      <!-- <div id="addcart">
            <div  *ngIf="alert" class="alert">
+              <strong *ngIf="product.colors.length > 0">Select Color
+              </strong>
+              <strong *ngIf="product.sizes.length > 0">Select Size
+              </strong>
               <span class="closebtn"  (click)="hidealert()">&times;</span>
-              <strong *ngIf="product.colors.length > 0">Select Color</strong>
-              <strong *ngIf="product.sizes.length > 0">Select Size</strong>
             </div>
 
 
@@ -103,27 +182,42 @@
                     No Quantity
                   </button>
 
-                 <br>
+     </div> -->
+     </div>
 
-                 <button (click)="alerttoggle()" class="glow-on-hover" >
-                  Send Message
-                </button>
 
-        </div>
+     <div class="row" >
+
+      <div [innerHtml]="product.details"></div>
 
      </div>
 
      <div class="row">
-      <div *ngFor="let r of reviews">
-        <img *ngIf="r.image1 !== '' " class="rimg" src="{{'http://localhost:8000/'+r.image1}}" alt="">
-        <img *ngIf="r.image2 !== '' "  class="rimg" src="{{'http://localhost:8000/'+r.image2}}" alt="">
-        <img *ngIf="r.image3 !== '' "  class="rimg" src="{{'http://localhost:8000/'+r.image3}}" alt="">
-        <img *ngIf="r.image4 !== '' "  class="rimg" src="{{'http://localhost:8000/'+r.image4}}" alt="">
-        <h1>{{r.ratting}}</h1>
-        <h1>{{r.review}}</h1>
+      <div class="clolumn_full">
+        <h4>Reviews</h4>
+      <div class="reviews" *ngFor="let r of reviews">
+         <div class="ratting">
+          <h2>{{r.ratting}}<i class="fa fa-star" aria-hidden="true"></i>
+           {{r.review}}
+          </h2>
+
+         </div>
+        <img *ngIf="r.image1 !== '' " class="rimg" src="{{imglink+r.image1}}" alt="" (click)="reviewtoggle(r.id)">
+        <img *ngIf="r.image2 !== '' "  class="rimg" src="{{imglink+r.image2}}" alt="" (click)="reviewtoggle(r.id)">
+        <img *ngIf="r.image3 !== '' "  class="rimg" src="{{imglink+r.image3}}" alt="" (click)="reviewtoggle(r.id)">
+        <img *ngIf="r.image4 !== '' "  class="rimg" src="{{imglink+r.image4}}" alt="" (click)="reviewtoggle(r.id)">
      </div>
+     <button>Load More</button>
      </div>
-     </div>
+  </div>
+
   </div>
 </div>
 
+<div class="row">
+    <div class="clolumn_full">
+      <h4>Related Products</h4>
+      <app-shop [filters]="false"></app-shop>
+
+   </div>
+</div>

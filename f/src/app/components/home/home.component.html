@@ -1,1 +1,37 @@
-<p>home works!</p>
+
+<div>
+  <app-navbar></app-navbar>
+</div>
+
+
+
+
+<section class="banner-container padding-top">
+  <div class="">
+    <app-carousel [images] = "images" [content] = "true" [autoSlide]="true"></app-carousel>
+  </div>
+</section>
+
+
+<section class="padding-top">
+  <!-- <div class="filter-buttons">
+    <div class="buttons active" data-filter="all">all</div>
+    <div class="buttons" data-filter="arrivals">new arrivals</div>
+    <div class="buttons" data-filter="featured">discounts</div>
+    <div class="buttons" data-filter="special">top ratted</div>
+  </div> -->
+
+  <h1 class="heading"> exclusive <span>products</span> </h1>
+
+
+  <div class="column">
+    <app-shop [filters] = "false"></app-shop>
+  </div>
+
+
+
+</section>
+
+<app-footer></app-footer>
+
+

@@ -1,4 +1,4 @@
-<div class="topnav">
+<!-- <div class="topnav">
   <img routerLink='/' class="logo" src="../assets/logo.png" alt="logo">
   <a routerLinkActive="active" class="active" >Home</a>
   <span *ngIf="(accountService.currentUser$ | async) === null">
@@ -6,16 +6,99 @@
   </span>
 
 
-    <!-- <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" novalidate>
+    <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" novalidate>
       <span>
         <input id="search" type="search" [(ngModel)]="search" type="text" name="search" required minlength="3" placeholder="Search..">
         <button  class="searchbutton" [disabled]="SearchForm.invalid" type="submit" >Search</button>
       </span>
-    </form> -->
+    </form>
 
   <a routerLinkActive="active" routerLink='/msg'>Message</a>
   <a routerLinkActive="active" routerLink='/products'>Get Products</a>
   <a routerLink="/dash" >Dashboard</a>
 
 
+</div> -->
+
+
+
+
+
+
+
+<header class="header">
+
+  <div class="logoclass">
+    <img routerLink='/' class="favicon" src="favicon.ico" alt="logo">
+    <img routerLink='/' class="logo" src="../assets/logo.png" alt="logo">
+  </div>
+
+
+
+  <nav class="navbar">
+
+      <span *ngFor="let item of category" >
+
+        <a class="dropdown" >
+
+          <a [routerLink]="['/shop', {cate: item.id}]" >{{item.name}}</a>
+
+        <span *ngIf="item.subcate.length > 0" >
+        <a class="dropbtn">
+          <i class="fa fa-caret-down"></i>
+        </a>
+        <div class="dropdown-content">
+          <div class="row">
+            <div class="column" *ngFor="let sub of item.subcate">
+              <a [routerLink]="['/shop', {subcate: sub.id}]" >{{sub.name}}</a>
+            </div>
+          </div>
+        </div>
+      </span>
+      </a>
+
+      </span>
+
+  </nav>
+
+
+  <div class="icons">
+      <a id="search-btn" routerLink='/mobilecate'  class="category fas fa-bars"> </a>
+      <a id="search-btn" routerLink='/search' class=" fas fa-search"></a>
+      <a routerLink='/cart' class="cart fas fa-shopping-cart">
+        <span  *ngIf="(basketService.basket$ | async) as basket" >
+          {{basket.items.length}}
+        </span>
+      </a>
+      <a [routerLink]="['/shop', {fav: 3}]"  href="#" class="heart fas fa-heart"></a>
+      <a routerLink="/dash" id="menu-btn" class="user fas fa-user"></a>
+  </div>
+
+</header>
+
+
+
+
+
+
+
+
+
+
+
+
+<footer class="footer">
+
+
+      <a id="search-btn" class="fas fa-bars"></a>
+      <a href="#" class="fas fa-heart"></a>
+      <a id="menu-btn" class="fas fa-user"></a>
+      <a id="search-btn"  class="fas fa-comment"></a>
+
+
+</footer>
+
+<div class="whatsapp" >
+  <img src="../assets/whatsapp.png" alt="">
 </div>
+

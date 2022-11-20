@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, of } from 'rxjs';
+import { map, of, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IOrder } from '../_models/order';
+import { IOrder, Order } from '../_models/order';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +19,23 @@ export class OrderService {
   constructor(private http: HttpClient) { }
 
   orderCreate(orderform) {
-    return this.http.post(this.baseUrl + 'createorder', orderform);
+    return this.http.post<any>(this.baseUrl + 'createorder', orderform);
   }
 
   orderQuantityCheck(items) {
     return this.http.post(this.baseUrl + 'orders/ordercheck', items);
   }
 
-  getOrderById(id: string,sellerid: number) {
+  searchOrderById(id: string,sellerid: number) {
   return this.http.get<IOrder[]>(this.baseUrl + 'getOrderById/' + id +'/' + sellerid);
   }
+
+
+  getOrderById(id: number) {
+    return this.http.get<any>(this.baseUrl + 'getorderbyid/' + id);
+  }
+
+
   deleteOrder(id: number) {
     return this.http.delete(this.baseUrl + 'orders/deleteOrder/' + id);
   }
@@ -65,7 +72,10 @@ export class OrderService {
 
 
   changeStatus(id: number,userid: number,status:string) {
-    return this.http.put(this.baseUrl + 'orders/changeStatus/' + id +'/' + userid +'/' +status,{});
+    return this.http.post(this.baseUrl + '/changeStatus/' + id +'/' + userid +'/' +status,{});
+  }
+  getorderbystatus(userid: number,sortby:string) {
+    return this.http.get<any>(this.baseUrl + '/getorderbystatus/' + userid +'/' + sortby);
   }
 
 
@@ -73,6 +83,22 @@ export class OrderService {
     return this.http.put(this.baseUrl + 'orders/changecutomerstatus/' + id +'/' + userid +'/' +status,{});
   }
 
+
+
+
+
+
+
+
+  setcod(id: number) {
+    return this.http.get<any>(this.baseUrl + 'setcod/' + id);
+  }
+  setpaypal(id: number) {
+    return this.http.get<any>(this.baseUrl + 'setpaypal/' + id);
+  }
+  setstripe(data: any):Observable<any> {
+    return this.http.post<any>(this.baseUrl + 'setstripe/',data);
+  }
 
 
 }

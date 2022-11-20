@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from 'src/app/_services/account.service';
 
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-
 
 
   noaddress = false;
@@ -34,7 +34,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
 
-
       this.accountService.currentUser$.subscribe( user => {
         if(user){
           console.log(user)
@@ -43,6 +42,10 @@ export class ProfileComponent implements OnInit {
 
 
   }
+
+
+
+
   ondisChange(){
 
       const selected = this.districts.find(m => m.name === this.createaddress.district);

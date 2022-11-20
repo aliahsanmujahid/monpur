@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { ProductService } from 'src/app/_services/product.service';
 import { AccountService } from 'src/app/_services/account.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sellerproduct',
@@ -10,6 +11,8 @@ import { AccountService } from 'src/app/_services/account.service';
   styleUrls: ['./sellerproduct.component.css']
 })
 export class SellerproductComponent implements OnInit {
+
+  imglink = environment.imgUrl;
 
   products: any = [];
   userid: any;

@@ -1,0 +1,128 @@
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>footer Manage</h1>
+    </div>
+    <div class="details">
+
+      <label>Address</label>
+
+      <div class="editor">
+        <ngx-editor
+        [editor]="editor"
+        [(ngModel)]="model.address"
+        required
+        minlength="20"
+        [disabled]="false">
+      </ngx-editor>
+      </div>
+
+      <br>
+
+      <label>Email</label>
+      <input
+          [(ngModel)]="model.email1"
+          placeholder="Product Name"
+          name="name"
+          type="text"
+          required  />
+
+        <label>Email</label>
+        <input
+              [(ngModel)]="model.email2"
+              placeholder="Product Name"
+              name="name"
+              type="text"
+              required  />
+
+
+        <label>Phone</label>
+        <input
+              [(ngModel)]="model.phone1"
+              placeholder="Product Name"
+              name="name"
+              type="text"
+              required  />
+       <label>Phone</label>
+       <input
+              [(ngModel)]="model.phone2"
+              placeholder="Product Name"
+              name="name"
+              type="text"
+              required  />
+
+        <label>Facebook</label>
+       <input
+              [(ngModel)]="model.fb"
+              placeholder="Product Name"
+              name="name"
+              type="text"
+              required  />
+
+              <label>Twitter</label>
+              <input
+                     [(ngModel)]="model.tw"
+                     placeholder="Product Name"
+                     name="name"
+                     type="text"
+                     required  />
+
+                     <label>Instagram</label>
+                     <input
+                            [(ngModel)]="model.ins"
+                            placeholder="Product Name"
+                            name="name"
+                            type="text"
+                            required  />
+
+                            <label>Android App Link</label>
+                     <input
+                            [(ngModel)]="model.android"
+                            placeholder="Product Name"
+                            name="name"
+                            type="text"
+                            required  />
+                            <label>iPhone App Link</label>
+                            <input
+                                   [(ngModel)]="model.iphone"
+                                   placeholder="Product Name"
+                                   name="name"
+                                   type="text"
+                                   required  />
+
+
+
+    <button *ngIf="model.id == 0" (click)="createfooter()" >Save Changes</button>
+    <button *ngIf="model.id != 0" (click)="updatefooter()" >Update Changes</button>
+
+    </div>
+  </div>
+
+
+  <div class="column">
+    <div class="title">
+      <h1>Terms and conditions</h1>
+    </div>
+    <div class="details">
+      <div class="editor">
+        <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+      <ngx-editor
+            [editor]="editor2"
+            [(ngModel)]="terms.term"
+            required
+            minlength="20"
+            [disabled]="false">
+      </ngx-editor>
+      </div>
+
+    <br>
+
+    <button *ngIf="terms.id == 0" (click)="createterm()" >Save Changes</button>
+    <button *ngIf="terms.id != 0" (click)="updateterm()" >Update Changes</button>
+
+    </div>
+  </div>
+
+</div>

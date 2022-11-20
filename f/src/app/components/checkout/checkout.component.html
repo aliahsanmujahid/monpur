@@ -1,124 +1,122 @@
-<div class="column">
 
-    <form #OrderForm="ngForm"  (ngSubmit)="createorder()">
-      <label for="fname">Name</label>
-      <input  [(ngModel)]="orderCreate.name" type="text" id="fname" required minlength="3" name="firstname" placeholder="Your name..">
-
-      <label for="lname">Phone Number</label>
-      <input  [(ngModel)]="orderCreate.phone" type="text" id="lname" required minlength="11" maxlength="11" name="lastname" placeholder="Phone Number..">
-
-      <label for="lname">Address</label>
-      <textarea  [(ngModel)]="orderCreate.address" id="w3review" required minlength="10" name="w3review" rows="4" cols="50">
-      </textarea>
-
-      <label for="lname">district</label>
-      <input  [(ngModel)]="orderCreate.district" type="text" id="district" required  name="district" placeholder="district..">
+<app-navbar></app-navbar>
 
 
-      <label for="lname">upazila</label>
-      <input  [(ngModel)]="orderCreate.upazila" type="text" id="upazila" required  name="upazila" placeholder="upazila..">
 
-      <input  type="submit" value="Submit">
+<!--
+
+
+<div class="container">
+  <div class="title">Checkout</div>
+  <div class="content">
+    <form #OrderForm="ngForm" (ngSubmit)="createorder()">
+      <div class="user-details">
+        <div class="input-box">
+          <span class="details">Full Name</span>
+          <input [(ngModel)]="orderCreate.name" name="name" minlength="3" type="text" placeholder="Enter your name" required>
+        </div>
+        <div class="input-box">
+          <span class="details">Phone Number</span>
+          <input [(ngModel)]="orderCreate.phone" name="number" type="text" placeholder="Enter your number" required>
+        </div>
+        <div class="input-box">
+          <span class="details">Address</span>
+          <input  [(ngModel)]="orderCreate.address" name="address" type="text" placeholder="542 W. 15th Street" required>
+        </div>
+        <div class="input-box">
+          <span class="details">City</span>
+          <input [(ngModel)]="orderCreate.city" name="city" type="text" placeholder="New York" required>
+        </div>
+        <div class="input-box">
+          <span class="details">State</span>
+          <input [(ngModel)]="orderCreate.state" name="state" type="text" placeholder="state" required>
+        </div>
+        <div class="input-box">
+          <span class="details">Zip</span>
+          <input [(ngModel)]="orderCreate.zip" name="zip" type="text" placeholder="zip" required>
+        </div>
+      </div>
+      <div class="gender-details">
+        <input [checked]="true" type="radio" name="terms" id="dot-3">
+        <div class="category">
+        <label for="dot-3">
+          <span class="dot three"></span>
+          <a class="terms">Terms and Conditions </a>
+        </label>
+        </div>
+      </div>
+      <div class="button">
+        <input [disabled]="OrderForm.invalid" type="submit" value="Create and Pay">
+      </div>
     </form>
   </div>
+</div> -->
 
 
 
-  <div class="column">
-    <span *ngIf="basket$ | async">
-      <span *ngFor="let item of (basket$ | async).items" class="row">
 
-        <span *ngIf="(basketService.basket$ | async) as basket" >
-              <span *ngIf="basket.items.length == 1">
-                <div  class="card_item width100">
-                  <div  >
-                  <div class="card_inner">
-                    <div class="card_top">
-                      <img src="{{'http://localhost:8000/'+item.pictureUrl}}"  alt="">
-                  </div>
-                  </div>
-                  <table id="customers2" style="table-layout: fixed; width: 100%">
-                    <tr>
-                      <td>Name</td>
-                      <td>{{item.productName}}</td>
-                    </tr>
+<!-- order section starts  -->
 
-                    <tr>
-                      <td>Quantity</td>
-                      <td>{{item.quantity}}</td>
-                    </tr>
-                    <tr>
-                      <td>Price</td>
-                      <td>৳{{item.price}}</td>
-                    </tr>
-                    <tr>
-                      <td>Total</td>
-                      <td>৳{{item.price * item.quantity}}</td>
-                    </tr>
-                  </table>
-                </div>
-                </div>
-              </span>
+<section class="order" id="order">
 
-        <span *ngIf="basket.items.length > 1">
-          <div  class="card_item">
-            <div  >
-            <div class="card_inner">
-              <div class="card_top">
-                <img src="{{'http://localhost:8000/'+item.pictureUrl}}"   alt="">
-            </div>
-            </div>
-            <table id="customers2" style="table-layout: fixed; width: 100%">
-              <tr>
-                <td>Name</td>
-                <td>{{item.productName}}</td>
-              </tr>
+  <h3 class="sub-heading"> order now </h3>
+  <h1 class="heading"> free and fast </h1>
 
-              <tr>
-                <td>Quantity</td>
-                <td>{{item.quantity}}</td>
-              </tr>
-              <tr>
-                <td>Price</td>
-                <td>৳{{item.price}}</td>
-              </tr>
-              <tr>
-                <td>Total</td>
-                <td>৳{{item.price * item.quantity}}</td>
-              </tr>
-            </table>
+  <form  #OrderForm="ngForm" (ngSubmit)="createorder()">
+
+      <div class="inputBox">
+          <div class="input">
+              <span>your name</span>
+              <input [(ngModel)]="orderCreate.name" name="name" minlength="3" required type="text" placeholder="enter your name">
           </div>
+          <div class="input">
+              <span>Phone Number</span>
+              <input  [(ngModel)]="orderCreate.phone" name="number" required type="text" placeholder="enter your number">
           </div>
-        </span>
-      </span>
+      </div>
+      <div class="inputBox">
+
+        <div class="input">
+          <span>Email</span>
+          <input [(ngModel)]="orderCreate.email" type="text" placeholder="enter Email">
+         </div>
+          <div class="input">
+              <span>City</span>
+              <input [(ngModel)]="orderCreate.city" type="text" placeholder="enter City">
+          </div>
+
+      </div>
+      <div class="inputBox">
+          <div class="input">
+          <span>state</span>
+          <input [(ngModel)]="orderCreate.state" type="test" placeholder="extra with food">
+          </div>
+          <div class="input">
+              <span>zip</span>
+              <input [(ngModel)]="orderCreate.zip"  type="text" placeholder="how many orders">
+          </div>
+      </div>
+      <div class="inputBox">
+          <div class="input">
+              <span>your address</span>
+              <textarea [(ngModel)]="orderCreate.address" minlength="3" required name="address" placeholder="enter your address" id="" cols="30" rows="10"></textarea>
+          </div>
+          <div class="input">
+              <span>your message</span>
+              <textarea name="message" [(ngModel)]="orderCreate.message" minlength="3" required placeholder="enter your message" id="" cols="30" rows="10"></textarea>
+          </div>
+      </div>
 
 
-      </span>
+      <div class="terms">
+        <input type="radio" id="terms" name="terms" value="terms" checked>
+        <label for="html">Terms and Conditions</label><br>
+      </div>
 
+      <input type="submit" [disabled]="OrderForm.invalid" value="order now" class="btn">
 
+  </form>
 
+</section>
 
-        <ul class="summery" *ngIf="(basketTotal$ | async)">
-          <h2>Order Summary</h2>
-          <li>
-              <table id="customers2" style="table-layout: fixed; width: 100%">
-                <tr>
-                  <td>Order SubTotal</td>
-                  <td>৳{{(basketTotal$ | async).subtotal}}</td>
-                </tr>
-                <tr>
-                  <td>Delivery Charge</td>
-                  <td>৳{{(basketTotal$ | async).delevary}}</td>
-                </tr>
-                <tr>
-                  <td>Total</td>
-                  <td>৳{{(basketTotal$ | async).total }}</td>
-                </tr>
-              </table>
-          </li>
-        </ul>
-
-
-    </span>
-  </div>
-
+<!-- order section ends -->

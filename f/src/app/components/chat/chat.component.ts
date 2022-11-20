@@ -69,7 +69,7 @@ export class ChatComponent implements OnInit {
 
 
   loadmessage(id,receiveid){
-    console.log("loading message");
+    // console.log("loading message");
     this.active = receiveid;
     this.ChatId = id
     this.ReceiverId = receiveid;

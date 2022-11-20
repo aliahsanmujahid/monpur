@@ -129,5 +129,14 @@ setCurrentUser(token: any) {
 
 
 
+  getadminmoderator() {
+    return this.http.get(this.baseUrl + 'getadminmoderator/');
+  }
+  setadminmoderator(model) {
+    return this.http.post<any>(this.baseUrl + 'setadminmoderator/',model);
+  }
+
+
+
 
 }

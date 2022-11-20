@@ -1,3 +1,4 @@
+import { AccountService } from './account.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -13,7 +14,9 @@ import { map, take } from 'rxjs/operators';
 export class MessageService {
 
   private socket: Socket;
-  private url = 'http://localhost:8000';
+
+  private url = environment.socketUrl;
+
   baseUrl = environment.apiUrl;
 
   private isOnline = new BehaviorSubject<Online[]>([]);
@@ -29,7 +32,7 @@ export class MessageService {
   public userMessage = new BehaviorSubject<Message[]>([]);
   userMessage$ = this.userMessage.asObservable();
 
-  constructor(private http: HttpClient,private router: Router) { }
+  constructor(private http: HttpClient,private router: Router,private accountService: AccountService) { }
 
   activechat : number = null
 
@@ -56,7 +59,7 @@ export class MessageService {
       })
       this.chatUser$.pipe(take(1)).subscribe(datas => {
         var index = datas.findIndex(x => x.chatid == data.chatid);
-        console.log("this.activechat load",this.activechat );
+        // console.log("this.activechat load",this.activechat );
         if(index !== -1 && this.activechat !== data.chatid){
           datas[index].date = data.date;
           datas[index].unread++;
@@ -66,6 +69,11 @@ export class MessageService {
         );
         this.chatUser.next(newdata)
       })
+
+      if(this.activechat == data.chatid){
+        this.http.post(this.baseUrl + 'makezero', {chatid:data.chatid,userid:userId}).subscribe();
+      }
+
        //console.log("recieve-message",data);
     });
     this.socket.on("chat-get", (data) => {
@@ -92,45 +100,49 @@ export class MessageService {
 
   sendmsg(model,receiverId){
 
-    this.http.post(this.baseUrl + 'createmessege/',model ).pipe(
-      map((data: any) => {
+    // if(model.chatid !== this.activechat){
 
-        console.log(data);
+      this.http.post(this.baseUrl + 'createmessege/',model ).pipe(
+        map((data: any) => {
 
-          this.userMessage$.pipe(take(1)).subscribe(datas => {
-              this.userMessage.next([...datas, data])
-              this.socket.emit("send-message", {...data,receiverId});
-              this.socket.emit("chat-send", {...data,receiverId});
-          })
-          this.chatUser$.pipe(take(1)).subscribe(datas => {
+          // console.log(data);
 
-            var index = datas.findIndex(x => x.chatid == model.chatid);
+            this.userMessage$.pipe(take(1)).subscribe(datas => {
+                this.userMessage.next([...datas, data])
+                this.socket.emit("send-message", {...data,receiverId});
+                this.socket.emit("chat-send", {...data,receiverId});
+            })
+            this.chatUser$.pipe(take(1)).subscribe(datas => {
 
-            if(index !== -1){
-              // console.log("index",index)
+              var index = datas.findIndex(x => x.chatid == model.chatid);
 
-              // console.log("main",datas)
-              // console.log("date",data.date)
-              datas[index].date = data.date;
-              // console.log("modify",datas[index])
-              // console.log("modify main",datas)
+              if(index !== -1){
+                // console.log("index",index)
 
-            }
+                // console.log("main",datas)
+                // console.log("date",data.date)
+                datas[index].date = data.date;
+                // console.log("modify",datas[index])
+                // console.log("modify main",datas)
 
-            const newdata = datas.sort(
-            (objA, objB) => Math.floor(new Date(objB.date).getTime()/ 1000) - Math.floor(new Date(objA.date).getTime()/ 1000),
-            );
+              }
 
-            this.chatUser.next(newdata)
+              const newdata = datas.sort(
+              (objA, objB) => Math.floor(new Date(objB.date).getTime()/ 1000) - Math.floor(new Date(objA.date).getTime()/ 1000),
+              );
 
-            // datas.forEach( res =>{
-            //   console.log("name",res.name,"asasas", new Date(res.date).getSeconds());
-            // });
+              this.chatUser.next(newdata)
 
-          })
+              // datas.forEach( res =>{
+              //   console.log("name",res.name,"asasas", new Date(res.date).getSeconds());
+              // });
 
-      })
-    ).subscribe();
+            })
+        })
+      ).subscribe();
+    // }else{
+    //   console.log("acyive")
+    // }
 
   }
 
@@ -143,7 +155,7 @@ export class MessageService {
     this.userMessage.next([]);
 
     this.activechat = chatid;
-    console.log("this.activechat load",this.activechat );
+    // console.log("this.activechat load",this.activechat );
     return this.http.get(this.baseUrl + 'getmessages/' + chatid + '/' + userid).pipe(
       map((data: Message[]) => {
         const newdata = [...data].sort((a, b) => a.id - b.id);
@@ -237,7 +249,7 @@ export class MessageService {
     this.http.get(this.baseUrl + 'getchats/' + id).pipe(
       map((data: any) => {
 
-        console.log(data)
+        // console.log(data)
 
         data.forEach(e => {
           const receiverid = e.senderid == id ? e.receiverid : e.senderid;

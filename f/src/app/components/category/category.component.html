@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
   <div class="flex-parent jc-center">
     <button (click)="addcate()" class="green margin-right">Add Category</button>
     <button (click)="addsubcate(0)" class="green margin-right">Add SubCategory</button>
@@ -9,11 +9,11 @@
     <ul *ngIf="iscate">
       <li *ngFor="let c of categoryes">
          <span (click)="addsubcate(c.id)" >
-          <img class="img" src="{{'http://localhost:8000/'+c.image}}" alt="image">
+          <img class="img" src="{{imglink+c.image}}" alt="image">
           <p>{{c.name}}</p>
          </span>
         <button (click)="editcate(c)">Edit</button>
-        <button>Delete</button>
+        <button (click)="detetecate(c.id)">Delete</button>
       </li>
 
     </ul>
@@ -25,7 +25,7 @@
       </div>
 
       <div *ngIf="category.image !== '' " class="border">
-        <p ><img src="{{'http://localhost:8000/' + category.image }}" alt=""></p>
+        <p ><img src="{{imglink+ category.image }}" alt=""></p>
         <div class="delete">
           <p  (click)="deleteimage(category.image,1)">Delete</p>
         </div>
@@ -52,10 +52,10 @@
 
 
     <li *ngFor="let c of subcategoryes">
-       <img class="img" src="{{'http://localhost:8000/'+c.image}}" alt="image">
+       <img class="img" src="{{imglink+c.image}}" alt="image">
           <p>{{c.name}}</p>
     <button (click)="editsubcate(c)">Edit</button>
-    <button>Delete</button>
+    <button (click)="detetecate(c.id)">Delete</button>
     </li>
 
 
@@ -69,7 +69,7 @@
       </div>
 
       <div *ngIf="subcategory.image !== '' " class="border">
-        <p ><img src="{{'http://localhost:8000/' + subcategory.image }}" alt=""></p>
+        <p ><img src="{{imglink+ subcategory.image }}" alt=""></p>
         <div class="delete">
           <p  (click)="deleteimage(subcategory.image,2)">Delete</p>
         </div>
@@ -97,4 +97,129 @@
 
   </div>
 </div>
+ -->
+
+
+
+
+
+ <div class="row">
+
+
+  <div class="column">
+    <div class="title">
+      <h1>Add Category(1st)</h1>
+    </div>
+
+    <div class="details">
+
+      <div class="category">
+
+            <div *ngFor="let c of categoryes" class="cate">
+              <div (click)="addsubcate(c.id)" class="cateimg">
+                <img class="img" src="{{imglink+c.image}}" alt="image">
+                <p>{{c.name}}</p>
+               </div>
+
+              <button (click)="editcate(c)">Edit</button>
+              <button (click)="detetecate(c.id)">Delete</button>
+            </div>
+
+      </div>
+
+      <form  #SetVariName="ngForm"  (ngSubmit)="catecreate()">
+        <div  *ngIf="category.image == '' " class="border">
+          <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,1)" style="display:none;">
+          <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+        </div>
+
+        <div *ngIf="category.image !== '' " class="border">
+          <p ><img src="{{imglink+ category.image }}" alt=""></p>
+          <div class="delete">
+            <p  (click)="deleteimage(category.image,1)">Delete</p>
+          </div>
+        </div>
+
+        <!-- <label for="size">Category Name</label> -->
+        <input  [(ngModel)]="category.name" type="text" name="name" required minlength="1" oninput="this.value = this.value.toUpperCase()" placeholder="Catename Name..">
+
+
+          <button [disabled]="SetVariName.invalid"  type="submit">Add</button>
+        </form>
+    </div>
+
+  </div>
+
+
+  <div class="column">
+    <div class="title">
+      <h1>Add Category(2nd)</h1>
+    </div>
+
+    <div class="details">
+
+
+      <div class="subcategory">
+
+        <ng-container *ngFor="let c of categoryes">
+        <ng-container *ngIf="c.subcate.length > 0" >
+        <h1 >Category: {{c.name}}</h1>
+        <div  class="subcate">
+          <ng-container *ngFor="let item of c.subcate">
+          <div class="subbody">
+            <div  class="cateimg">
+              <img class="img" src="{{imglink+item.image}}" alt="image">
+              <p>{{item.name}}</p>
+             </div>
+
+             <button (click)="editsubcate(c)">Edit</button>
+             <button (click)="detetecate(c.id)">Delete</button>
+          </div>
+        </ng-container>
+        </div>
+      </ng-container>
+      </ng-container>
+
+     </div>
+
+      <form #SetsubcateName="ngForm"  (ngSubmit)="subcatecreate()">
+        <div  *ngIf="subcategory.image == '' " class="border">
+          <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,2)" style="display:none;">
+          <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+        </div>
+
+        <div *ngIf="subcategory.image !== '' " class="border">
+          <p ><img src="{{imglink+ subcategory.image }}" alt=""></p>
+          <div class="delete">
+            <p  (click)="deleteimage(subcategory.image,2)">Delete</p>
+          </div>
+        </div>
+
+        <select [(ngModel)]="subcategory.cateid" class="form-control" name="cate">
+          <option value="0">Select</option>
+          <option *ngFor="let c of categoryes" value="{{ c.id }}" >{{ c.name }}</option>
+        </select>
+
+        <label for="size">Category Name</label>
+        <input  [(ngModel)]="subcategory.name" type="text" name="name" required minlength="1" oninput="this.value = this.value.toUpperCase()" placeholder="Variable Name..">
+
+
+        <button [disabled]="SetsubcateName.invalid"  type="submit" >Add</button>
+        </form>
+
+    </div>
+
+  </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
 

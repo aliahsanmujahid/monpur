@@ -1,3 +1,75 @@
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(37, 253, 253, 0.877);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #0cceffad;
+}
+h4{
+  font-size: 20px;
+  text-align: center;
+  padding: 4px 0px 4px 0px;
+  background-color: coral;
+  margin: 9px 0px 9px 1px;
+  color: rgb(255, 255, 255);
+  border-radius: 4px;
+}
+
+h1{
+  font-size: 30px;
+}
+h2,p{
+  font-size: 20px;
+  word-wrap: break-word;
+}
+h3{
+  font-size: 15px;
+  margin-left: 10px;
+}
+.ratting i{
+  color: gold;
+}
+.reviews p{
+  font-size: 15px;
+}
+
+.reviews li{
+  margin: 0px 5px 5px 5px;
+}
+
+.row{
+  width: 100%;
+  display: flex;
+}
+.clolumn_full{
+  width: 100%;
+  margin-top: 40px;
+}
+
+
+.padding-top{
+  padding-top:80px;
+ }
+
+.column_r{
+  display: block;
+  float: left;
+}
+
 .column {
   float: left;
   width: 50%;
@@ -5,20 +77,22 @@
 
 }
 .column1 {
-  float: left;
-  width: 65%;
+  width: 50%;
+  padding: 10px;
+}
+
+.column2 {
+  width: 50%;
   padding: 10px;
 
 }
-.column2 {
-  float: left;
-  width: 35%;
-  padding: 10px;
-
+.column1_m{
+  display: none;
 }
 
 img{
   width: 100%;
+  height: auto;
   min-height: 300px;
   border: 3px solid burlywood;
 }
@@ -62,7 +136,8 @@ input[type=radio] {
   margin: 10px;
 }
 .vari{
-  margin: 30px 0px 30px 0px;
+  margin: 0px 0px 25px 8px;
+  font-size: 15px;
 }
 .container2 input:checked ~ .checkmark2  {
   opacity: 1;
@@ -90,27 +165,27 @@ input:checked ~ .checkmark  {
 
 }
 
-div#footer{
-  text-align: center;
- width:100%;
- background-color: rgb(255, 127, 127);
+div#addcart{
+  width:100%;
+  margin-left: 10px;
  }
 
  .alert {
-  padding: 20px;
-  background-color: #f44336;
+  padding: 0px 0px 15px 0px;
   color: white;
-  margin-top: 20px;
+}
+strong{
+  background-color: #f44336;
+  padding: 5px 35px 5px 35px;
+  font-size: 15px;
 }
 .closebtn {
-  margin-left: 15px;
-  color: white;
-  font-weight: bold;
-  float: right;
-  font-size: 22px;
-  line-height: 20px;
-  cursor: pointer;
-  transition: 0.3s;
+  color: cornsilk;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    background: red;
+    padding: 0px 10px 3px 10px;
 }
 
 .closebtn:hover {
@@ -118,20 +193,24 @@ div#footer{
 }
 
 .rimg{
-  width: 100px;
+  width: 80px;
   min-height: 40px;
+  margin: 0px 5px 0px 5px;
 }
 button{
+  font-size: 15px;
+  font-weight: bold;
   margin-top: 8px;
   margin-bottom: 18px;
   padding: 10px;
   cursor: pointer;
-  color: #ff766ce7;
+  color: #fff;
   border-radius: 4px;
+  background-color: #ff766ce7;
 }
-.button:hover{
-  background: rgb(255, 255, 255);
-  color: chocolate;
+button:hover{
+  background: rgb(247, 94, 94);
+  color: rgb(255, 255, 255);
 }
 
 .sellerbutton{
@@ -163,13 +242,33 @@ button{
 }
 .alert-box {
   position: fixed;
-  top: 2vw;
-  left: 10%;
-  width: 80%;
-  padding: 18px 8px 18px 8px;
-  background: #fff;
+  top: 0;
+  left: 0%;
+  right: 0%;
+  width: 50%;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 0;
+  background: rgb(255, 255, 255);
   z-index: 3000;
   box-shadow: 0px 3px 8px rgb(49, 47, 47);
+  margin: 0 auto;
+  scrollbar-color: #008de4 #c5d9ff;
+  scrollbar-width: thin;
+}
+
+.review-box {
+  position: fixed;
+  top: 5%;
+  left: 0%;
+  right: 0%;
+  width: 30%;
+  height: auto;
+  padding: 0;
+  background: rgb(255, 255, 255);
+  z-index: 3000;
+  box-shadow: 0px 3px 8px rgb(49, 47, 47);
+  margin: 0 auto;
 }
 
 form {
@@ -192,4 +291,224 @@ form input,textarea,select {
   border-radius: 6px;
   outline: none;
 }
+
+.cross{
+  position: absolute;
+    top: 1%;
+    right: 1%;
+    font-size: 26px;
+    color: rgb(255, 37, 37);
+    z-index: 1;
+    padding: 0px 5px 0px 5px;
+    background: azure;
+    border-radius: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select {
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  -ms-appearance:none;
+  appearance:none;
+  outline:0;
+  box-shadow:none;
+  background: #ffffff;
+  background-image: none;
+  flex: 1;
+  padding: 8px 0.5em;
+  color:rgb(15, 15, 15);
+  cursor:pointer;
+  font-size: 2.2em;
+  font-family: 'Open Sans', sans-serif;
+  border-radius: 5px;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+}
+select::-ms-expand {
+  display: none;
+}
+.selectbox{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  height: 2.3em;
+  line-height: 2.3;
+  overflow: hidden;
+  border-radius: .25em;
+}
+
+
+
+@media (max-width: 1120px) {
+  img{
+    min-height: 240px;
+  }
+
+  .alert-box {
+
+    width: 60%;
+  }
+
+}
+@media (max-width: 1000px) {
+  img{
+    min-height: 200px;
+  }
+
+}
+@media (max-width: 955px) {
+  img{
+    min-height: 200px;
+  }
+  .alert-box {
+
+    width: 75%;
+  }
+
+}
+
+@media (max-width: 850px) {
+  img{
+    min-height: 150px;
+  }
+
+}
+@media (max-width: 800px) {
+
+  img{
+    min-height: 100px;
+  }
+}
+
+
+
+@media (max-width: 700px) {
+  img{
+    min-height: 100px;
+  }
+  .alert-box {
+
+    width: 100%;
+  }
+
+  .row{
+    display: block;
+  }
+
+  .column1 {
+    display: none;
+
+  }
+  .column1_m {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 0 auto;
+  }
+  .column2 {
+    display: block;
+    width: 100%;
+  }
+  *{
+    text-align: center;
+  }
+  h1{
+    font-size: 20px;
+  }
+  h2,p{
+    font-size: 15px;
+    word-wrap: break-word;
+  }
+  h3{
+    font-size: 10px;
+    margin-left: 10px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+  .alert-box {
+
+    width: 100%;
+
+  }
+  h1{
+    font-size: 15px;
+  }
+  h2,p{
+    font-size: 10px;
+    word-wrap: break-word;
+  }
+  h3{
+    font-size: 10px;
+    margin-left: 10px;
+  }
+
+
+
+}
+
+
+
+@media (max-width: 768px) {
+
+
+}
+
+@media (max-width: 500px) {
+
+  .alert-box{
+    overflow-y: unset;
+  }
+
+  h1{
+    font-size: 20px;
+  }
+  h2,p{
+    font-size: 15px;
+    word-wrap: break-word;
+  }
+  h3{
+    font-size: 15px;
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 450px) {
+
+}
+@media (max-width: 350px) {
+
+
+}
+
+@media (max-width: 280px) {
+
+}
+@media (max-width: 240px) {
+
+
+}
+
+
+
 

@@ -144,11 +144,11 @@ export class BasketService {
       eachid: uuid4(),
       id: item.id,
       productName: item.name,
-      price: item.discprice,
+      price: item.price,
       pictureUrl: item.file1,
       quantity,
-      color : item.colors,
-      size : item.sizes,
+      color : [],
+      size : [],
     }
   }
 }

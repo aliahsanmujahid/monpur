@@ -70,6 +70,8 @@ exports.imageupload = async (req, res, next) => {
 exports.deleteimage = async (req, res, next) => {
   imagePath = req.body.imagePath;
   
+  console.log("imgwatch",imagePath);
+
   var sql = "DELETE FROM imgwatch WHERE url = ?";
   let query = db.query(sql, imagePath, (err, result) => {
     if(err) throw err;
@@ -522,6 +524,61 @@ exports.fsendotp = async (req, res, next) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.getadminmoderator = async (req, res, next) => {
+  
+  let sql = `SELECT * FROM users WHERE role = ? || role = ?`;
+  let query = db.query(sql, ['admin','moderator'],(err, result) => {
+    if(err) throw err;
+      res.send(result);
+  });   
+
+};
+
+exports.setadminmoderator = async (req, res, next) => {
+
+  const { id,userrole} = req.body;
+
+  let sql = `SELECT * FROM users WHERE role = ?`;
+  let query = db.query(sql, ['admin'],(err, result) => {
+    if(err) {
+      return sendError(res, "One User Must Be Admin");
+    }
+      
+      
+        var sqle = `UPDATE users SET role = "${userrole}" Where id = ?`;
+
+        db.query(sqle, [id], function (err, result) {
+            if (err){
+              return sendError(res, "Not Exist!");
+            };
+            let sql = `SELECT * FROM users where id = ?`;
+    
+            let query = db.query(sql,[id] ,(err, result) => {
+              if (err){
+                return sendError(res, "Not Exist!");
+              };
+               res.send(result[0]);
+            })
+          });
+      
+      
+  });
+
+};
 
 
 

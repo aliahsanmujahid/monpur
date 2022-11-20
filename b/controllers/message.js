@@ -70,7 +70,7 @@ exports.haschat = async (req, res, next) => {
 
   const { senderid, receiverid } = req.body;
 
-  console.log("haschat res",senderid, receiverid);
+  // console.log("haschat res",senderid, receiverid);
 
   if(senderid == receiverid){
     return sendError(res, "Same Chat Not Allowed");
@@ -95,6 +95,22 @@ exports.haschat = async (req, res, next) => {
 };
 
 
+exports.makezero = async (req, res, next) => {
+
+  console.log("making zero",req.body)
+  const con = await connection;
+  const { chatid,userid  } = req.body;
+
+  var sqle = `UPDATE chatwatch SET unread = 0 WHERE chatid = ? && userid = ?`;
+
+  con.query(sqle, [chatid,userid], function (err, result) {
+                  if (err){
+                    return sendError(res, "Not Exist!");
+  };
+               
+  });
+
+}
 
 exports.createmessege = async (req, res, next) => {
 
@@ -103,7 +119,7 @@ exports.createmessege = async (req, res, next) => {
 
   var date = new Date();
   
-  console.log(chatid);
+  // console.log(chatid);
 
 
   let data = {chatid: chatid, senderid:senderid, message: message,date:date};
@@ -130,7 +146,7 @@ exports.createmessege = async (req, res, next) => {
                                     if(err) throw err;
                                     
 
-                                    console.log(result[0].date);
+                                  
 
                                     var sqle = `UPDATE chat SET date = "${result[0].date}" WHERE id = ?`;
                                     con.query(sqle, [chatid], function (err, result) {
@@ -151,7 +167,7 @@ exports.getchats = async (req, res, next) => {
   const  userId  = req.params.id;
   const con = await connection;
 
-  const [result] = await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ${userId} `);
+  const [result] = await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ${userId}  ORDER BY chat.date DESC limit 1`);
       
   
   res.send(result);
@@ -202,7 +218,7 @@ exports.unflagchat = async (req, res, next) => {
   const  chatid  = req.body.chatid;
   const  userid  = req.body.userid;
 
-  console.log("chatid",chatid,"userid",userid);
+  // console.log("chatid",chatid,"userid",userid);
 
   var sqle = `UPDATE chatwatch SET flag = 0 WHERE chatid = ? && userid = ?`;
               con.query(sqle, [chatid,userid], function (err, result) {

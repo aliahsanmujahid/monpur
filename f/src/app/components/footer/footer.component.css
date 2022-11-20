@@ -1,0 +1,81 @@
+
+section {
+  padding: 2rem 1%;
+  margin-bottom: 10px;
+}
+.heading {
+  font-size: 3.5rem;
+  color: #130f40;
+  padding-bottom: 2rem;
+  text-align: center;
+}
+.heading span {
+  color: #eb4d4b;
+}
+
+
+
+.contact .icons-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(20rem, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.5rem;
+}
+
+.contact .icons-container .icons {
+  padding: 2rem;
+  border-radius: .5rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: table;
+  border-radius: 5px;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+  min-height: 200px;
+}
+
+.contact .icons-container .icons h3 {
+  font-size: 2.2rem;
+  padding: 1rem 0;
+  color: #130f40;
+}
+
+.contact .icons-container .icons p {
+  font-size: 1.5rem;
+  line-height: 2;
+  color: #666;
+}
+
+.apps{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.apps a{
+  padding: 10px 0px 10px 0px;
+  background: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+  color: rgb(54, 52, 52);
+  margin: 5px 0px 5px 0px;
+  border-radius: 5px;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+  text-transform: none;
+}
+
+
+
+.social a{
+  font-size: 2rem;
+  height: 5rem;
+  width: 5rem;
+  line-height: 5rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  margin: 5px;
+}

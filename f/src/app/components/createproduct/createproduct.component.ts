@@ -1,13 +1,16 @@
-import { ISizes } from './../../_models/product';
+import { Ivalues, Ivari } from './../../_models/product';
+
 import { ProductService } from './../../_services/product.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs';
-import { IColors, IProduct } from 'src/app/_models/product';
 import { AccountService } from 'src/app/_services/account.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CategoryService } from 'src/app/_services/category.service';
+import { environment } from 'src/environments/environment';
+import { Editor } from 'ngx-editor';
+import { IProduct } from 'src/app/_models/product';
 
 @Component({
   selector: 'app-createproduct',
@@ -16,13 +19,32 @@ import { CategoryService } from 'src/app/_services/category.service';
 })
 export class CreateproductComponent implements OnInit {
 
+  @Input() producteditid = 0;
+
+  editor: Editor;
+  editor2: Editor;
+  html: '';
+  alert = false;
+
+  imglink = environment.imgUrl;
+
   progress: number = null;
   message: string = null;
   UserId: string;
   active:any;
   active1 = true;
   active2 = true;
-  hasvari = false;
+  editmode = false;
+
+  vari1added = false;
+  vari2added = false;
+  disabledbtn = true;
+  pricemixedvari = false;
+  quantitymixedvari = false;
+  saved = false;
+  showdiscount = true;
+  showpersonalization = false;
+
 
   product: IProduct = {
     id: 0,
@@ -30,9 +52,13 @@ export class CreateproductComponent implements OnInit {
     subcateid:0,
     name:'',
     details:'',
-    orgprice:null,
-    discprice:null,
-    qty:null,
+    sku:'',
+    personalization:'',
+
+    price:null,
+    discount:null,
+    quantity:null,
+
     file1:'',
     file2:'',
     file3:'',
@@ -41,8 +67,30 @@ export class CreateproductComponent implements OnInit {
     file6:'',
     file7:'',
     file8:'',
-    colors : [],
-    sizes : []
+
+    hasvari1:'',
+    hasprice1:'',
+    hasquantity1:'',
+
+    hasvari2:'',
+    hasprice2:'',
+    hasquantity2:'',
+
+    hasmixedvari:'',
+
+    vari1 : {
+      name:'',
+      values:[]
+    },
+    vari2 : {
+      name:'',
+      values:[]
+    },
+    mixedvari:{
+      vari1:'',
+      vari2:'',
+      values:[]
+    }
   };
 
   categoryes: any = [];
@@ -52,17 +100,18 @@ export class CreateproductComponent implements OnInit {
   isSize:Boolean = false;
   qtyshow = false;
 
+  values1 : Ivalues = {
+      name:'',
+      quantity: 0,
+      price: 0,
+  };
 
-  colors: IColors ={
-    colorCode:"#1c03ed",
-    name:"",
-    quantity:null,
-  };
-  sizes: ISizes ={
-    name:null,
-    variCode:'',
-    quantity:null,
-  };
+  values2 : Ivalues = {
+    name:'',
+    quantity: 0,
+    price: 0,
+};
+Math: any;
 
 
 
@@ -73,21 +122,267 @@ export class CreateproductComponent implements OnInit {
 
   ngOnInit(): void {
     this.UserId = this.accountService.getuserid()
+    this.editor = new Editor();
+    this.editor2 = new Editor();
 
-    this.route.params.subscribe(p => {
-      if(p['id'] != 0 && p['id'] != null){
-        this.productService.getEditProduct(p['id']).subscribe(res =>{
-          this.product = res;
-          if(this.product.sizes.length > 0){
-            this.hasvari = true;
-            this.sizes.name = this.product.sizes[0].name;
+    if(this.producteditid !== 0){
+      this.productService.getEditProduct(this.producteditid).subscribe(res =>{
+        this.product = res;
+
+        if(this.product.mixedvari.values.length > 0){
+          this.vari1added = true;
+          this.vari2added = true;
+          this.pricemixedvari = true;
+          this.quantitymixedvari = true;
+          this.saved = true;
+          this.editmode = true;
+
+        this.product.mixedvari.vari1 = this.product.mixedvari.vari1;
+        this.product.mixedvari.vari2 = this.product.mixedvari.vari2;
+
+        this.product.mixedvari.values.forEach(e1 => {
+
+          if(!this.product.vari1.values.find(x => x.name ==  e1.vari1name)){
+            this.product.vari1.values.push(
+              {
+                name:e1.vari1name,
+                price: e1.price,
+                quantity: e1.quantity
+              }
+            );
           }
-        });
-      }
+          if(!this.product.vari2.values.find(x => x.name ==  e1.vari2name)){
+            this.product.vari2.values.push(
+              {
+                name:e1.vari2name,
+                price: e1.price,
+                quantity: e1.quantity
+              }
+            );
+          }
 
-    });
+
+        });
+
+        }
+
+        console.log("edited product ",this.product);
+      });
+    }
     this.getcate();
     this.getsubcate();
+  }
+
+
+  ngOnDestroy(): void {
+    this.editor.destroy();
+    this.editor2.destroy();
+  }
+
+  showproductdata(){
+    console.log("Product Data",this.product);
+  }
+
+  calculateDiscount(){
+     this.showdiscount = true;
+  }
+
+
+  saveandcontinue(){
+    this.editmode = true;
+    this.alert = !this.alert;
+    if( this.product.hasprice1 == 'true' &&  this.product.hasprice2 == 'true'){
+      this.pricemixedvari = true;
+      this.product.mixedvari = {
+        vari1:'',
+        vari2:'',
+        values:[]
+      }
+
+      this.product.hasmixedvari = "true";
+      this.product.mixedvari.vari1 = this.product.vari1.name;
+      this.product.mixedvari.vari2 = this.product.vari2.name;
+      this.product.vari1.values.forEach(vari1 => {
+        this.product.vari2.values.forEach(vari2 => {
+           this.product.mixedvari.values.push({
+            vari1name:vari1.name,
+            vari2name: vari2.name,
+            quantity:0,
+            price:0
+           });
+
+        });
+      });
+      this.saved = true;
+
+    }
+    if( this.product.hasquantity1 == 'true' &&  this.product.hasquantity2 == 'true'){
+      this.quantitymixedvari = true;
+      this.product.mixedvari = {
+        vari1:'',
+        vari2:'',
+        values:[]
+      }
+
+      this.product.hasmixedvari = "true";
+      this.product.mixedvari.vari1 = this.product.vari1.name;
+      this.product.mixedvari.vari2 = this.product.vari2.name;
+      this.product.vari1.values.forEach(vari1 => {
+        this.product.vari2.values.forEach(vari2 => {
+           this.product.mixedvari.values.push({
+            vari1name:vari1.name,
+            vari2name: vari2.name,
+            quantity:0,
+            price:0
+           });
+
+        });
+      });
+      this.saved = true;
+    }
+
+    if( this.product.hasprice1 == '' ||  this.product.hasprice2 == ''){
+      this.pricemixedvari = false;
+    }
+    if( this.product.hasquantity1 == '' ||  this.product.hasquantity2 == ''){
+      this.quantitymixedvari = false;
+    }
+
+  }
+
+  onFeatureToggle($event) {
+    if ($event.target.checked){
+      if($event.target.value == 'hasprice1'){
+          this.product.hasprice1 = 'true'
+      }
+      if($event.target.value == 'hasprice2'){
+        this.product.hasprice2 = 'true'
+      }
+      if($event.target.value == 'hasquantity1'){
+        this.product.hasquantity1 = 'true'
+      }
+      if($event.target.value == 'hasquantity2'){
+        this.product.hasquantity2 = 'true'
+      }
+      if($event.target.value == 'personalization'){
+        this.showpersonalization = true;
+      }
+    }
+    else {
+      if($event.target.value == 'hasprice1'){
+        this.product.hasprice1 = ''
+      }
+      if($event.target.value == 'hasprice2'){
+        this.product.hasprice2 = ''
+      }
+      if($event.target.value == 'hasquantity1'){
+       this.product.hasquantity1 = ''
+      }
+      if($event.target.value == 'hasquantity2'){
+       this.product.hasquantity2 = ''
+      }
+    }
+  }
+
+
+  addvariation1(){
+    this.vari1added = true;
+  }
+  addvariation2(){
+    this.vari2added = true;
+  }
+  renamevari1(){
+    this.vari1added = false;
+  }
+  deletevariname1(){
+    this.vari1added = false;
+    this.product.vari1 = {
+      name:'',
+      values:[]
+    }
+  }
+
+  renamevari2(){
+    this.vari2added = false;
+  }
+  deletevariname2(){
+    this.vari2added = false;
+    this.product.vari2 = {
+      name:'',
+      values:[]
+    }
+  }
+
+  addvari1(){
+     if(this.values1.name != ''){
+      this.product.vari1.values.push(this.values1)
+      this.disabledbtn = false;
+      this.values1 = {
+         name:'',
+         quantity: 0,
+         price: 0,
+      }
+     }
+  }
+
+  deletevari1(index){
+    if(this.product.vari1.values.length == 1){
+      this.disabledbtn = true;
+    }
+    this.product.vari1.values.splice(index,1)
+  }
+
+  addvari2(){
+    if(this.values2.name != ''){
+     this.product.vari2.values.push(this.values2)
+     this.values2 = {
+        name:'',
+        quantity: 0,
+        price: 0,
+     }
+    }
+ }
+
+ deletevari2(index){
+   this.product.vari2.values.splice(index,1)
+ }
+
+
+ cancelvaripopup(){
+  if(this.vari1added && this.product.vari1.values.length == 0){
+     this.disabledbtn = true;
+  }
+  // if(this.vari2added && this.product.vari2.values.length == 0){
+  //   this.disabledbtn = true;
+  // }
+
+  if(this.editmode == false){
+    this.product.hasprice1 = ''
+    this.product.hasprice2 = ''
+    this.product.hasquantity1 = ''
+    this.product.hasquantity2 = ''
+    this.product.vari1 = {
+      name:'',
+      values:[]
+    },
+    this.product.vari2 = {
+      name:'',
+      values:[]
+    }
+    this.values2 = {
+      name:'',
+      quantity: 0,
+      price: 0,
+   }
+   this.vari1added = false;
+   this.vari2added = false;
+  }
+  this.alert = !this.alert;
+
+ }
+
+  alerttoggle(){
+    this.alert = !this.alert;
   }
 
   getcate(){
@@ -120,7 +415,7 @@ export class CreateproductComponent implements OnInit {
     formData.append('userId',this.UserId);
 
 
-    this.http.post('http://localhost:8000/api/user/imageupload', formData, {reportProgress: true, observe: 'events'})
+    this.http.post(this.imglink+'api/user/imageupload', formData, {reportProgress: true, observe: 'events'})
     .pipe(
       map((data: any) => {
         if (data.type === HttpEventType.UploadProgress)
@@ -163,7 +458,7 @@ if(val == 8){
    deleteimage = async(path,val) =>{
     this.message = "Deleteing";
     this.progress = null;
-    this.http.post('http://localhost:8000/api/user/deleteimage', {imagePath:path})
+    this.http.post(this.imglink+'api/user/deleteimage', {imagePath:path})
     .pipe(
       map((data: any) => {
 
@@ -196,154 +491,40 @@ if(val == 8){
     ).subscribe();
    }
 
-   createProduct(ProductForm: NgForm){
+   createProduct(){
+
+    console.log("this.product",this.product);
+
     if(this.product.id == 0){
       if(this.product.file1 !== ''){
-        if(ProductForm.valid){
+
           this.productService.createproduct(this.product).subscribe( res =>{
             console.log("res",res);
          }),
          error => {
 
          };
-       }
+
       }else{
       }
     }else{
-      if(ProductForm.valid){
+
         this.productService.updateproduct(this.product).subscribe( res =>{
             console.log("res",res);
        }),
        error => {
 
        };
-     }
+
     }
 
    }
 
 
 
-   quantityShow(): any{
-    if(this.product.colors.length !== 0 || this.product.sizes.length !== 0){
-       return false;
-    }if(this.product.colors.length === 0 || this.product.sizes.length === 0){
-      return true;
-   }
-  }
-
-   setQuantity(){
-    if(this.product.colors.length === 0 || this.product.sizes.length === 0){
-       this.product.qty = null;
-    }
-    if(this.product.colors.length !== 0){
-       this.product.qty = this.product.colors.reduce((a, b) => (b.quantity) + a, 0);
-       return;
-    }
-    if(this.product.sizes.length !== 0){
-      this.product.qty = this.product.sizes.reduce((a, b) => (b.quantity) + a, 0)
-   }
-
-  }
-
-   setColor(){
-    this.product.colors.push(this.colors);
-    this.colors = {
-      colorCode:"#1c03ed",
-      name:"",
-      quantity: null
-    };
-    this.setQuantity();
-  }
-  setSize(){
-    this.product.sizes.push(this.sizes);
-    this.sizes = {
-      name:this.sizes.name,
-      variCode:'',
-      quantity: null
-    };
-    this.setQuantity();
-  }
-
-   addColors(id){
-    if(id == 1){
-      this.active1 = !this.active1;
-      if(this.active2 == false){
-        this.active2 = true;
-      }
-    }
-    if(id == 2){
-      this.active2 = !this.active2;
-      if(this.active1 == false){
-        this.active1 = true;
-      }
-    }
-    this.active = id;
-    if(this.product.sizes.length === 0){
-      this.isColor = !this.isColor;
-    }
-    if(this.isSize === true){
-      this.isSize = false;
-    }
-    if(this.product.sizes.length == 0){
-      this.sizes.name = null;
-      this.hasvari = false;
-
-    }
-
-  }
-  addSizes(id){
-    if(id == 1){
-      this.active1 = !this.active1;
-      if(this.active2 == false){
-        this.active2 = true;
-      }
-    }
-    if(id == 2){
-      this.active2 = !this.active2;
-      if(this.active1  == false){
-        this.active1 = true;
-      }
-    }
-    this.active = id;
-    if(this.product.colors.length === 0){
-      this.isSize = !this.isSize;
-    }
-    if(this.isColor === true){
-      this.isColor = false;
-    }
-  }
-
-  removeColor(name: String){
-    var color =this.product.colors.find.name == name;
-    let index = this.product.colors.findIndex(d => d.name === name); //find index in your array
-    this.product.colors.splice(index, 1);
-    this.setQuantity();
- }
- removeSize(name: String){
-   var color =this.product.sizes.find.name == name;
-   let index = this.product.sizes.findIndex(d => d.name === name); //find index in your array
-   this.product.sizes.splice(index, 1);
-   this.setQuantity();
- }
-
- setVariname(){
-
-  if(this.product.sizes.length !== 0){
-    for (let i = 0; i < this.product.sizes.length; i++) {
-      this.product.sizes[i].name = this.sizes.name;
-    }
-  }
-
-  this.hasvari = true;
- }
-
- changevari(){
-  this.hasvari = false;
- }
 
    onCateChange(){
-    if(this.product.cateid !== 0 && this.product.cateid !== -1){
+    if(this.product.cateid !== 0){
       this.categoryService.getsubcatebyid(this.product.cateid).subscribe( res => {
         this.subcategoryes = res;
         this.product.subcateid = 0;
@@ -352,6 +533,9 @@ if(val == 8){
       };
     }
   }
-  
+
+
+
+
 
 }

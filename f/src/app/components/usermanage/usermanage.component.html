@@ -1,0 +1,55 @@
+
+<div (click)="alerttoggle(null)"  *ngIf="alert" class="backdrop "></div>
+
+<div *ngIf="alert" class="alert-box">
+
+  <div class="details2" >
+    <div class="text">
+      <label class="container">Admin
+        <input type="radio" value="admin" [(ngModel)]="selectuser.userrole" name="radio">
+        <span class="checkmark"></span>
+      </label>
+
+      <label class="container">Modaretor
+        <input type="radio" value="moderator" [(ngModel)]="selectuser.userrole" name="radio">
+        <span class="checkmark"></span>
+      </label>
+
+      <button (click)="setadminmoderator()">Save Change</button>
+    </div>
+  </div>
+
+</div>
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>Payment Manage</h1>
+    </div>
+    <div class="details">
+
+      <form #SearchForm="ngForm" (ngSubmit)="searchUser()" class="search-form">
+        <input class="input" type="search" name="search" [(ngModel)]="search" placeholder="search here..." id="search-box">
+        <label for="search-box" class="fas fa-search" (click)="searchUser()"></label>
+      </form>
+
+      <div class="users">
+
+        <div class="userdetails" *ngFor="let item of users">
+          <div class="bio">
+            <p>Name: {{item.name}}</p>
+            <p>Role: {{item.role}}</p>
+            <p>Number: {{item.pnumber}}</p>
+          </div>
+
+          <div>
+            <button (click)="alerttoggle(item)" >Edit</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

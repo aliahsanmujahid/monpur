@@ -1,10 +1,14 @@
+import { MobilecateComponent } from './components/mobilecate/mobilecate.component';
+import { ShopComponent } from './components/shop/shop.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { CartComponent } from './components/cart/cart.component';
+import { SearchComponent } from './components/search/search.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ForgotComponent } from './components/forgot/forgot.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ProductviewComponent } from './components/productview/productview.component';
-import { ProductsComponent } from './components/products/products.component';
 import { CreateproductComponent } from './components/createproduct/createproduct.component';
 import { HomeComponent } from './components/home/home.component';
 import { MessageComponent } from './components/message/message.component';
@@ -20,17 +24,19 @@ const routes: Routes = [
   {path: 'signup',  component: SignupComponent},
   {path: 'forgot',  component: ForgotComponent},
   {path: 'chat',  component: MessageComponent},
+  {path: 'search',  component: SearchComponent},
 
   {path: 'msg',  component: ChatComponent},
   {path: 'dash',  component: DashboardComponent},
   {path: 'profile',  component: ProfileComponent},
 
   {path: 'createproduct',  component: CreateproductComponent},
-  {path: 'products',  component: ProductsComponent},
-  {path: 'sellerproducts',  component: ProductsComponent},
+  {path: 'mobilecate',  component: MobilecateComponent},
+  {path: 'shop',  component: ShopComponent},
+  {path: 'cart',  component: CartComponent},
   {path: 'checkout',  component: CheckoutComponent},
+  {path: 'payment/:id',  component: PaymentComponent},
 
-  {path: 'edit/:id',  component: CreateproductComponent},
   {path: 'product/:id',  component: ProductviewComponent, resolve: {product: ProductDetailedResolver}},
 ];
 

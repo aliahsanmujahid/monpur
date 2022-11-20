@@ -1,0 +1,75 @@
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>Payment Manage</h1>
+    </div>
+    <div class="details">
+      <label class="container">Cash On Delevary
+        <input type="checkbox"  value="cod" (change)="onPaymentset($event)" [checked]="payment.cod == 'true' " id="cod" name="cod">
+        <span class="checkmark"></span>
+      </label>
+    </div>
+    <div class="details">
+      <label class="container">Paypal
+        <input type="checkbox"  value="paypal" (change)="onPaymentset($event)" [checked]="payment.paypalid !== '' " id="paypal" name="paypal">
+        <span class="checkmark"></span>
+      </label>
+
+      <div class="keys" *ngIf="payment.paypalid !== '' ">
+        <span>Public Key: {{payment.paypalid}}</span>
+     </div>
+
+      <div *ngIf="paypal">
+        <label>Paypal Id</label>
+        <input
+        [(ngModel)]="payment.paypalid"
+        placeholder="Product Name"
+        name="name"
+        type="text"
+        class="input"
+        required  />
+      </div>
+    </div>
+    <div class="details">
+      <label class="container">Stripe
+        <input type="checkbox"  value="stripe" (change)="onPaymentset($event)" [checked]="payment.stripepkey !== '' " id="stripe" name="stripe">
+        <span class="checkmark"></span>
+      </label>
+
+      <div class="keys" *ngIf="payment.stripepkey !== '' && payment.stripeskey !== ''">
+         <span>Public Key: {{payment.stripepkey}}</span>
+         <span>Secret Key: {{payment.stripeskey}}</span>
+      </div>
+
+      <div *ngIf="stripe ">
+        <label>Stripe stripepkey</label>
+        <input
+        [(ngModel)]="stripep"
+        placeholder="Product Name"
+        name="name"
+        type="text"
+        class="input"
+        required  />
+
+        <label>stripeid2 stripeskey</label>
+        <input
+        [(ngModel)]="stripes"
+        placeholder="Product Name"
+        name="name"
+        type="text"
+        class="input"
+        required  />
+
+      <button (click)="setstripe()">Set</button>
+      </div>
+
+    </div>
+
+
+    <button *ngIf="payment.id == 0" class="button" (click)="createpaymentsettings()">Save Changes</button>
+    <button *ngIf="payment.id !== 0" class="button" (click)="updatepaymentsettings()">Update Changes</button>
+
+  </div>
+</div>

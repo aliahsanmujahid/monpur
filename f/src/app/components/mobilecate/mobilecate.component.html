@@ -1,0 +1,37 @@
+
+<app-navbar></app-navbar>
+
+
+<div class="row">
+
+  <div class="left">
+
+     <ul>
+      <li class="items" *ngFor="let item of category" (click) = "selectcate(item)">
+
+        <img src="{{imglink+item.image}}" alt="">
+        <p>{{item.name}}</p>
+
+      </li>
+     </ul>
+
+  </div>
+
+
+  <div class="right">
+
+
+        <div *ngIf="scate.length == 0">
+          <div class="scate" >
+            <img src="{{imglink+nocate.image}}" alt="">
+            <p>{{nocate.name}}</p>
+          </div>
+        </div>
+        <div class="scate" *ngFor="let item of scate" >
+          <img src="{{imglink+item.image}}" alt="">
+          <p>{{item.name}}</p>
+        </div>
+
+  </div>
+
+</div>

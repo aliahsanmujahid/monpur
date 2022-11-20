@@ -46,4 +46,8 @@ export class AppComponent {
   removeBasketItem(item: IBasketItem) {
     this.basketService.removeItemFromBasket(item);
   }
+
+
+
+
 }

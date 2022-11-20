@@ -1,345 +1,221 @@
-<!-- <div
-  infinite-scroll
-  [infiniteScrollDistance]="distance"
-  [infiniteScrollThrottle]="throttle"
-  (scrolled)="onScroll()"
-> -->
-
-<span *ngIf="sellerid">
-<form #SearchOrderform="ngForm" (ngSubmit)="SearchOrder()" novalidate>
-  <span>
-    <input id="search" type="search" [(ngModel)]="search" type="number" name="search" required minlength="1" placeholder="Search..">
-    <button  class="searchbutton" [disabled]="SearchOrderform.invalid" type="submit" >Search</button>
-  </span>
-</form>
-</span>
 
 
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
 
-<div class="topnav bar" *appHasRole='["admin"]'>
-    <a (click)="getOrdersByStatus('All')">All</a>
-    <a (click)="getOrdersByStatus('Pending')">Pending</a>
-    <a (click)="getOrdersByStatus('Approved')">Approved</a>
-    <a (click)="getOrdersByStatus('Delivered')">Delivering</a>
-    <a (click)="getOrdersByStatus('Confirmed')">Confirmed</a>
-    <a (click)="getOrdersByStatus('Rejected')">Rejected</a>
+<div (click)="ratealerttoggle()"  *ngIf="rateingalert" class="backdrop "></div>
+
+<div *ngIf="alert" class="alert-box">
+
+    <div class="details3" *ngIf="selectedorder">
+      <div class="text">
+        <h3>Order Address</h3>
+        <br>
+        <p>Order Id: {{selectedorder.id}}</p>
+        <p>Name: {{selectedorder.name}}</p>
+        <p>Address: {{selectedorder.address}}</p>
+        <p>City: {{selectedorder.city}}</p>
+        <p>State: {{selectedorder.state}}</p>
+        <p>Phone: {{selectedorder.phone}}</p>
+        <br>
+        <p>Delevary Charge: {{selectedorder.delivery}}</p>
+        <p>Sub Total: {{selectedorder.subtotal}}</p>
+        <p>Total: {{selectedorder.total}}</p>
+        <br>
+        <p *ngIf="selectedorder.ispaid == 1">Status: Paid</p>
+        <p *ngIf="selectedorder.ispaid == 0">Status: Not Paid</p>
+      </div>
+    </div>
+
 </div>
 
-<div class="topnav" *appHasRole='["Member"]'>
-  <a (click)="getOrdersByStatus('All')">All Orders</a>
-</div>
-
-<!-- <div class="custom-select select">
-  <select [(ngModel)]="status" (change)="selectChange()">
-    <option value="All">All</option>
-    <option value="Pending">Pending</option>
-    <option value="Approved">Approved</option>
-    <option value="Delivering">Delivering</option>
-    <option value="Confirmed">Confirmed</option>
-    <option value="Rejected">Rejected</option>
-  </select>
-</div> -->
 
 
+   <!-- for ratting -->
+
+   <div *ngIf="rateingalert" class="alert-box">
+
+    <div class="details3" >
+      <div class="text">
+        {{reviewitem.name}}
+        <div class="rate">
+          <ul>
+            <li  *ngFor="let i of [1,2,3,4,5]" [ngClass]="review.ratting >= i ? 'ratting' : 'noratting'" (click)="setratting(i)">
+             {{i}}
+            </li>
+          </ul>
+        </div>
+
+        <div class="reviewcontent">
+          <ngx-editor
+            [editor]="rateditor"
+            [(ngModel)]="review.review"
+            required
+            minlength="20"
+            [disabled]="false">
+      </ngx-editor>
+          <!-- <textarea [(ngModel)]="review.review" name="" id="" cols="30" rows="10"></textarea> -->
+        </div>
+
+        <div class="rateimg">
+
+          <ul>
+            <li>
+              <div  class="files" *ngIf="review.image1 == '' "   >
+                <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,1)" style="display:none;">
+                <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+              </div>
+
+              <div  class="files" *ngIf="review.image1 !== '' ">
+                <p ><img src="{{imglink+review.image1}}" alt=""></p>
+                <div class="delete">
+                  <p (click)="deleteimage(review.image1,1)">Delete</p>
+                </div>
+              </div>
+
+            </li>
 
 
-<div class="container">
-  <span *ngIf="!orderview">
-    <!-- <div *ngFor="let item of orders" class="topnav bg" >
-      <span *ngIf="sellerid">
-        <a *appHasRole='["Admin", "Moderator"]'>Id: {{item.id}}</a>
-      </span>
-      <a >Order Id: <span style="color:darkred;font-size: 17px;">{{item.randnum}}</span></a>
-      <a >Status:{{item.status}}</a>
-      <div class="topnav-right">
-        <a style="cursor: pointer;background:tomato;" (click)="viewOrder(item.id)" >View</a>
-        <a *appHasRole='["Admin"]' (click)="deleteOrder(item.id)">Delete</a>
+            <li>
+              <div  class="files" *ngIf="review.image2 == '' "   >
+                <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,2)" style="display:none;">
+                <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+              </div>
+
+              <div  class="files" *ngIf="review.image2 !== '' ">
+                <p ><img src="{{imglink+review.image2}}" alt=""></p>
+                <div class="delete">
+                  <p (click)="deleteimage(review.image2,2)">Delete</p>
+                </div>
+              </div>
+
+            </li>
+
+
+            <li>
+              <div  class="files" *ngIf="review.image3 == '' "   >
+                <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,3)" style="display:none;">
+                <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+              </div>
+
+              <div  class="files" *ngIf="review.image3 !== '' ">
+                <p ><img src="{{imglink+review.image3}}" alt=""></p>
+                <div class="delete">
+                  <p (click)="deleteimage(review.image3,3)">Delete</p>
+                </div>
+              </div>
+
+            </li>
+
+
+            <li>
+              <div  class="files" *ngIf="review.image4 == '' "   >
+                <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file" (change)="uploadFile(file.files,4)" style="display:none;">
+                <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+              </div>
+
+              <div  class="files" *ngIf="review.image4 !== '' ">
+                <p ><img src="{{imglink+review.image4}}" alt=""></p>
+                <div class="delete">
+                  <p (click)="deleteimage(review.image4,4)">Delete</p>
+                </div>
+              </div>
+
+            </li>
+
+
+          </ul>
+        </div>
+
+        <button (click)="createreview()">Create Review</button>
 
       </div>
-    </div>  -->
+    </div>
 
-      <table id="customers2" *ngFor="let item of orders" style="table-layout: fixed; width: 100%">
-        <tr   (click)="viewOrder(item.id)" >
-           <td>ID: {{item.id}}</td>
-           <td>Status:{{item.status}}</td>
-         </tr>
-      </table>
+</div>
 
-      <div *ngIf="noorder" class="nomore">
-        <h1 >No Orders</h1>
-       </div>
-
-  </span>
-
-  <span  *ngIf="orderview">
-
-  <span *ngFor="let item of singleorder">
+<div class="row">
   <div class="column">
-    <h2>Order Deatails</h2>
 
-    <table id="customers">
-      <tr>
-        <td>Name</td>
-        <td>{{item.name}}</td>
-      </tr>
-      <tr>
-        <td>Address</td>
-        <td>{{item.address}}</td>
-      </tr>
-      <tr>
-        <td>Phone</td>
-        <td>{{item.phone}}</td>
-      </tr>
-      <tr>
-        <td>District</td>
-        <td>{{item.district}}</td>
-      </tr>
-      <tr>
-        <td>Upazila</td>
-        <td>{{item.upazila}}</td>
-      </tr>
-      <tr>
-        <td>Order Id</td>
-        <td>{{item.randnum}}</td>
-      </tr>
-      <tr *ngIf="sellerid">
-        <td>Primary Id</td>
-        <td>{{item.id}}</td>
-      </tr>
-      <tr>
-        <td>Date</td>
-        <td>{{item.orderDate | date: 'short'}}</td>
-      </tr>
-    </table>
-
-
-    <h2>Paymeny</h2>
-
-    <span *ngIf="item.cashOnDelevary !== '' ">
-      <h3 style="background: tomato;
-      color: white;
-      padding: 3px;
-      width: 185px;
-      margin: 0 auto;
-      border-radius: 3px;
-      ">Cash On Delevary</h3>
-    </span>
-
-    <span *ngIf="item.bkash !== '' ">
-    <h1>Bkash</h1>
-    <table id="customers">
-      <tr>
-        <td>Number</td>
-        <td>{{item.bkash}}</td>
-      </tr>
-      <tr>
-        <td>TrxId</td>
-        <td>{{item.bkashTransactionID}}</td>
-      </tr>
-    </table>
-    </span>
-
-    <span *ngIf="item.rocket !== '' ">
-      <h1>Rocket</h1>
-      <table id="customers" style="table-layout: fixed; width: 100%">
-        <tr>
-          <td>Number</td>
-          <td>{{item.rocket}}</td>
-        </tr>
-        <tr>
-          <td>TrxId</td>
-          <td>{{item.rocketTransactionID}}</td>
-        </tr>
-      </table>
-      </span>
-
-
-      <span *ngIf="item.nagad !== '' ">
-        <h1>Nagad</h1>
-        <table id="customers">
-          <tr>
-            <td>Number</td>
-            <td>{{item.nagad}}</td>
-          </tr>
-          <tr>
-            <td>TrxId</td>
-            <td>{{item.nagadTransactionID}}</td>
-          </tr>
-        </table>
-        </span>
-
-
-        <h2>Order Summary</h2>
-
-
-        <table id="customers">
-          <tr>
-            <td>Status</td>
-            <td>{{item.status}}</td>
-          </tr>
-          <tr>
-            <td>SubTotal</td>
-            <td>{{item.subtotal}}</td>
-          </tr>
-          <tr>
-            <td>Delivery</td>
-            <td>{{item.delivery}}</td>
-          </tr>
-          <tr>
-            <td>Total</td>
-            <td>{{item.total}}</td>
-          </tr>
-        </table>
-
-    <span *ngIf="customerid">
-      <div class="margin2"></div>
-      <h4 *ngIf="item.status === 'Pending'">Your Order is Pending</h4>
-
-      <h4 *ngIf="item.status === 'Approved'">All Ok, We Approved Your Order</h4>
-
-      <h4 *ngIf="item.status === 'Delivered'">We are Delivering this Order</h4>
-      <h4 *ngIf="item.status === 'Delivered'">Confirm this Order Only After The Product Received</h4>
-
-      <h4 *ngIf="item.status === 'Confirmed'">This Order Is Confirmed</h4>
-      <h4 *ngIf="item.status === 'Confirmed'">Thank You For Being With Us</h4>
-      <h4 *ngIf="item.status === 'Confirmed'">Contact If You Need Any Help</h4>
-
-      <h4 *ngIf="item.status === 'Rejected'">Order Rejected</h4>
-      <h4 *ngIf="item.status === 'Rejected'">Contact If You Need Any Help</h4>
-
-    <div class="topnav margin2">
-          <span *ngIf="item.status === 'Delivered'">
-            <a style="cursor: pointer;"  (click)="changecutomerstatus(item.id,'Confirmed')">Confirm Order</a>
-          </span>
-          <span *ngIf="item.status === 'Confirmed'">
-            <a style="cursor: pointer;" (click)="changecutomerstatus(item.id,'Delivered')">Not Confirmed Yet</a>
-          </span>
-    </div>
-  </span>
-    <span *ngIf="sellerid && item.status !== 'Confirmed'">
-    <div class="topnav margin2">
-      <a *appHasRole='["Admin","Seller"]' (click)="changeStatus(item.id,'Pending')">Pending</a>
-      <a *appHasRole='["Admin","Seller"]' (click)="changeStatus(item.id,'Approved')">Approve</a>
-      <a *appHasRole='["Admin","Seller"]' (click)="changeStatus(item.id,'Delivered')">Deliver</a>
-
-      <!-- <span *ngIf="item.status === 'Delivered' ">
-        <a *appHasRole='["Admin","Member"]' (click)="changeStatus(item.id,'Confirmed')">Confirm</a>
-      </span> -->
-      <a *appHasRole='["admin"]' (click)="changeStatus(item.id,'Rejected')">Reject</a>
-    </div>
-   </span>
-   <span *ngIf="sellerid && item.status === 'Confirmed'">
-    <div class="topnav margin2">
-      <a *appHasRole='["Admin","Seller","Moderator"]'>Order Confirmed</a>
-    </div>
-   </span>
-
-  <div class="padding displanone">
-
-  </div>
-
-  </div>
-  <div class="column padding">
-    <h2>Purchased</h2>
-    <span *ngFor="let p of item.orderItems">
-      <table id="customers">
-        <tr>
-          <td>Name</td>
-          <td>{{p.name}}</td>
-        </tr>
-        <tr *ngIf="p.color !== '' ">
-          <td>Color</td>
-          <td>{{p.color}}</td>
-        </tr>
-        <tr *ngIf="p.size !== '' ">
-          <td>Size</td>
-          <td>{{p.size}}</td>
-        </tr>
-        <tr>
-          <td>Quantity</td>
-          <td>{{p.quantity}}</td>
-        </tr>
-        <tr>
-          <td>Price</td>
-          <td>{{p.price}}</td>
-        </tr>
-        <tr>
-          <td>TotalPrice</td>
-          <td>{{p.totalPrice}}</td>
-        </tr>
-      </table>
-      <button (click)="addreview(p.pid)">Add a Review</button>
-
-      <div *ngIf="isreview" class="review">
-
-        <form #SetVariName="ngForm"  (ngSubmit)="createreview()">
-          <div  *ngIf="review.image1 == '' " class="border">
-            <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,1)" style="display:none;">
-            <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
-          </div>
-
-          <div *ngIf="review.image1 !== '' " class="border">
-            <p ><img src="{{'http://localhost:8000/' + review.image1 }}" alt=""></p>
-            <div class="delete">
-              <p (click)="deleteimage(review.image1,1)" >Delete</p>
-            </div>
-          </div>
-
-          <div  *ngIf="review.image2 == '' " class="border">
-            <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,2)" style="display:none;">
-            <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
-          </div>
-
-          <div *ngIf="review.image2 !== '' " class="border">
-            <p ><img src="{{'http://localhost:8000/' + review.image2 }}" alt=""></p>
-            <div class="delete">
-              <p (click)="deleteimage(review.image2,2)" >Delete</p>
-            </div>
-          </div>
-
-          <div  *ngIf="review.image3 == '' " class="border">
-            <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,3)" style="display:none;">
-            <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
-          </div>
-
-          <div *ngIf="review.image3 !== '' " class="border">
-            <p ><img src="{{'http://localhost:8000/' + review.image3 }}" alt=""></p>
-            <div class="delete">
-              <p  (click)="deleteimage(review.image3,3)">Delete</p>
-            </div>
-          </div>
-
-
-          <div  *ngIf="review.image4 == '' " class="border">
-            <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,4)" style="display:none;">
-            <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
-          </div>
-
-          <div *ngIf="review.image4 !== '' " class="border">
-            <p ><img src="{{'http://localhost:8000/' + review.image4 }}" alt=""></p>
-            <div class="delete">
-              <p  (click)="deleteimage(review.image4,4)">Delete</p>
-            </div>
-          </div>
-
-          <label for="size">ratting</label>
-          <input  [(ngModel)]="review.ratting" type="number" name="ratting" required minlength="1"  placeholder="ratting ..">
-
-
-          <label for="size">review</label>
-          <input  [(ngModel)]="review.review" type="text" name="review" required placeholder="review ..">
-
-
-          <input [disabled]="SetVariName.invalid"  type="submit" value="Add">
-          </form>
-
+  <ul>
+    <li *ngFor="let item of orders" >
+      <div class="text">
+        <h3>{{item.status}}</h3>
+        <p>Id: {{item.id}}</p>
+        <p>Today: 10 pm</p>
+        <button (click)="showdetails(item)">Show Details</button>
       </div>
+        <div class="details" [ngClass]="item.id == selectedorder.id ? 'view' : ''">
+          <div class="button">
+            <button (click)="alerttoggle()" >Address</button>
+            <button *ngIf="selectedorder.ispaid == 0" routerLink="/payment/{{selectedorder.id}}" routerLinkActive="router-link-active" >Pay Now</button>
+            <button *ngIf="selectedorder.ispaid == 1">Order Paid</button>
+          </div>
+          <ul class="productul">
+            <li class="reviewli" *ngFor="let item of item.orderItems">
 
-      <div class="padding"></div>
-      <div class="margin2"></div>
-    </span>
+                <div class="sm">
+                  <img src="{{imglink+item.img}}" alt="">
+                 </div>
+                 <div class="sm2">
+                  <div class="text2">
+                  <p>{{item.name}}</p>
+                  <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+                 </div>
+                </div>
+
+
+                <button class="reviewbtn">Add Review</button>
+            </li>
+          </ul>
+
+          <div class="footer">
+            <p>Delivary Cost: {{item.delivery}}</p>
+            <p>Subtotal: {{item.subtotal}}</p>
+            <p>Total: {{item.total}}$</p>
+          </div>
+
+        </div>
+    </li>
+  </ul>
 
   </div>
-  </span>
-</span>
+  <div class="column ">
+    <div class="dcontent" *ngIf="selectedorder">
+      <div class="details2">
+        <div class="text">
+          <h3>{{selectedorder.status}}</h3>
+          <p>Id: {{selectedorder.id}}</p>
+          <p>Today: 10 pm</p>
+        </div>
+        <div class="button">
+          <button (click)="alerttoggle()" >Address</button>
+          <button *ngIf="selectedorder.ispaid == 0" routerLink="/payment/{{selectedorder.id}}" routerLinkActive="router-link-active" >Pay Now</button>
+          <button *ngIf="selectedorder.ispaid == 1">Order Paid</button>
+        </div>
+        <ul>
+          <li class="reviewli"  *ngFor="let item of selectedorder.orderItems">
+              <div class="sm">
+                <img src="{{imglink+item.img}}" alt="">
+               </div>
+               <div class="sm2">
+                <div class="text2">
+                <p>{{item.name}}</p>
+                <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+              </div>
+              </div>
+
+              <button class="reviewbtn" (click)="addreview(item.id)" >Add Review</button>
+          </li>
+        </ul>
+        <div class="footer">
+          <p>Delivary Cost: {{selectedorder.delivery}}</p>
+          <p>Subtotal: {{selectedorder.subtotal}}</p>
+          <p>Total: {{selectedorder.total}}$</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+

@@ -1,0 +1,49 @@
+
+<header class="header">
+
+
+  <a routerLink='/' class="fas fa-arrow-left"></a>
+
+  <form #SearchForm="ngForm" (ngSubmit)="searchProduct()" class="search-form">
+      <input type="search" name="search" [(ngModel)]="search" placeholder="search here..." id="search-box">
+      <label for="search-box" class="fas fa-search" (click)="searchProduct()"></label>
+  </form>
+
+</header>
+
+<div class="row">
+  <div class="column">
+
+    <button *ngFor="let item of searchkeys" (click)="searchkry(item)">{{item}}
+      <i class="icon fa fa-times" aria-hidden="true" (click)="deletekey(item)"></i>
+    </button>
+
+
+
+  </div>
+
+  <div class="column padding">
+
+    <ul>
+
+      <li *ngFor="let item of category" >
+
+        <div *ngIf="!item.cateid" class="text" [routerLink]="['/shop', {cate: item.id}]">
+          <img src="{{imglink+item.image}}" alt="">
+          <h3>{{item.name}}</h3>
+        </div>
+
+        <div *ngIf="item.cateid" class="text" [routerLink]="['/shop', {subcate: item.id}]">
+          <img src="{{imglink+item.image}}" alt="">
+          <h3>{{item.name}}</h3>
+        </div>
+      </li>
+
+
+
+
+    </ul>
+
+  </div>
+
+</div>

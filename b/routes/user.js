@@ -16,8 +16,11 @@ const {
   sendotp,
   setac,
   fsendotp,
-  fsetac
+  fsetac,
 
+
+  getadminmoderator,
+  setadminmoderator
 
 } = require("../controllers/user");
 
@@ -29,7 +32,8 @@ const {
   haschat,
   getflagchats,
   flagchat,
-  unflagchat
+  unflagchat,
+  makezero
 } = require("../controllers/message");
 
 const {
@@ -39,11 +43,19 @@ const {
   getallproducts,
   getcolors,
   getsizes,
-  searchproducts
+  searchproducts,
+  getcateproducts,
+  getsubcateproducts
 
 } = require("../controllers/product");
 
 const {
+  getorderbystatus,
+  changestatus,
+  getorderbyid,
+  setcod,
+  setpaypal,
+  setstripe,
   createorder,
   getSellerOrders,
   getCustomerOrders
@@ -55,7 +67,10 @@ const {
   createsubcate,
   getallsubcate,
   getallcate,
-  getsubcatebyid
+  getsubcatebyid,
+  detetecate,
+  detetesubcate,
+  getmixedcates
 
 } = require("../controllers/category");
 
@@ -64,6 +79,26 @@ const {
   getallreviews
 
 } = require("../controllers/review");
+
+
+const {
+  createpaymentsettings,
+  updatepaymentsettings,
+  getpaymentsettings,
+  createcoupon,
+  updatecoupon,
+  getallcopuns,
+  getallslider,
+  createslider,
+  updateslider,
+  createfooter,
+  updatefooter,
+  getfooter,
+  createterm,
+  updateterm,
+  getterm
+
+} = require("../controllers/setting");
 
 
 
@@ -123,6 +158,19 @@ router.get("/getCustomerOrders/:id/:page/:status",
     isAuth,
     getCustomerOrders
 );
+router.get("/getorderbyid/:id", 
+    isAuth,
+    getorderbyid
+);
+router.get("/getorderbystatus/:userid/:status", 
+    isAuth,
+    getorderbystatus
+);
+router.post("/changestatus/:id/:userid/:status", 
+    isAuth,
+    changestatus
+);
+
 
 router.post("/createreview", 
     isAuth,
@@ -135,20 +183,27 @@ router.get("/getallreviews/:pid", getallreviews);
 
 router.post("/imageupload",upload.single('file'), imageupload);
 router.post("/deleteimage",deleteimage);
-router.get("/getallproducts",getallproducts);
 router.get("/getsingleproduct/:id",getsingleproduct);
 router.get("/getsellerproducts/:id",getsellerproducts);
 router.get("/getcolors/:id",getcolors);
 router.get("/getsizes/:id",getsizes);
 
 
+router.get("/getallproducts/:sortby",getallproducts);
+router.get("/getcateproducts/:id",getcateproducts);
+router.get("/getsubcateproducts/:id",getsubcateproducts);
+router.get("/searchproducts/:text/:sortby",searchproducts);
 
-router.get("/searchproducts/:text",searchproducts);
 
+
+
+router.get("/getadminmoderator",getadminmoderator);
+router.post("/setadminmoderator",setadminmoderator);
 
 
 router.post("/createchat",createchat);
 router.post("/haschat",haschat);
+router.post("/makezero",makezero);
 router.post("/createmessege",createmessege);
 router.post("/flagchat",flagchat);
 router.post("/unflagchat",unflagchat);
@@ -166,13 +221,16 @@ router.get("/getusers",getusers);
 router.get("/getsingleuser/:id",getsingleuser);
 
 
-
+router.get("/getmixedcates",getmixedcates);
 router.get("/getcategoryes",getcategoryes);
 router.get("/getallsubcate",getallsubcate);
 router.get("/getsubcatebyid/:id",getsubcatebyid);
 router.get("/getallcate",getallcate);
 router.post("/createcate",createcate);
 router.post("/createsubcate",createsubcate);
+
+router.post("/detetecate",detetecate);
+router.post("/detetesubcate",detetesubcate);
 
 
 
@@ -182,5 +240,48 @@ router.post("/sendotp",sendotp);
 router.post("/setac",setac);
 router.post("/fsendotp",fsendotp);
 router.post("/fsetac",fsetac);
+
+
+router.get("/getpaymentsettings",getpaymentsettings);
+router.post("/createpaymentsettings",createpaymentsettings);
+router.post("/updatepaymentsettings",updatepaymentsettings);
+
+
+router.get("/getallcopuns",getallcopuns);
+router.post("/createcoupon",createcoupon);
+router.post("/updatecoupon",updatecoupon);
+
+
+
+router.get("/getallslider",getallslider);
+router.post("/createslider",createslider);
+router.post("/updateslider",updateslider);
+
+
+router.get("/getfooter",getfooter);
+router.post("/createfooter",createfooter);
+router.post("/updatefooter",updatefooter);
+
+
+router.get("/getterm",getterm);
+router.post("/createterm",createterm);
+router.post("/updateterm",updateterm);
+
+
+
+router.get("/setcod/:id", 
+isAuth,
+setcod
+);
+
+router.get("/setpaypal/:id", 
+isAuth,
+setpaypal
+);
+
+router.post("/setstripe/", 
+isAuth,
+setstripe
+);
 
 module.exports = router;

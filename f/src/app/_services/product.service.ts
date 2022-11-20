@@ -30,18 +30,19 @@ export class ProductService {
    }
 
 
-  getallproducts() {
-    var response = this.productCache.get("products");
+  getallproducts(sortby) {
+
+
+     var response = this.productCache.get("products"+sortby);
 
     if(response){
-      //console.log("Products getting from catch",response);
       return of(response);
     }
 
-    return this.http.get(this.baseUrl + 'getallproducts').pipe(map(response => {
+    return this.http.get(this.baseUrl + 'getallproducts/'+ Number(sortby)).pipe(map(response => {
 
-      this.productCache.set("products", response);
-      return this.productCache.get("products");
+      this.productCache.set("products"+sortby, response);
+     return this.productCache.get("products"+sortby);
 
     }));
   }
@@ -57,15 +58,13 @@ export class ProductService {
     }
     return this.http.get<Product>(this.baseUrl + 'getsingleproduct/' + Number(id));
   }
-  getEditProduct(id: string) {
-    return this.http.get<Product>(this.baseUrl + 'getsingleproduct/' + Number(id));
+  getEditProduct(id: number) {
+    return this.http.get<any>(this.baseUrl + 'getsingleproduct/' + Number(id));
   }
 
-  searchProducts(key){
-    return this.http.get<Product>(this.baseUrl + 'searchproducts/' + key);
-  }
 
-  getSellerProduct(id: string) {
+
+  getSellerProduct(id) {
 
     return this.http.get<Product[]>(this.baseUrl + 'getsellerproducts/' + Number(id));
   }
@@ -75,6 +74,25 @@ export class ProductService {
   }
   getsizes(id){
     return this.http.get<Sizes[]>(this.baseUrl + 'getsizes/' + Number(id));
+  }
+
+
+
+
+
+
+
+
+  searchProducts(key,sortby){
+    return this.http.get<Product>(this.baseUrl + 'searchproducts/' + key + '/' + sortby);
+  }
+  getcateproducts(id,sortby) {
+
+    return this.http.get<Product[]>(this.baseUrl + 'getcateproducts/' + Number(id));
+  }
+  getsubcateproducts(id,sortby) {
+
+    return this.http.get<Product[]>(this.baseUrl + 'getsubcateproducts/' + Number(id));
   }
 
 }

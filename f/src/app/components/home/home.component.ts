@@ -7,9 +7,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  params: any = {};
+
   constructor() { }
 
   ngOnInit(): void {
+    this.params = "eeeeeeeeeee";
   }
 
+
+  images = [
+    {
+      imageSrc:
+          '../assets/banner1.jpg',
+      imageAlt: 'nature1',
+    },
+    {
+      imageSrc:
+         '../assets/banner2.jpg',
+      imageAlt: 'nature2',
+    },
+    {
+      imageSrc:
+          '../assets/banner3.jpg',
+      imageAlt: 'person1',
+    }
+  ]
 }

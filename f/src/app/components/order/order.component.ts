@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { ReviewService } from './../../_services/review.service';
 import { AccountService } from 'src/app/_services/account.service';
 import { Component, OnInit } from '@angular/core';
@@ -6,6 +7,7 @@ import { User } from 'src/app/_models/user';
 import { OrderService } from 'src/app/_services/order.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map } from 'rxjs';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-order',
@@ -13,6 +15,9 @@ import { map } from 'rxjs';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
+  imglink = environment.imgUrl;
+
+  rateditor: Editor;
 
   user: User;
   noorder = false;
@@ -23,7 +28,6 @@ export class OrderComponent implements OnInit {
   stopscroll  = false;
   search:string;
   neworder = false;
-  isreview = false;
 
   review = {
     pid:null,
@@ -37,12 +41,16 @@ export class OrderComponent implements OnInit {
 
   orders: any = [];
   singleorder: any = [];
+  selectedorder: any = null;
+  reviewitem: any = null;
   sellerid: number;
   customerid: number;
   status="All";
   progress: number = null;
   message: string = null;
   UserId: string;
+  alert = false;
+  rateingalert = false;
 
   constructor(private route: ActivatedRoute,
     private accountService: AccountService,private http: HttpClient,
@@ -50,6 +58,8 @@ export class OrderComponent implements OnInit {
     private reviewService: ReviewService) { }
 
   ngOnInit(): void {
+    this.rateditor = new Editor();
+
     this.UserId = this.accountService.getuserid()
     this.route.params.subscribe(params => {
       window.scrollTo(0, 0);
@@ -75,18 +85,61 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  addreview(id){
-    console.log(id);
-    this.review.pid = id;
-    this.isreview = true ;
+  ngOnDestroy(): void {
+    this.rateditor.destroy();
   }
+
+
+  addreview(id){
+    if(id !== this.review.pid){
+      this.review = {
+        pid:null,
+        ratting:null,
+        review:this.review.review,
+        image1:this.review.image1,
+        image2:this.review.image2,
+        image3:this.review.image3,
+        image4:this.review.image4,
+      }
+    }
+    console.log(id);
+    this.rateingalert = !this.rateingalert;
+    this.review.pid = id;
+    console.log(this.selectedorder);
+    this.reviewitem = this.selectedorder.orderItems.find(x => x.id == id);
+  }
+
+  setratting(count){
+    this.review.ratting = count;
+  }
+
+
   createreview(){
+
     this.reviewService.createreview(this.review).subscribe( res=>{
 
       console.log(res);
+      this.review = {
+        pid:null,
+        ratting:null,
+        review:'',
+        image1:'',
+        image2:'',
+        image3:'',
+        image4:'',
+      }
 
     });
 
+  }
+  showdetails(item){
+  this.selectedorder = item;
+  }
+  alerttoggle(){
+    this.alert = !this.alert;
+  }
+  ratealerttoggle(){
+    this.rateingalert = !this.rateingalert;
   }
 
   viewOrder(id:number){
@@ -116,14 +169,7 @@ export class OrderComponent implements OnInit {
     this.getorders();
   }
 
-  changeStatus(id:number,status:string){
-   this.orderService.changeStatus(id,this.user.userId,status).subscribe(res => {
-      var newo =  this.orders.find(i => i.id == id);
-      newo.status = status;
 
-   });
-
-  }
   changecutomerstatus(id:number,status:string){
     this.orderService.changecutomerstatus(id,this.user.userId,status).subscribe(res => {
        var newo =  this.orders.find(i => i.id == id);
@@ -131,12 +177,13 @@ export class OrderComponent implements OnInit {
     });
 
    }
+
   SearchOrder(){
     this.orders = [];
     this.noorder = false;
     this.orderview = false;
     this.stopscroll = false;
-    this.orderService.getOrderById(this.search,this.sellerid).subscribe(res =>{
+    this.orderService.searchOrderById(this.search,this.sellerid).subscribe(res =>{
       this.orders.push(res);
       if(res == null){
         this.orders = null;
@@ -161,6 +208,8 @@ export class OrderComponent implements OnInit {
     if(this.sellerid){
        this.orderService.getSellerOrders(this.sellerid,this.page,this.status).subscribe(res =>{
          this.orders  = res;
+         this.selectedorder = res[0]
+         console.log(this.orders)
          if(this.orders.length === 0 || res.length < 10 ){
           this.noorder = true;
           this.stopscroll = true;
@@ -228,40 +277,6 @@ export class OrderComponent implements OnInit {
       }})).subscribe();
   }
 
-
-  onScroll(): void {
-    if(this.orderview == false && this.stopscroll == false){
-      this.noorder = false;
-
-      if(this.sellerid){
-        this.orderService.getSellerOrders(this.sellerid,++this.page,this.status).subscribe( res => {
-          this.orders.push(...res);
-          if(res.length === 0 || res.length < 10 ){
-            this.noorder = true;
-            this.stopscroll = true;
-          }else{
-            this.noorder = false;
-            this.stopscroll = false;
-          }
-
-         });
-      }
-      if(this.customerid){
-        this.orderService.getCustomerOrders(this.customerid,++this.page,this.status,this.neworder).subscribe( res => {
-
-          this.orders.push(...res);
-          if(res.length === 0 || res.length < 10 ){
-            this.noorder = true;
-            this.stopscroll = true;
-          }else{
-            this.noorder = false;
-            this.stopscroll = false;
-          }
-
-         });
-      }
-    }
-    }
 
     deleteimage = async(path,val) =>{
       this.message = "Deleteing";

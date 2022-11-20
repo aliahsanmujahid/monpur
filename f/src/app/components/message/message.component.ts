@@ -57,7 +57,7 @@ export class MessageComponent implements OnInit {
 
         if(!res.error){
           this.ChatId = res[0].id
-          console.log("this.ChatId ",this.ChatId );
+          // console.log("this.ChatId ",this.ChatId );
           this.messageService.loadmessage(this.ChatId,this.UserId);
         }else{
           this.messageService.nullmessage();

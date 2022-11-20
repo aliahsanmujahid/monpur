@@ -1,3 +1,14 @@
+*{
+  font-size: large;
+}
+.row{
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  padding-top: 80px;
+  font-size: large;
+
+}
 .column1 {
   position: fixed;
   width: 20%;
@@ -10,14 +21,23 @@
   left: 20%;
   height: 100%;
   width: 80%;
-  overflow: scroll;
+  overflow-y: scroll;
   background-color: rgb(255, 255, 255);
 }
 ul{
-  position: absolute;
-  top: 21%;
   width: 100%;
+  height: 100%;
   color: rgb(138, 120, 113);
+  overflow-y: scroll;
+  padding-bottom: 300px;
+}
+h1{
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background: #ff21b5;
+  color: #fff ;
+  cursor: pointer;
 }
 
 .row:after {
@@ -30,6 +50,7 @@ li{
   background-color: rgb(255, 255, 255);
   margin: 10px;
   border-radius: 3px;
+  list-style: none;
 }
 .logout{
   background-color: rgba(255, 127, 127, 0.795);
@@ -55,3 +76,66 @@ img{
   position: absolute;
   width: 30px;
 }
+
+
+
+
+
+
+
+
+
+
+section {
+    width: 99%;
+    margin: 0 auto;
+    padding: 2rem 9%;
+    margin-top: 100px;
+    border-radius: 5px;
+    border: 1px solid rgb(189, 189, 185);
+    box-shadow: 1px 2px 2px #888888;
+}
+
+
+
+.contact .icons-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(20rem, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1rem;
+}
+
+.contact .icons-container .icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.2rem;
+  border-radius: .5rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.contact .icons-container .icons i {
+  font-size: 2rem;
+  height: 4rem;
+  width: 4rem;
+  line-height: 4rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+.contact .icons-container .icons h3 {
+  font-size: 1.5rem;
+  padding: 1rem 0;
+  color: #130f40;
+}
+
+.contact .icons-container .icons p {
+  font-size: 1.5rem;
+  line-height: 2;
+  color: #666;
+}
+

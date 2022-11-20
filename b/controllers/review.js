@@ -58,7 +58,7 @@ exports.createreview = async (req, res, next) => {
 
 exports.getallreviews = async (req, res, next) => {
 
-    let sql = `SELECT * FROM reviews WHERE pid = ?`;
+    let sql = `SELECT * FROM reviews WHERE pid = ? limit 3`;
     let query = db.query(sql,[req.params.pid], (err, result) => {
           if(err) throw err;
            res.send(result);

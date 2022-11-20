@@ -6,6 +6,7 @@ import { IBasket, IBasketTotals } from 'src/app/_models/basket';
 import { IOrder, IOrderItem } from 'src/app/_models/order';
 import { AccountService } from 'src/app/_services/account.service';
 import { BasketService } from 'src/app/_services/basket.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -14,6 +15,9 @@ import { BasketService } from 'src/app/_services/basket.service';
 })
 export class CheckoutComponent implements OnInit {
 
+  imglink = environment.imgUrl;
+  card = false;
+
   basket$: Observable<IBasket>;
   basketTotal$: Observable<IBasketTotals>;
 
@@ -21,16 +25,18 @@ export class CheckoutComponent implements OnInit {
     public accountService: AccountService, private orderService: OrderService) { }
 
   orderCreate: IOrder = {
-    
     name: '',
     phone: '',
+    email: '',
     address: '',
-    district: '',
-    upazila: '',
-    cashOnDelevary:'',
+    message: '',
+    city: '',
+    state: '',
+    zip: '',
     sellerid:0,
     orderItems:[]
   }
+
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -47,14 +53,22 @@ export class CheckoutComponent implements OnInit {
 
   createorder(){
 
-    console.log("orderCreate",this.orderCreate);
+    // console.log("orderCreate",this.orderCreate);
 
     this.orderService.orderCreate(this.orderCreate).subscribe(res =>{
 
-      console.log("order res",res);
+      if(res.success == true){
+          this.router.navigateByUrl("payment/"+res.orderid);
+      }else{
+        console.log("No Order");
+      }
+
      // this.basketService.deleteBasket();
       window.scrollTo(0, 0);
     })
+  }
+  onItemChange(value){
+    console.log(" Value is : ", value.target.value );
   }
 
   setOrderItems(){
@@ -65,6 +79,7 @@ export class CheckoutComponent implements OnInit {
      const OrderItem: IOrderItem ={
         id: 0,
         productName: '',
+        pictureUrl: '',
         price: 0,
         quantity: 0,
         color_id:0,
@@ -76,6 +91,7 @@ export class CheckoutComponent implements OnInit {
       }
       OrderItem.id = item.id;
       OrderItem.productName = item.productName;
+      OrderItem.pictureUrl = item.pictureUrl;
       OrderItem.price = item.price;
       OrderItem.quantity = item.quantity;
       if(item.color.length !== 0){
@@ -96,6 +112,10 @@ export class CheckoutComponent implements OnInit {
     this.orderCreate.sellerid = basket.sellerid;
 
 
+  }
+
+  creditcard(what){
+    this.card = what;
   }
 
 }

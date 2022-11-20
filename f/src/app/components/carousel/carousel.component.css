@@ -1,0 +1,146 @@
+.carousel-container{
+  position: relative;
+  text-align: center;
+  box-shadow: 0 6px 12px #dce1e1;
+  align-items: center;
+}
+.carousel-dot-container{
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.dot{
+  cursor: pointer;
+  height: 13px;
+  width: 13px;
+  margin: 0 5px;
+  background-color: #3b4747;
+  border-radius: 50%;
+  display: inline-block;
+  transition:opacity 0.6 ease;
+  opacity: 0.2;
+}
+
+.active,.dot:hover{
+  opacity: 1;
+}
+
+.carousel-container img{
+  width: 100%;
+  display: none;
+  min-height: 50vh;
+}
+
+.carousel-container img.image-active{
+  display: block;
+  height: auto;
+}
+.content{
+  position: absolute;
+  top: 30%;
+  left: 10%;
+  text-align: left;
+}
+.content span {
+  font-size: 2rem;
+  color: #666;
+}
+button{
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.9rem 3rem;
+  border-radius: 0.5rem;
+  background: #eb4d4b;
+  color: #fff;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+button:hover{
+  background:#130f40;
+}
+.content h1{
+  font-size: 6rem;
+  color: #130f40;
+  padding-top: 0.5rem;
+}
+
+.btn-carousel{
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  font-size: 30px;
+  padding:0;
+  color: #2a3333d0;
+}
+.pcontrolsprev{
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  display: block;
+  align-items: center;
+  justify-content:center;
+  font-size: 30px;
+  padding:0;
+  color: #2a3333d0;
+}
+.pcontrolsnext{
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  display: block;
+  align-items: center;
+  justify-content:center;
+  font-size: 30px;
+  padding:0;
+  color: #2a3333d0;
+}
+
+.icon-carusel{
+  opacity: 0.5;
+  transition: all 0.15s ease;
+  background-color: #ffffff;
+  border: 1px solid  #130f40b9;
+  border-radius: 4px;
+  margin: 5px;
+  padding: 8px 15px 8px 15px;
+}
+.icon-carusel:hover{
+  opacity: 0.9;
+}
+.icon-carusel:active{
+  opacity: 0.5;
+}
+
+
+
+.fade{
+  animation-name: fade;
+  animation-duration: .7s;
+}
+
+
+@keyframes fade {
+
+  from{
+     opacity: 0.4;
+  }
+  to{
+    opacity: 1;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+
+}

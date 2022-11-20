@@ -1,0 +1,438 @@
+
+.row{
+  width: 100%;
+  padding: 10px;
+  padding-top: 100px;
+  font-size: large;
+ }
+ .column1{
+  float: left;
+  word-wrap: break-word;
+  width: 20%;
+  height: 100%;
+  display: table;
+  color: #000000;
+}
+.text{
+  padding: 20px;
+}
+.column2{
+  word-wrap: break-word;
+  width: 98%;
+  margin: 0 auto;
+  display: table;
+}
+
+
+
+
+
+
+
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.products .box-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap:5px;
+  -webkit-box-pack: flex-start;
+      -ms-flex-pack: flex-start;
+          justify-content: flex-start;
+  width: 100%;
+
+}
+
+.products .box-container .box {
+  width: 24%;
+  border-radius: .5rem;
+  overflow: hidden;
+  position: relative;
+  -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  border: 0.1rem solid rgba(0, 0, 0, 0.3);
+}
+
+.products .box-container .box.hide {
+  display: none;
+}
+
+.products .box-container .box.active {
+  -webkit-animation: fadeUp .4s linear;
+          animation: fadeUp .4s linear;
+}
+
+.products .box-container .box .icons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: rgba(236, 236, 236, 0.384);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  gap: .5rem;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  z-index: 1;
+}
+
+.products .box-container .box .icons a {
+  font-size: 1rem;
+  height: 3rem;
+  width: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  background: #fff;
+  border-radius: .5rem;
+}
+
+.products .box-container .box:hover .icons {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+
+.products .box-container .box .image {
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.products .box-container .box .image img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.products .box-container .box:hover .image img {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+.products .box-container .box .content {
+  padding: 1rem 1.5rem;
+}
+
+.products .box-container .box .content h3 {
+  font-size: 1rem;
+  color: #130f40;
+  font-weight: normal;
+}
+
+.products .box-container .box .content .price {
+  padding: .5rem 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: .5rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.products .box-container .box .content .price .amount {
+  font-size: 1rem;
+  font-weight: bolder;
+  color: #130f40;
+}
+
+.products .box-container .box .content .price .cut {
+  font-size: 1rem;
+  text-decoration: line-through;
+  color: #666;
+}
+
+.products .box-container .box .content .price .offer {
+  font-size: 1rem;
+  color: #eb4d4b;
+}
+
+.products .box-container .box .content .stars {
+  font-size: 1rem;
+}
+
+.products .box-container .box .content .stars i {
+  color: gold;
+}
+
+.products .box-container .box .content .stars span {
+  color: #666;
+}
+
+.width{
+  width: 100%!important;
+  margin: 0 auto!important;
+}
+
+
+
+
+
+
+
+
+
+
+
+select {
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  -ms-appearance:none;
+  appearance:none;
+  outline:0;
+  box-shadow:none;
+  background: #ffffff;
+  background-image: none;
+  flex: 1;
+  padding: 0 .5em;
+  color:rgb(15, 15, 15);
+  cursor:pointer;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  border-radius: 5px;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+}
+select::-ms-expand {
+  display: none;
+}
+.selectbox{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  height: 2.3em;
+  line-height: 2.3;
+  overflow: hidden;
+  border-radius: .25em;
+}
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #e9ebeb;
+  cursor:pointer;
+  pointer-events:none;
+  transition:.25s all ease;
+  border-radius: 0px 5px;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+}
+.select:hover::after {
+  color: #ff2d8f;
+}
+
+
+
+
+
+@media (max-width: 1200px) {
+ .products .box-container .box {
+   width: 32%;
+ }
+}
+
+@media (max-width: 1085px) {
+
+  /* .products .box-container .box {
+    width: 23%;
+  } */
+
+  .products .box-container .box .icons a {
+    font-size: 20px;
+  }
+  .products .box-container .box .content h3 {
+    font-size: 20px;
+  }
+  .products .box-container .box .content .price .amount {
+    font-size: 10px;
+  }
+
+  .products .box-container .box .content .price .cut {
+    font-size: 10px;
+  }
+
+  .products .box-container .box .content .price .offer {
+    font-size: 20px;
+  }
+
+  .products .box-container .box .content .stars {
+    font-size: 7px;
+  }
+
+}
+
+
+
+@media (max-width: 900px) {
+  .products .box-container .box {
+    width: 32.5%;
+  }
+
+}
+@media (max-width: 900px) {
+ .products .box-container .box {
+   width: 32.5%;
+ }
+
+}
+
+@media (max-width: 700px) {
+ .column1{
+   display: none;
+ }
+ .column2{
+   width: 100%;
+   padding: 0;
+ }
+ .row{
+   padding: 5px;
+ }
+ .products .box-container .box {
+   width: 32%;
+ }
+
+}
+
+
+@media (max-width: 600px) {
+  .products .box-container .box {
+    width: 49%;
+  }
+
+}
+
+
+
+@media (max-width: 768px) {
+
+
+}
+
+@media (max-width: 500px) {
+
+
+}
+
+@media (max-width: 450px) {
+  .products .box-container {
+    gap:3px;
+  }
+  .select{
+    width: 100%;
+    height: 2em;
+  }
+
+
+}
+@media (max-width: 350px) {
+  .products .box-container {
+    gap:2px;
+  }
+
+}
+
+@media (max-width: 280px) {
+  .products .box-container .box {
+    width: 100%;
+  }
+
+}
+@media (max-width: 240px) {
+
+
+}
+
+
+
+

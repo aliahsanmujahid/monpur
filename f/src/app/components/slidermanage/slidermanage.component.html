@@ -1,0 +1,88 @@
+
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+
+<div *ngIf="alert" class="alert-box">
+
+  <div class="details2" >
+    <div class="text">
+
+      <div class="upload">
+        <span  *ngIf="progress > 0" >
+          {{progress}}%
+        </span>
+        <span *ngIf="message">
+          {{message}}
+        </span>
+      </div>
+
+      <div  *ngIf="model.img == '' " class="border">
+        <input accept=".jpg,.png,.jpeg,.webp" type="file" #file placeholder="Choose file"  (change)="uploadFile(file.files,1)" style="display:none;">
+        <img class="upload"  (click)="file.click()" src="./assets/upload.png" alt="">
+      </div>
+
+      <div *ngIf="model.img !== '' " class="border">
+        <img src="{{imglink+model.img }}" alt="">
+        <div class="delete">
+          <p  (click)="deleteimage(model.img,1)">Delete</p>
+        </div>
+      </div>
+
+
+      <form  #CopunForm="ngForm" >
+        <div class="inputBox">
+          <div class="input">
+              <label>title</label>
+              <input  name="title" [(ngModel)]="model.title" minlength="3" required type="text" placeholder="enter copun code">
+          </div>
+          <div class="input">
+              <label>heading</label>
+              <input  name="heading" [(ngModel)]="model.heading" required type="text" placeholder="enter minimun budget">
+          </div>
+      </div>
+
+      <div class="inputBox">
+        <div class="input">
+            <label>buttontext</label>
+            <input  name="buttontext" [(ngModel)]="model.buttontext" minlength="3" required type="text" placeholder="enter copun code">
+        </div>
+        <div class="input">
+            <label>buttonlink</label>
+            <input  name="buttonlink" [(ngModel)]="model.buttonlink" required type="text" placeholder="enter minimun budget">
+        </div>
+    </div>
+      <input type="submit" *ngIf="model.id == 0"  [disabled]="CopunForm.invalid" (click)="createslider()" value="Create" class="btn">
+      <input type="submit" *ngIf="model.id != 0" [disabled]="CopunForm.invalid" (click)="updateslider()" value="Update" class="btn">
+    </form>
+    </div>
+  </div>
+
+</div>
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>slider Manage</h1>
+    </div>
+    <div class="details">
+
+
+
+     <div class="copun" *ngFor="let s of sliders">
+      <div class="copundata">
+        <img src="{{imglink+s.img }}" alt="">
+        <p>title: {{s.title}}</p>
+        <p>heading: {{s.heading}}</p>
+        <p>buttontext: {{s.buttontext}}</p>
+        <p>buttonlink: {{s.buttonlink}}</p>
+      </div>
+      <div>
+        <button (click)="updatetoggle(s)" >Edit</button>
+      </div>
+     </div>
+
+     <button (click)="alerttoggle()">Add Slider</button>
+
+    </div>
+  </div>
+</div>

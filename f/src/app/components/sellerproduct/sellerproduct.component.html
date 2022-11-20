@@ -8,7 +8,7 @@
       <div *ngFor="let item of products" class="card_item">
         <div class="card_inner" routerLink="/product/{{item.id}}">
           <div class="card_top">
-            <img src="{{'http://localhost:8000/'+item.file1}}"  alt="">
+            <img src="{{imglink+item.file1}}"  alt="">
           </div>
           <div class="psummer">
             <span>Name: {{item.name}}</span>
@@ -22,7 +22,7 @@
 
 
         <div class="cartbutton">
-          <button routerLink="/edit/{{item.id}}"  >Edit</button>
+          <button [routerLink]="['/dash', {editproduct: item.id }]" >Edit</button>
           <button  >Delete</button>
         </div>
 

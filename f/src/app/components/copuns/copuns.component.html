@@ -1,0 +1,49 @@
+
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+
+<div *ngIf="alert" class="alert-box">
+
+  <div class="details2" >
+    <div class="text">
+      <form  #CopunForm="ngForm" >
+        <div class="inputBox">
+          <div class="input">
+              <label>Copun name</label>
+              <input  name="code" [(ngModel)]="model.code" minlength="3" required type="text" placeholder="enter copun code">
+          </div>
+          <div class="input">
+              <label>Minimun Budget</label>
+              <input  name="number" [(ngModel)]="model.minimun" required type="text" placeholder="enter minimun budget">
+          </div>
+      </div>
+      <input type="submit" *ngIf="model.id == 0"  [disabled]="CopunForm.invalid" (click)="creatcopun()" value="Create" class="btn">
+      <input type="submit" *ngIf="model.id != 0" [disabled]="CopunForm.invalid" (click)="updatecopun()" value="Update" class="btn">
+    </form>
+    </div>
+  </div>
+
+</div>
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>copun Manage</h1>
+    </div>
+    <div class="details">
+
+     <div class="copun" *ngFor="let item of copuns">
+      <div class="copundata">
+      <p >Code: <span (click)="copyMessage(item.code)" >{{item.code}}</span></p>
+      <p>Min: {{item.minimun}}</p>
+      </div>
+      <div>
+        <button (click)="updatetoggle(item)" >Edit</button>
+      </div>
+     </div>
+
+     <button (click)="alerttoggle()">Add copun</button>
+
+    </div>
+  </div>
+</div>

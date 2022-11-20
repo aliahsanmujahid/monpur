@@ -1,17 +1,25 @@
 
+<app-navbar ></app-navbar>
+
 <input type="checkbox" id="check3">
 
 <div class="row">
 
-
   <div class="column1" >
     <ul>
+      <li (click)="viewdashboard()" >Dashboard</li>
       <li (click)="viewprofile()" >Profile</li>
       <li (click)="createproduct()" >Create Product</li>
       <li (click)="createcate()" >Create Category</li>
       <li (click)="sellerproduct()" >Your Products</li>
       <li (click)="sellerorder()" >Your Orders</li>
+      <li (click)="manageorder()" >Manage Orders</li>
       <li (click)="viewmessage()" >Message</li>
+      <li (click)="paymentmanagment()" >Payment Managment</li>
+      <li (click)="usermanagment()" >User Managment</li>
+      <li (click)="slidermessage()" >slider</li>
+      <li (click)="copunmanagment()" >copuns Managment</li>
+      <li (click)="footermanagment()" >footer & terms</li>
       <li class="logout" (click)="logout()">Log Out</li>
     </ul>
   </div>
@@ -22,12 +30,64 @@
       </label>
     </div>
 
-  <app-createproduct *ngIf="createproductview"></app-createproduct>
+    <section *ngIf="dashboard" class="contact" id="contact">
+
+      <div class="icons-container">
+
+          <div class="icons">
+              <div class="">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>address</h3>
+              </div>
+
+              <p>3434343434</p>
+
+          </div>
+
+          <div class="icons">
+            <div class="">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>address</h3>
+            </div>
+
+            <p>3434343434</p>
+          </div>
+
+          <div class="icons">
+            <div class="">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>address</h3>
+            </div>
+
+            <p>3434343434</p>
+          </div>
+
+          <div class="icons">
+            <div class="">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>address</h3>
+            </div>
+
+            <p>3434343434</p>
+        </div>
+
+      </div>
+
+
+    </section>
+
+  <app-createproduct *ngIf="createproductview" [producteditid] = "producteditid" ></app-createproduct>
   <app-sellerproduct *ngIf="sellerproductview"></app-sellerproduct>
   <app-profile *ngIf="profileview"></app-profile>
   <app-chat *ngIf="messageview"></app-chat>
   <app-order *ngIf="orderview"></app-order>
   <app-category *ngIf="cateview"></app-category>
+  <app-manageorder *ngIf="manageorderview"></app-manageorder>
+  <app-paymentmanage *ngIf="paymentmanageview"></app-paymentmanage>
+  <app-usermanage *ngIf="usermanageview"></app-usermanage>
+  <app-copuns *ngIf="copunsview"></app-copuns>
+  <app-slidermanage *ngIf="sliderview"></app-slidermanage>
+  <app-footermanage *ngIf="footerview"></app-footermanage>
 
 </div>
 </div>
