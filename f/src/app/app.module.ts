@@ -1,6 +1,5 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ColorPickerModule } from 'ngx-color-picker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MessageComponent } from './components/message/message.component';
@@ -39,7 +38,10 @@ import { CopunsComponent } from './components/copuns/copuns.component';
 import { SlidermanageComponent } from './components/slidermanage/slidermanage.component';
 import { MobilecateComponent } from './components/mobilecate/mobilecate.component';
 import { FootermanageComponent } from './components/footermanage/footermanage.component';
-
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ShipingComponent } from './components/shiping/shiping.component';
 
 
 @NgModule({
@@ -73,21 +75,25 @@ import { FootermanageComponent } from './components/footermanage/footermanage.co
     CopunsComponent,
     SlidermanageComponent,
     MobilecateComponent,
-    FootermanageComponent
+    FootermanageComponent,
+    ShipingComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
+    NgxSpinnerModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ColorPickerModule,
     NgxPayPalModule,
     NgxEditorModule,
     NgxPrintModule,
     TimeagoModule.forRoot()
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

@@ -1,36 +1,39 @@
 
-<app-navbar ></app-navbar>
-
 <input type="checkbox" id="check3">
 
 <div class="row">
-
   <div class="column1" >
+   <div class="sidemenu">
     <ul>
-      <li (click)="viewdashboard()" >Dashboard</li>
-      <li (click)="viewprofile()" >Profile</li>
-      <li (click)="createproduct()" >Create Product</li>
-      <li (click)="createcate()" >Create Category</li>
-      <li (click)="sellerproduct()" >Your Products</li>
-      <li (click)="sellerorder()" >Your Orders</li>
-      <li (click)="manageorder()" >Manage Orders</li>
-      <li (click)="viewmessage()" >Message</li>
-      <li (click)="paymentmanagment()" >Payment Managment</li>
-      <li (click)="usermanagment()" >User Managment</li>
-      <li (click)="slidermessage()" >slider</li>
-      <li (click)="copunmanagment()" >copuns Managment</li>
-      <li (click)="footermanagment()" >footer & terms</li>
+      <h1 routerLink="" >View Site</h1>
+      <li (click)="showgroup('dash')"  >Dashboard</li>
+      <li (click)="showgroup('profile')" >Profile</li>
+      <li (click)="showgroup('createproduct')" >Create Product</li>
+      <li (click)="showgroup('category')" >Create Category</li>
+      <li (click)="showgroup('sellerproduct')" >Your Products</li>
+      <li (click)="showgroup('order')" >Your Orders</li>
+      <li (click)="showgroup('manageorder')" >Manage Orders</li>
+      <li (click)="showgroup('chat')" >Message</li>
+      <li (click)="showgroup('paymentmanage')" >Payment Managment</li>
+      <li (click)="showgroup('usermanage')" >User Managment</li>
+      <li (click)="showgroup('slidermanage')" >slider</li>
+      <li (click)="showgroup('copuns')" >copuns Managment</li>
+      <li (click)="showgroup('footermanage')" >footer & terms</li>
+      <li (click)="showgroup('shipingmanage')" >Shiping Manage</li>
+
       <li class="logout" (click)="logout()">Log Out</li>
     </ul>
+   </div>
   </div>
   <div class="column2">
+
     <div class="showhide">
       <label for="check3">
         <img src="../assets/bar.png" alt="">
       </label>
     </div>
 
-    <section *ngIf="dashboard" class="contact" id="contact">
+    <section *ngIf="show == 'dash' " class="contact" id="contact">
 
       <div class="icons-container">
 
@@ -76,18 +79,19 @@
 
     </section>
 
-  <app-createproduct *ngIf="createproductview" [producteditid] = "producteditid" ></app-createproduct>
-  <app-sellerproduct *ngIf="sellerproductview"></app-sellerproduct>
-  <app-profile *ngIf="profileview"></app-profile>
-  <app-chat *ngIf="messageview"></app-chat>
-  <app-order *ngIf="orderview"></app-order>
-  <app-category *ngIf="cateview"></app-category>
-  <app-manageorder *ngIf="manageorderview"></app-manageorder>
-  <app-paymentmanage *ngIf="paymentmanageview"></app-paymentmanage>
-  <app-usermanage *ngIf="usermanageview"></app-usermanage>
-  <app-copuns *ngIf="copunsview"></app-copuns>
-  <app-slidermanage *ngIf="sliderview"></app-slidermanage>
-  <app-footermanage *ngIf="footerview"></app-footermanage>
+  <app-createproduct *ngIf=" show == 'createproduct' " [producteditid] = "producteditid" ></app-createproduct>
+  <app-sellerproduct *ngIf=" show == 'sellerproduct' "  ></app-sellerproduct>
+  <app-profile *ngIf=" show == 'profile' "  ></app-profile>
+  <app-chat *ngIf=" show == 'chat' "  ></app-chat>
+  <app-order *ngIf=" show == 'order' "  ></app-order>
+  <app-category *ngIf=" show == 'category' "  ></app-category>
+  <app-manageorder *ngIf=" show == 'manageorder' "  ></app-manageorder>
+  <app-paymentmanage *ngIf=" show == 'paymentmanage' " ></app-paymentmanage>
+  <app-usermanage *ngIf=" show == 'usermanage' " ></app-usermanage>
+  <app-copuns *ngIf=" show == 'copuns' "  ></app-copuns>
+  <app-slidermanage *ngIf=" show == 'slidermanage' " ></app-slidermanage>
+  <app-footermanage *ngIf=" show == 'footermanage' " ></app-footermanage>
+  <app-shiping *ngIf=" show == 'shipingmanage' " ></app-shiping>
 
 </div>
 </div>

@@ -33,8 +33,9 @@
 
 .carousel-container img{
   width: 100%;
+  min-width: 100%;
   display: none;
-  min-height: 50vh;
+  min-height: 400px;
 }
 
 .carousel-container img.image-active{
@@ -140,7 +141,9 @@ button:hover{
 }
 
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
 
-
+  .carousel-container img{
+    min-height: 0;
+  }
 }

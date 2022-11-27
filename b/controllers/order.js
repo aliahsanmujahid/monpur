@@ -198,6 +198,8 @@ exports.getSellerOrders = async (req, res, next) => {
       for(let i=0;i<result.length;i++){
 
       const [orderItems] = await con.execute('SELECT * FROM orderitems WHERE orderid = ? ', [result[i].id]);
+      
+      
       data.push({...result[i],orderItems});
 
       }
@@ -207,119 +209,104 @@ exports.getSellerOrders = async (req, res, next) => {
 
 }
 
+
+
+
+
+
+
+
+
+
+
+// createorder Section
 exports.createorder = async (req, res, next) => {
 
     const con = await connection;
     const orderitems = req.body.orderItems;
-    const newitems = []
-
-    var delevary = 50;
-    var subtotal = 0;
-  
-  
+    
+    var newitems = []
   
     for (let i = 0; i < orderitems.length; i++) {
   
-      const [data] = await con.execute('SELECT * FROM products WHERE id = ? ', [ orderitems[i].id ]);
-     
-      var temp = data[0].discprice*orderitems[i].quantity;
-      subtotal = subtotal + temp;
+      let [data] = await con.execute('SELECT * FROM products WHERE id = ? ', [ orderitems[i].id ]);
       
-      newitems.push(data[0])
-  
+      if(orderitems[i].mixedvari.values.length > 0){
+        let id = orderitems[i].mixedvari.values[0].id;
+
+        if(orderitems[i].mixedvari.values[0].quantity != null){
+          await con.execute (
+            "UPDATE mixvalues SET quantity = quantity - ? WHERE id = ?", 
+            [orderitems[i].quantity,id]
+            );
+        }
+        const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE id = ? ', [id]);
+        var mix = mixvalues[0];
+        newitems.push({...data[0],mix})
+      }
+
     }
 
-    // for (let i = 0; i < newitems.length; i++) {
-      
-    //   var temp = newitems[i].discprice*orderitems[i].quantity;
-    //   subtotal = subtotal + temp;
+    var delevary = 0;
+    var cuponv = 0;
+    var subtotal = 0;
+    var alltotal = 0;
 
-    // }
+
+    let [shiping] = await con.execute('SELECT * FROM shiping WHERE id = ? ', [req.body.shipingid]);
+
+    //console.log("couponid",req.body.couponid);
+
+    if(req.body.couponid != null){
+      let [cupondata] = await con.execute('SELECT * FROM coupon WHERE id = ? ', [req.body.couponid]);
+      
+      cuponv = cupondata[0]?.value;
+    }
+
+
+    for (let i = 0; i < newitems.length; i++) {
+
+      if(newitems[i].mix.price !== null){
+        var temp = newitems[i].mix.price*orderitems[i].quantity;
+        subtotal = subtotal + temp;
+      }else{
+        var temp = newitems[i].price*orderitems[i].quantity;
+        subtotal = subtotal + temp;
+      }
+
+    }
+
+    delevary = shiping[0].value;
+    alltotal = (delevary+subtotal)-cuponv;
   
   
     const resultInsert = await con.query (
-      "INSERT INTO orders (email,message,name, phone,address,city,state,zip,status,customerid,sellerid,delivery,subtotal,total,ispaid,cashondelevary,paidbypaypal,paidbystripe) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+      "INSERT INTO orders (email,message,name, phone,address,city,state,zip,status,customerid,sellerid,dtitle,dvalue,ctitle,cvalue,subtotal,total,ispaid,cashondelevary,paidbypaypal,paidbystripe) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
       [ 
         req.body.email,req.body.message,req.body.name,req.body.phone,
         req.body.address,req.body.city,req.body.state,req.body.zip,
-        "Pending",req.user.id,req.body.sellerid,delevary,
-        subtotal,delevary+subtotal,0,0,0,0
+        "Pending",req.user.id,req.body.sellerid,
+        req.body.shiptitle,delevary,req.body.coupontitle,req.body.coupon,subtotal,alltotal,0,0,0,0
       ]
     );
   
-    //console.log(newitems)
-  
   
     for (let i = 0; i < newitems.length; i++) {
-  
-       // console.log("newitems",newitems);
-  
-          let sql2 = `INSERT INTO orderitems SET ?`;
-    
-          let orderitem = {
-            pid: newitems[i].id,
-            orderid: resultInsert[0].insertId,
-            name:newitems[i].name,
-            img:newitems[i].file1,
-            price:newitems[i].discprice,
-            totalprice:newitems[i].discprice*orderitems[i].quantity,
-            color:orderitems[i].color_name,
-            variname:orderitems[i].vari_name,
-            vari:orderitems[i].size_name,
-            quantity:orderitems[i].quantity,
-          };
-    
-          let query = await db.query(sql2, orderitem, async (err, result) => {
-                    if(err){
-                      return sendError(res, "Not Exist!");
-                    }
-                        
-                    if(result){
+      await con.query (
+        "INSERT INTO orderitems (pid,orderid,name,img,quantity) VALUES (?,?,?,?,?)", 
+        [ 
+          newitems[i].id,resultInsert[0].insertId,newitems[i].name,newitems[i].file1,newitems[i].quantity
+        ]
+      );
 
-                      var sqle = `UPDATE products SET qty = qty - ${orderitems[i].quantity}  WHERE id = ?`;
-                      con.query(sqle, [newitems[i].id], function (err, result) {
-                        if (err){
-                          return sendError(res, "Not Exist!");
-                        };
-                        
-                      });
-                      if(orderitems[i].color_id !== 0){
-                        const [data] = await con.execute('SELECT * FROM colors WHERE id = ? ', [ orderitems[i].color_id ]);
-                        
-                        console.log("colors",data[0])
-                        var sqle = `UPDATE colors SET quantity = quantity - ${orderitems[i].quantity}  WHERE id = ?`;
-                        con.query(sqle, [orderitems[i].color_id], function (err, result) {
-                        if (err){
-                          return sendError(res, "Not Exist!");
-                        };
-                        
-                      });
-                      }
-                      if(orderitems[i].size_id !== 0){
-                        const [data] = await con.execute('SELECT * FROM sizes WHERE id = ? ', [ orderitems[i].size_id ]);
-                        console.log("sizes",data[0])
-                        var sqle = `UPDATE sizes SET quantity = quantity - ${orderitems[i].quantity}  WHERE id = ?`;
-                        con.query(sqle, [orderitems[i].size_id], function (err, result) {
-                        if (err){
-                          return sendError(res, "Not Exist!");
-                        };
-                        
-                      });
-                      }
-
-
-                    }  
-                             
-          });
-        }    
-
-        res.send({
-            success:true,
-            orderid:resultInsert[0].insertId
-          });
+    }
   
-  
-  
+    res.send({
+          success:true,
+          orderid:resultInsert[0].insertId
+        });     
   
   };
+
+
 

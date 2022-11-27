@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IBasket, IBasketTotals } from 'src/app/_models/basket';
-import { IOrder, IOrderItem } from 'src/app/_models/order';
+import { IOrder, OrderItem } from 'src/app/_models/order';
 import { AccountService } from 'src/app/_services/account.service';
 import { BasketService } from 'src/app/_services/basket.service';
 import { environment } from 'src/environments/environment';
@@ -24,18 +24,21 @@ export class CheckoutComponent implements OnInit {
   constructor(private router: Router,public basketService: BasketService,
     public accountService: AccountService, private orderService: OrderService) { }
 
-  orderCreate: IOrder = {
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    message: '',
-    city: '',
-    state: '',
-    zip: '',
-    sellerid:0,
-    orderItems:[]
-  }
+  // orderCreate: IOrder = {
+  //   name: '',
+  //   phone: '',
+  //   email: '',
+  //   address: '',
+  //   message: '',
+  //   city: '',
+  //   state: '',
+  //   zip: '',
+  //   sellerid:0,
+  //   sku:'',
+  //   personalization:'',
+  //   shiping:0,
+  //   orderItems:[]
+  // }
 
 
   ngOnInit(): void {
@@ -47,7 +50,7 @@ export class CheckoutComponent implements OnInit {
       this.basketService.getBasket();
       this.basket$ = this.basketService.basket$;
       this.basketTotal$ = this.basketService.basketTotal$;
-      this.setOrderItems();
+      // this.setOrderItems();
     }
   }
 
@@ -55,64 +58,64 @@ export class CheckoutComponent implements OnInit {
 
     // console.log("orderCreate",this.orderCreate);
 
-    this.orderService.orderCreate(this.orderCreate).subscribe(res =>{
+    // this.orderService.orderCreate(this.orderCreate).subscribe(res =>{
 
-      if(res.success == true){
-          this.router.navigateByUrl("payment/"+res.orderid);
-      }else{
-        console.log("No Order");
-      }
+    //   if(res.success == true){
+    //       this.router.navigateByUrl("payment/"+res.orderid);
+    //   }else{
+    //     console.log("No Order");
+    //   }
 
-     // this.basketService.deleteBasket();
-      window.scrollTo(0, 0);
-    })
+    //  // this.basketService.deleteBasket();
+    //   window.scrollTo(0, 0);
+    // })
   }
   onItemChange(value){
     console.log(" Value is : ", value.target.value );
   }
 
-  setOrderItems(){
-    const basket = JSON.parse(localStorage.getItem('basket'));
+  // setOrderItems(){
+  //   const basket = JSON.parse(localStorage.getItem('basket'));
 
-    basket.items.forEach(item =>{
+  //   basket.items.forEach(item =>{
 
-     const OrderItem: IOrderItem ={
-        id: 0,
-        productName: '',
-        pictureUrl: '',
-        price: 0,
-        quantity: 0,
-        color_id:0,
-        color_name:'',
-        size_id:0,
-        vari_name:'',
-        size_name:'',
+  //    const OrderItem: OrderItem ={
+  //       id: 0,
+  //       productName: '',
+  //       pictureUrl: '',
+  //       price: 0,
+  //       quantity: 0,
+  //       color_id:0,
+  //       color_name:'',
+  //       size_id:0,
+  //       vari_name:'',
+  //       size_name:'',
 
-      }
-      OrderItem.id = item.id;
-      OrderItem.productName = item.productName;
-      OrderItem.pictureUrl = item.pictureUrl;
-      OrderItem.price = item.price;
-      OrderItem.quantity = item.quantity;
-      if(item.color.length !== 0){
+  //     }
+  //     OrderItem.id = item.id;
+  //     OrderItem.productName = item.productName;
+  //     OrderItem.pictureUrl = item.pictureUrl;
+  //     OrderItem.price = item.price;
+  //     OrderItem.quantity = item.quantity;
+  //     if(item.color.length !== 0){
 
-        OrderItem.color_id = item.color[0].id;
-        OrderItem.color_name = item.color[0].name;
-      }
-      if(item.size.length !== 0){
-          OrderItem.size_id = item.size[0].id;
-          OrderItem.vari_name = item.size[0].name;
-          OrderItem.size_name = item.size[0].variCode;
+  //       OrderItem.color_id = item.color[0].id;
+  //       OrderItem.color_name = item.color[0].name;
+  //     }
+  //     if(item.size.length !== 0){
+  //         OrderItem.size_id = item.size[0].id;
+  //         OrderItem.vari_name = item.size[0].name;
+  //         OrderItem.size_name = item.size[0].variCode;
 
-      }
+  //     }
 
-      this.orderCreate.orderItems.push(OrderItem);
+  //     this.orderCreate.orderItems.push(OrderItem);
 
-    });
-    this.orderCreate.sellerid = basket.sellerid;
+  //   });
+  //   this.orderCreate.sellerid = basket.sellerid;
 
 
-  }
+  // }
 
   creditcard(what){
     this.card = what;

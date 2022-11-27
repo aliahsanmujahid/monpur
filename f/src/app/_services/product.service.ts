@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Colors, IProduct, Product, Sizes } from '../_models/product';
+import { IProduct, Product } from '../_models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -69,12 +69,12 @@ export class ProductService {
     return this.http.get<Product[]>(this.baseUrl + 'getsellerproducts/' + Number(id));
   }
 
-  getcolors(id){
-    return this.http.get<Colors[]>(this.baseUrl + 'getcolors/' + Number(id));
-  }
-  getsizes(id){
-    return this.http.get<Sizes[]>(this.baseUrl + 'getsizes/' + Number(id));
-  }
+  // getcolors(id){
+  //   return this.http.get<Colors[]>(this.baseUrl + 'getcolors/' + Number(id));
+  // }
+  // getsizes(id){
+  //   return this.http.get<Sizes[]>(this.baseUrl + 'getsizes/' + Number(id));
+  // }
 
 
 

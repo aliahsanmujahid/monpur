@@ -4,29 +4,54 @@
 </div>
 
 
-
+    <!-- [ngClass]="catelength > 4 ? 'column1' : 'none' " -->
 
 <section class="banner-container padding-top">
-  <div class="">
-    <app-carousel [images] = "images" [content] = "true" [autoSlide]="true"></app-carousel>
+
+  <div class="row" *ngIf="showbanner">
+
+
+      <div [ngClass]="catelength <=4 ? 'column3' : 'none' " >
+        <app-carousel [images] = "images" [content] = "true" [autoSlide]="true" [controls]="true"></app-carousel>
+      </div>
+
+   <div [ngClass]="catelength > 4 ? '' : 'none' ">
+
+    <div class="column1">
+      <div class="navbar" (mouseover)='over2()' (mouseout)='out2()' >
+      <ng-container *ngFor="let item of category">
+
+        <a  (mouseover)='over(item)' (mouseout)='out()' [routerLink]="['/shop', {cate: item.id}]" >{{item.name}}</a>
+
+      </ng-container>
+      </div>
+
+      <div *ngIf="scate.length > 0" (mouseover)='over2()' (mouseout)='out2()'  [ngClass]="showhide == true ? 'submenu' : 'submenunone'" >
+        <h1 *ngIf="catename != '' " [routerLink]="['/shop', {cate: cateid}]">{{catename}}</h1>
+        <a  *ngFor="let item of scate" [routerLink]="['/shop', {subcate: item.id}]" >{{item.name}}</a>
+      </div>
+
+
+    </div>
+
+    <div class="column2" >
+      <app-carousel [images] = "images" [content] = "true" [autoSlide]="true" [controls]="true"></app-carousel>
+    </div>
+   </div>
+
   </div>
+
+
 </section>
 
 
 <section class="padding-top">
-  <!-- <div class="filter-buttons">
-    <div class="buttons active" data-filter="all">all</div>
-    <div class="buttons" data-filter="arrivals">new arrivals</div>
-    <div class="buttons" data-filter="featured">discounts</div>
-    <div class="buttons" data-filter="special">top ratted</div>
-  </div> -->
+
 
   <h1 class="heading"> exclusive <span>products</span> </h1>
 
+  <app-shop [filters] = "false"></app-shop>
 
-  <div class="column">
-    <app-shop [filters] = "false"></app-shop>
-  </div>
 
 
 

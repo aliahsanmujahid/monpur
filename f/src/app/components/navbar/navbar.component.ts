@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
 
   search:string;
   category: any = [];
+  catelength = 0;
 
   constructor(public categoryService: CategoryService,public accountService: AccountService,private router: Router,public basketService: BasketService) { }
 
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit {
 
       this.categoryService.getcategoryes().subscribe( res => {
         this.category = res;
+        this.catelength = this.category.length;
       })
   }
 

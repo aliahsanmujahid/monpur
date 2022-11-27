@@ -9,6 +9,7 @@ export interface IProduct {
   discount:number,
   quantity:number;
   sku:string,
+  ispersonalization:string,
   personalization:string,
 
   file1:string,
@@ -23,10 +24,12 @@ export interface IProduct {
   hasvari1:string,
   hasprice1:string,
   hasquantity1:string,
+  hassku1:string,
 
   hasvari2:string,
   hasprice2:string,
   hasquantity2:string,
+  hassku2:string,
 
   hasmixedvari:string,
 
@@ -49,12 +52,14 @@ export interface Imixvalues {
   vari2name:string;
   quantity: number;
   price: number;
+  sku: string;
 }
 
 export interface Ivalues {
     name:string;
     quantity: number;
     price: number;
+    sku: string;
 }
 
 export interface Product {
@@ -69,6 +74,7 @@ export interface Product {
   discount:number,
   quantity:number;
   sku:string,
+  ispersonalization:string,
   personalization:string,
 
   file1:string,
@@ -106,6 +112,7 @@ export interface Values {
     name:string;
     quantity: number;
     price: number;
+    sku: string;
 }
 
 export interface Mixvari {
@@ -120,18 +127,7 @@ export interface Mixvalues {
   vari2name:string;
   quantity: number;
   price: number;
+  sku: string;
 }
 
 
-export interface Colors {
-    id: number,
-    name: string;
-    colorCode:string;
-    quantity: number;
-}
-export interface Sizes {
-    id: number,
-    name: string;
-    variCode:string;
-    quantity: number;
-}

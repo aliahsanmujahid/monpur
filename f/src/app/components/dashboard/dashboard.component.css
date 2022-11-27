@@ -5,9 +5,7 @@
   width: 100%;
   height: 100%;
   padding: 10px;
-  padding-top: 80px;
   font-size: large;
-
 }
 .column1 {
   position: fixed;
@@ -15,6 +13,9 @@
   height: 100%;
   left: 0%;
   background-color: rgba(196, 195, 194, 0.678);
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .column2 {
   position: fixed;
@@ -23,13 +24,13 @@
   width: 80%;
   overflow-y: scroll;
   background-color: rgb(255, 255, 255);
+
 }
-ul{
+.sidemenu ul{
   width: 100%;
   height: 100%;
   color: rgb(138, 120, 113);
-  overflow-y: scroll;
-  padding-bottom: 300px;
+  padding-bottom: 200px;
 }
 h1{
   width: 100%;
@@ -45,7 +46,7 @@ h1{
   display: table;
   clear: both;
 }
-li{
+.sidemenu li{
   padding: 10px;
   background-color: rgb(255, 255, 255);
   margin: 10px;
@@ -54,7 +55,7 @@ li{
 }
 .logout{
   background-color: rgba(255, 127, 127, 0.795);
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   text-align: center;
 }
 
@@ -139,3 +140,24 @@ section {
   color: #666;
 }
 
+
+
+@media (max-width: 900px) {
+  .column1{
+    left: -20%;
+    background: #fff;
+  }
+  .column2{
+    width: 100%;
+    left: 0%;
+  }
+  #check3:checked ~ .row .column1{
+    left: 0%;
+    width: 30%;
+    display: block;
+    z-index: 1;
+  }
+  #check3:checked ~ .row .showhide{
+    margin-left: 30%;
+  }
+}

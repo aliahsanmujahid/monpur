@@ -41,7 +41,7 @@
   width: 50%;
   float: left;
   padding: 5px;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 .rightcolumn{
   width: 50%;
@@ -156,9 +156,6 @@ ul li{
   width: 130px!important;
   height: 0px!important;
 }
-.discountbody{
-  padding-top: 10px;
-}
 .vari a,.a{
   text-decoration: underline;
   font-size: 13px;
@@ -201,14 +198,13 @@ img{
 .alert-box {
   position: fixed;
   display: table;
-  top: 7vw;
   left: 0;
   right: 0;
   width: 70%;
   background: #fff;
   min-height: 400px;
   margin: 0 auto;
-  z-index: 1;
+  z-index: 2;
   border-radius: 5px;
 }
 .alert-details{
@@ -229,7 +225,7 @@ img{
   position: fixed;
   top: 0px;
   left: 0px;
-  z-index: 0;
+  z-index: 2;
   background: rgba(129, 129, 129, 0.322);
 }
 
@@ -240,7 +236,7 @@ img{
   justify-content:space-between;
 }
 button{
-  padding: 10px 15px 10px 15px;;
+  padding: 10px 15px 10px 15px;
   border-radius: 5px;
   background: #FFF;
   border: 1px solid rgb(194, 194, 194);
@@ -254,36 +250,37 @@ button{
 }
 .flexContainer {
   display: flex;
-  width: 300px;
+  max-width: 300px;
+}
+.justifyleft{
+  justify-content: flex-end;
 }
 .flexContainer button{
-  margin: 9px 0px 10px 0px;
+  margin: 10px 0px 10px 0px;
   border-radius: 0px 5px 5px 0px;
 }
 
 .inputField {
-  flex: 1;
-  appearance:none;
-  outline:0;
-  box-shadow:none;
   background: #ffffff;
-  background-image: none;
-  flex: 1;
-  padding: 0 .5em;
-  color:rgb(15, 15, 15);
+  padding: 0 0.5em;
+  color: rgb(15, 15, 15);
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
-  border-radius: 5px;
   border: 1px solid rgb(189, 189, 185);
-  display: flex;
   width: 50%;
-  height: 2.3em;
-  line-height: 2.3;
-  overflow: hidden;
+  height: 42px;
   border-radius: 5px 0px 0px 5px;
-  box-shadow: none;
   font-weight: 100;
   margin: 10px 0px 10px 0px;
+  min-width: 100px;
+}
+
+.sminput input{
+  height: 32px!important;
+  text-align: center;
+}
+.sminput button{
+  padding: 0px 10px 0px 10px!important;
 }
 
 
@@ -356,6 +353,19 @@ button{
     width: 40%;
   }
   .files{
+    width: 100%;
+  }
+  .column{
+    width: 100%;
+  }
+  .variadd{
+    flex-direction: column;
+  }
+  .alert-box{
+    width:97%;
+    margin: 3px;
+  }
+  .left,.right{
     width: 100%;
   }
 }

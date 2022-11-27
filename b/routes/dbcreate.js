@@ -23,7 +23,8 @@ const {
   coupon,
   slider,
   footer,
-  terms
+  terms,
+  shiping
 
 } = require("../controllers/dbcreate");
 
@@ -56,6 +57,8 @@ router.get("/slider", slider);
 
 router.get("/footer", footer);
 router.get("/terms", terms);
+router.get("/shiping", shiping);
+
 
 
 

@@ -15,12 +15,12 @@
       </p>
   </div>
   </label>
-  </span> -->
+  </span>
 
 <app-navbar></app-navbar>
 
 <div class="rightbar">
-  <!-- <label for="check2">
+  <label for="check2">
     <h2 class="close">Close</h2>
   </label>
 
@@ -28,7 +28,7 @@
     <label for="check2">
       <img class="toggle2" src="../assets/left.png" alt="">
     </label>
-  </div> -->
+  </div>
   <div class="cartnull" *ngIf="(basket$ | async) == null">
     <h3>There are no items in your basket</h3>
  </div>
@@ -36,7 +36,7 @@
   <span *ngIf="basket$ | async">
   <div *ngFor="let item of (basket$ | async).items" class="row">
 
-    <!-- <div class="smcolumn" >
+    <div class="smcolumn" >
       <div class="unitControl">
         <ul>
           <li (click)="incrementItemQuantity(item)">
@@ -50,7 +50,7 @@
           </li>
         </ul>
       </div>
-    </div> -->
+    </div>
     <div class="column" >
       <img src="{{'http://localhost:8000/'+item.pictureUrl}}"  alt="">
     </div>
@@ -115,4 +115,241 @@
     <h1 class="checkout" routerLink='/checkout' >Checkout</h1>
 
 </ul>
+</div> -->
+
+
+
+
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+
+<div (click)="alerttoggle2()"  *ngIf="alert2" class="backdrop "></div>
+
+<div (click)="alerttoggle3()"  *ngIf="alert3" class="backdrop "></div>
+
+<div *ngIf="alert || alert2 || alert3" class="alert-box">
+
+  <div class="alertdetails" >
+
+    <div *ngIf="alert3">
+      <h1>Personalization</h1>
+      <br>
+      <p>{{showpersonalizationdata}}</p>
+    </div>
+
+    <div *ngIf="alert2">
+      <h1>Terms And Conditions</h1>
+      <p>sniskigo</p>
+    </div>
+
+    <form *ngIf="alert" #OrderForm="ngForm"  (ngSubmit)="setaddressform()">
+
+      <div class="inputBox">
+          <div class="input">
+              <span>your name</span>
+              <input [(ngModel)]="orderCreate.name" name="name" minlength="3" required type="text" placeholder="enter your name">
+          </div>
+          <div class="input">
+              <span>Phone Number</span>
+              <input  [(ngModel)]="orderCreate.phone" name="number" required type="text" placeholder="enter your number">
+          </div>
+      </div>
+      <div class="inputBox">
+
+        <div class="input">
+          <span>Email</span>
+          <input [(ngModel)]="orderCreate.email" type="text" placeholder="enter Email">
+         </div>
+          <div class="input">
+              <span>City</span>
+              <input [(ngModel)]="orderCreate.city" type="text" placeholder="enter City">
+          </div>
+
+      </div>
+      <div class="inputBox">
+          <div class="input">
+          <span>state</span>
+          <input [(ngModel)]="orderCreate.state" type="test" placeholder="extra with food">
+          </div>
+          <div class="input">
+              <span>zip</span>
+              <input [(ngModel)]="orderCreate.zip"  type="text" placeholder="how many orders">
+          </div>
+      </div>
+      <div class="inputBox">
+          <div class="input">
+              <span>your address</span>
+              <textarea [(ngModel)]="orderCreate.address" minlength="3" required name="address" placeholder="enter your address" id="" cols="30" rows="10"></textarea>
+          </div>
+          <div class="input">
+              <span>your message</span>
+              <textarea name="message" [(ngModel)]="orderCreate.message" minlength="3" required placeholder="enter your message" id="" cols="30" rows="10"></textarea>
+          </div>
+      </div>
+
+
+
+      <input type="submit" [disabled]="OrderForm.invalid" value="Set Address" class="btn">
+
+  </form>
+
+  </div>
+
 </div>
+
+
+<app-navbar></app-navbar>
+
+
+<div class="row">
+  <div class="column1">
+
+    <div class="address">
+
+      <div class="details2" *ngIf="!setaddress">
+        <button (click)="alerttoggle()">Set Address</button>
+      </div>
+
+      <div class="detailsform" *ngIf="setaddress">
+        <p>Name: {{orderCreate.name}}</p>
+        <p>phone: {{orderCreate.phone}}</p>
+        <p>email: {{orderCreate.email}}</p>
+        <p>city: {{orderCreate.city}}</p>
+        <p>state: {{orderCreate.state}}</p>
+        <p>zip: {{orderCreate.zip}}</p>
+        <p>address: {{orderCreate.address}}</p>
+        <p>message: {{orderCreate.message}}</p>
+
+        <button class="margin" (click)="alerttoggle()">Edit Address</button>
+      </div>
+
+    </div>
+
+
+    <ng-container *ngIf="basket$ | async">
+    <div class="items" *ngFor="let item of (basket$ | async).items" >
+    <div class="content">
+      <div class="img">
+        <img src="{{'http://localhost:8000/'+item.pictureUrl}}" alt="">
+       </div>
+
+       <div class="details">
+         <p>{{item.productName}}</p>
+         <p *ngIf="item.mixedvari.values.length > 0" >
+          {{item.mixedvari.vari1}}: <span>{{item.mixedvari.values[0].vari1name}}</span> | {{item.mixedvari.vari2}}: <span>{{item.mixedvari.values[0].vari2name}}</span>
+         </p>
+         <p>{{item.quantity}} * {{item.price}} = {{item.quantity * item.price}}</p>
+       </div>
+    </div>
+
+     <div class="icons">
+      <div class="plus" (click)="incrementItemQuantity(item)">
+        <i class="fas fa-plus"></i>
+      </div>
+      <div class="qty">
+        <h1>{{item.quantity}}</h1>
+      </div>
+      <div class="minus" (click)="decrementItemQuantity(item)">
+        <i class="fas fa-minus"></i>
+      </div>
+    </div>
+
+    <button class="personalization" *ngIf="item.personalization !== '' " (click)="showpersonalization(item.personalization)"  >Personalization</button>
+    <button class="delete" (click)="removeBasketItem(item)" >Delete</button>
+
+    </div>
+
+  </ng-container>
+
+
+
+  </div>
+  <div class="column2">
+
+
+    <div class="summery" *ngIf="(basketTotal$ | async)">
+
+      <h3>Order Summary</h3>
+
+
+      <div class="content2 margin">
+        <p>Subtotal
+          <span *ngIf="(basketTotal$ | async).totalqty == 1">({{(basketTotal$ | async).totalqty}} item)</span>
+          <span *ngIf="(basketTotal$ | async).totalqty > 1">({{(basketTotal$ | async).totalqty}} items)</span>
+        </p>
+
+        <p>${{(basketTotal$ | async).subtotal}}</p>
+      </div>
+
+
+
+      <div class="content2" *ngIf="orderCreate.shiping !== null">
+        <p>Shipping Fee</p>
+        <p>${{orderCreate.shiping}}</p>
+      </div>
+
+
+      <div class="content2" *ngIf="cuponvalid == true">
+        <p>Coupon</p>
+        <p class="cvalue">-${{coupondata[0]?.value}}</p>
+      </div>
+
+
+      <div class="shiping">
+
+        <p> <i class="fa fa-truck"></i> Select Shiping</p>
+
+        <div class="shipto" *ngFor="let item of shipings" (click)="selectship(item)"  [ngClass]="item.value == orderCreate.shiping ? 'selected' : '' ">
+          {{item.title}}
+        </div>
+
+      </div>
+
+
+      <div class="flexContainer">
+        <input  type="text" [(ngModel)]="orderCreate.coupontitle"
+        (change)="orderCreate.coupontitle = orderCreate.coupontitle.toLowerCase()"
+        (input)="orderCreate.coupontitle = orderCreate.coupontitle.toLowerCase()"
+        placeholder="Enter Cupon Code" class="inputField">
+        <button [disabled]="orderCreate.coupontitle == '' " (click)="applycupon()">Apply</button>
+      </div>
+      <p *ngIf="noshiping" class="fvalid">*Select Shiping First</p>
+      <p *ngIf="cuponvalid == false && !minvalid" class="notvalid">*Not Valid Coupon</p>
+      <p *ngIf="minvalid" class="notvalid">*Apply Over {{coupondata[0]?.minimun}} Buy</p>
+      <p *ngIf="cuponvalid == true" class="valid">*Coupon Apply Successfully</p>
+
+      <div class="content2 mr-top" *ngIf="orderCreate.shiping !== null">
+        <p>Total
+          <span *ngIf="(basketTotal$ | async).totalqty == 1">({{(basketTotal$ | async).totalqty}} item)</span>
+          <span *ngIf="(basketTotal$ | async).totalqty > 1">({{(basketTotal$ | async).totalqty}} items)</span>
+        </p>
+
+
+        <p *ngIf="!cuponvalid">${{(basketTotal$ | async).subtotal + orderCreate.shiping }}</p>
+        <p *ngIf="cuponvalid == true">${{(basketTotal$ | async).subtotal + orderCreate.shiping - coupondata[0]?.value}}</p>
+
+      </div>
+
+
+
+      <div class="content2">
+
+       <button  [disabled]="orderCreate.shiping == null" (click)="createorder()">Place Order</button>
+
+
+      <div class="terms" (click)="alerttoggle2()">
+        <input type="radio" id="terms" name="terms" value="terms" checked>
+        <label for="html">Terms and Conditions</label><br>
+      </div>
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+
+</div>
+
+

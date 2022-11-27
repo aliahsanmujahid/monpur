@@ -1,9 +1,8 @@
-import { Basket, IBasketItem, IBasketTotals } from './../_models/basket';
+import { Basket, IBasketItem, IBasketTotals, cartProduct } from './../_models/basket';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IBasket } from '../_models/basket';
-import { Product } from '../_models/product';
 import {v4 as uuid4} from 'uuid';
 
 @Injectable({
@@ -42,7 +41,7 @@ export class BasketService {
   }
 
 
-  addItemToBasket(item: Product, quantity = 1) {
+  addItemToBasket(item: cartProduct, quantity = 1) {
     const check = this.getCurrentBasketValue();
     if(check !== null && check.sellerid !== item.sellerid){
      this.basketSource.next(null);
@@ -64,24 +63,23 @@ export class BasketService {
       itemToAdd.quantity = quantity;
       items.push(itemToAdd);
     }else{
-      var notsame:Number = 0;
-      var notsame2:Number = 1;
-      item.forEach( i => {
-      if(JSON.stringify(i.color) === JSON.stringify(itemToAdd.color)
-      && JSON.stringify(i.size) === JSON.stringify(itemToAdd.size)){
-        i.quantity += quantity;
-        notsame = 0;
-        notsame2 = 0;
+      // var notsame:Number = 0;
+      // var notsame2:Number = 1;
+      // item.forEach( i => {
+      // if(JSON.stringify(i.color) === JSON.stringify(itemToAdd.color)
+      // && JSON.stringify(i.size) === JSON.stringify(itemToAdd.size)){
+      //   i.quantity += quantity;
+      //   notsame = 0;
+      //   notsame2 = 0;
 
-      }else{
-        notsame = 1;
-      }
-      });
-      if(notsame == 1 && notsame2 == 1){
-        itemToAdd.quantity = quantity;
-        items.push(itemToAdd);
-
-      }
+      // }else{
+      //   notsame = 1;
+      // }
+      //});
+      // if(notsame == 1 && notsame2 == 1){
+      //   itemToAdd.quantity = quantity;
+      //   items.push(itemToAdd);
+      // }
 
     }
 
@@ -131,24 +129,32 @@ export class BasketService {
   }
 
   private calculateTotals() {
+
     const basket = this.getCurrentBasketValue();
-    const delevary = this.delevary;
+
     const subtotal = basket.items.reduce((a, b) => (b.price * b.quantity) + a, 0);
-    const total = subtotal + delevary;
-    this.basketTotalSource.next({delevary, total, subtotal});
+
+    const totalqty = basket.items.reduce((a, b) => (b.quantity) + a, 0);
+
+    this.basketTotalSource.next({subtotal,totalqty});
+
   }
 
-
-  private mapProductItemToBasketItem(item: Product, quantity: number): IBasketItem {
+  private mapProductItemToBasketItem(item: cartProduct, quantity: number): IBasketItem {
+    console.log("cart item",item);
     return {
       eachid: uuid4(),
       id: item.id,
       productName: item.name,
-      price: item.price,
+      price: item.tempprice,
       pictureUrl: item.file1,
       quantity,
-      color : [],
-      size : [],
+      sku:item.sku,
+      personalization:item.personalization,
+      vari1 : item.vari1,
+      vari2 : item.vari2,
+      mixedvari:item.mixedvari
+
     }
   }
 }

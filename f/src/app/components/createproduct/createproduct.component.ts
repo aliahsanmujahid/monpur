@@ -1,11 +1,11 @@
-import { Ivalues, Ivari } from './../../_models/product';
+import { Imixvari, Ivalues, Ivari } from './../../_models/product';
 
 import { ProductService } from './../../_services/product.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { AccountService } from 'src/app/_services/account.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CategoryService } from 'src/app/_services/category.service';
 import { environment } from 'src/environments/environment';
@@ -41,6 +41,7 @@ export class CreateproductComponent implements OnInit {
   disabledbtn = true;
   pricemixedvari = false;
   quantitymixedvari = false;
+  skumixedvari = false;
   saved = false;
   showdiscount = true;
   showpersonalization = false;
@@ -53,6 +54,8 @@ export class CreateproductComponent implements OnInit {
     name:'',
     details:'',
     sku:'',
+
+    ispersonalization:'none',
     personalization:'',
 
     price:null,
@@ -71,10 +74,12 @@ export class CreateproductComponent implements OnInit {
     hasvari1:'',
     hasprice1:'',
     hasquantity1:'',
+    hassku1:'',
 
     hasvari2:'',
     hasprice2:'',
     hasquantity2:'',
+    hassku2:'',
 
     hasmixedvari:'',
 
@@ -104,13 +109,22 @@ export class CreateproductComponent implements OnInit {
       name:'',
       quantity: 0,
       price: 0,
+      sku: '',
   };
 
   values2 : Ivalues = {
     name:'',
     quantity: 0,
     price: 0,
+    sku: '',
 };
+
+tempmixedvari: Imixvari = {
+  vari1:'',
+  vari2:'',
+  values:[]
+}
+
 Math: any;
 
 
@@ -118,16 +132,37 @@ Math: any;
 
   constructor(public accountService: AccountService,private http: HttpClient,
     private route: ActivatedRoute,public categoryService: CategoryService,
-    public productService: ProductService) { }
+    public productService: ProductService,private router: Router) {
+       //Router subscriber
+       this.router.events.subscribe((event) => {
+
+
+        this.nullValues();
+
+      });
+    }
 
   ngOnInit(): void {
     this.UserId = this.accountService.getuserid()
     this.editor = new Editor();
     this.editor2 = new Editor();
 
+
     if(this.producteditid !== 0){
       this.productService.getEditProduct(this.producteditid).subscribe(res =>{
         this.product = res;
+        this.editmode = true;
+
+        if(this.product.personalization != ''){
+          this.showpersonalization = true
+        }
+
+        if(this.product.vari1.values.length > 0){
+          this.vari1added = true;
+        }
+        if(this.product.vari2.values.length > 0){
+          this.vari2added = true;
+        }
 
         if(this.product.mixedvari.values.length > 0){
           this.vari1added = true;
@@ -135,19 +170,19 @@ Math: any;
           this.pricemixedvari = true;
           this.quantitymixedvari = true;
           this.saved = true;
-          this.editmode = true;
-
-        this.product.mixedvari.vari1 = this.product.mixedvari.vari1;
-        this.product.mixedvari.vari2 = this.product.mixedvari.vari2;
 
         this.product.mixedvari.values.forEach(e1 => {
+
+          this.product.vari1.name = this.product.mixedvari.vari1;
+          this.product.vari2.name = this.product.mixedvari.vari2;
 
           if(!this.product.vari1.values.find(x => x.name ==  e1.vari1name)){
             this.product.vari1.values.push(
               {
                 name:e1.vari1name,
                 price: e1.price,
-                quantity: e1.quantity
+                quantity: e1.quantity,
+                sku: '',
               }
             );
           }
@@ -156,10 +191,13 @@ Math: any;
               {
                 name:e1.vari2name,
                 price: e1.price,
-                quantity: e1.quantity
+                quantity: e1.quantity,
+                sku: '',
               }
             );
           }
+
+          this.tempmixedvari = this.product.mixedvari;
 
 
         });
@@ -183,14 +221,16 @@ Math: any;
     console.log("Product Data",this.product);
   }
 
-  calculateDiscount(){
-     this.showdiscount = true;
-  }
+  // calculateDiscount(){
+  //    this.showdiscount = true;
+  // }
 
 
   saveandcontinue(){
+    this.disabledbtn = true;
     this.editmode = true;
     this.alert = !this.alert;
+    this.product.hasmixedvari = "";
     if( this.product.hasprice1 == 'true' &&  this.product.hasprice2 == 'true'){
       this.pricemixedvari = true;
       this.product.mixedvari = {
@@ -204,11 +244,16 @@ Math: any;
       this.product.mixedvari.vari2 = this.product.vari2.name;
       this.product.vari1.values.forEach(vari1 => {
         this.product.vari2.values.forEach(vari2 => {
+
+          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
+          // console.log("findvari",findvari);
+
            this.product.mixedvari.values.push({
             vari1name:vari1.name,
             vari2name: vari2.name,
-            quantity:0,
-            price:0
+            quantity:findvari?.quantity,
+            price:findvari?.price,
+            sku:findvari?.sku,
            });
 
         });
@@ -229,11 +274,16 @@ Math: any;
       this.product.mixedvari.vari2 = this.product.vari2.name;
       this.product.vari1.values.forEach(vari1 => {
         this.product.vari2.values.forEach(vari2 => {
+
+          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
+          // console.log("findvari",findvari);
+
            this.product.mixedvari.values.push({
             vari1name:vari1.name,
             vari2name: vari2.name,
-            quantity:0,
-            price:0
+            quantity:findvari?.quantity,
+            price:findvari?.price,
+            sku:findvari?.sku,
            });
 
         });
@@ -241,16 +291,72 @@ Math: any;
       this.saved = true;
     }
 
+    if( this.product.hassku1 == 'true' &&  this.product.hassku2 == 'true'){
+      this.skumixedvari = true;
+      this.product.mixedvari = {
+        vari1:'',
+        vari2:'',
+        values:[]
+      }
+
+      this.product.hasmixedvari = "true";
+      this.product.mixedvari.vari1 = this.product.vari1.name;
+      this.product.mixedvari.vari2 = this.product.vari2.name;
+      this.product.vari1.values.forEach(vari1 => {
+        this.product.vari2.values.forEach(vari2 => {
+
+          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
+          // console.log("findvari",findvari);
+
+           this.product.mixedvari.values.push({
+            vari1name:vari1.name,
+            vari2name: vari2.name,
+            quantity:findvari?.quantity,
+            price:findvari?.price,
+            sku:findvari?.sku,
+           });
+        });
+      });
+      this.saved = true;
+    }
+
+
+
     if( this.product.hasprice1 == '' ||  this.product.hasprice2 == ''){
       this.pricemixedvari = false;
     }
+
+    if(this.product.hasprice1 !== '' ||  this.product.hasprice2 !== ''){
+      this.product.price = null;
+    }
+
     if( this.product.hasquantity1 == '' ||  this.product.hasquantity2 == ''){
       this.quantitymixedvari = false;
+    }
+    if(this.product.hasquantity1 !== '' ||  this.product.hasquantity2 !== ''){
+      this.product.quantity = null;
+    }
+    if( this.product.hassku1 == '' ||  this.product.hassku2 == ''){
+      this.skumixedvari = false;
+    }
+    if(this.product.hassku1 !== '' ||  this.product.hassku2 !== ''){
+      this.product.sku = '';
     }
 
   }
 
+  inputchange(){
+    this.tempmixedvari = this.product.mixedvari;
+  }
+  discountchange(){
+    console.log("discount changing");
+    if(this.product.discount > 100){
+      this.product.discount = 100;
+    }
+  }
+
   onFeatureToggle($event) {
+    this.disabledbtn = false;
     if ($event.target.checked){
       if($event.target.value == 'hasprice1'){
           this.product.hasprice1 = 'true'
@@ -265,7 +371,17 @@ Math: any;
         this.product.hasquantity2 = 'true'
       }
       if($event.target.value == 'personalization'){
+        this.product.ispersonalization = "true";
         this.showpersonalization = true;
+      }
+      if($event.target.value == 'ispersonalization'){
+        this.product.ispersonalization = "false";
+      }
+      if($event.target.value == 'hassku1'){
+        this.product.hassku1 = 'true'
+      }
+      if($event.target.value == 'hassku2'){
+        this.product.hassku2 = 'true';
       }
     }
     else {
@@ -281,20 +397,37 @@ Math: any;
       if($event.target.value == 'hasquantity2'){
        this.product.hasquantity2 = ''
       }
+      if($event.target.value == 'personalization'){
+        this.product.ispersonalization = "none";
+        this.showpersonalization = false;
+      }
+      if($event.target.value == 'ispersonalization'){
+        this.product.ispersonalization = "true";
+      }
+      if($event.target.value == 'hassku1'){
+        this.product.hassku1 = ''
+      }
+      if($event.target.value == 'hassku2'){
+        this.product.hassku2 = '';
+      }
     }
   }
 
 
   addvariation1(){
     this.vari1added = true;
+    this.disabledbtn = false;
   }
   addvariation2(){
     this.vari2added = true;
+    this.disabledbtn = false;
   }
   renamevari1(){
     this.vari1added = false;
+    this.disabledbtn = false;
   }
   deletevariname1(){
+    this.disabledbtn = false;
     this.vari1added = false;
     this.product.vari1 = {
       name:'',
@@ -303,9 +436,11 @@ Math: any;
   }
 
   renamevari2(){
+    this.disabledbtn = false;
     this.vari2added = false;
   }
   deletevariname2(){
+    this.disabledbtn = false;
     this.vari2added = false;
     this.product.vari2 = {
       name:'',
@@ -314,6 +449,7 @@ Math: any;
   }
 
   addvari1(){
+     this.disabledbtn = false;
      if(this.values1.name != ''){
       this.product.vari1.values.push(this.values1)
       this.disabledbtn = false;
@@ -321,11 +457,13 @@ Math: any;
          name:'',
          quantity: 0,
          price: 0,
+         sku: '',
       }
      }
   }
 
   deletevari1(index){
+    this.disabledbtn = false;
     if(this.product.vari1.values.length == 1){
       this.disabledbtn = true;
     }
@@ -333,17 +471,20 @@ Math: any;
   }
 
   addvari2(){
+    this.disabledbtn = false;
     if(this.values2.name != ''){
      this.product.vari2.values.push(this.values2)
      this.values2 = {
         name:'',
         quantity: 0,
         price: 0,
+        sku: '',
      }
     }
  }
 
  deletevari2(index){
+   this.disabledbtn = false;
    this.product.vari2.values.splice(index,1)
  }
 
@@ -373,6 +514,7 @@ Math: any;
       name:'',
       quantity: 0,
       price: 0,
+      sku: '',
    }
    this.vari1added = false;
    this.vari2added = false;
@@ -499,7 +641,7 @@ if(val == 8){
       if(this.product.file1 !== ''){
 
           this.productService.createproduct(this.product).subscribe( res =>{
-            console.log("res",res);
+            console.log("createproduct res",res);
          }),
          error => {
 
@@ -536,6 +678,66 @@ if(val == 8){
 
 
 
+  nullValues(){
+    this.product = {
+      id: 0,
+      cateid:0,
+      subcateid:0,
+      name:'',
+      details:'',
+      sku:'',
 
+      ispersonalization:'none',
+      personalization:'',
+
+      price:null,
+      discount:null,
+      quantity:null,
+
+      file1:'',
+      file2:'',
+      file3:'',
+      file4:'',
+      file5:'',
+      file6:'',
+      file7:'',
+      file8:'',
+
+      hasvari1:'',
+      hasprice1:'',
+      hasquantity1:'',
+      hassku1:'',
+
+      hasvari2:'',
+      hasprice2:'',
+      hasquantity2:'',
+      hassku2:'',
+
+      hasmixedvari:'',
+
+      vari1 : {
+        name:'',
+        values:[]
+      },
+      vari2 : {
+        name:'',
+        values:[]
+      },
+      mixedvari:{
+        vari1:'',
+        vari2:'',
+        values:[]
+      }
+    };
+
+          this.vari1added = false;
+          this.vari2added = false;
+          this.pricemixedvari = false;
+          this.quantitymixedvari = false;
+          this.saved = false;
+          this.showpersonalization = false
+          this.editmode = false;
+
+  }
 
 }

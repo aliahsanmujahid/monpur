@@ -40,6 +40,10 @@ export class SettingsService {
     return this.http.get<any>(this.baseUrl + 'getallcopuns/');
   }
 
+  getcopun(code){
+    return this.http.get<any>(this.baseUrl + 'getcopun/' + code);
+  }
+
 
 
 
@@ -89,5 +93,19 @@ export class SettingsService {
 
   getterm() {
     return this.http.get<any>(this.baseUrl + 'getterm/');
+  }
+
+
+
+
+
+  getshiping() {
+    return this.http.get<any>(this.baseUrl + 'getshiping/');
+  }
+  createshiping(model) {
+    return this.http.post<any>(this.baseUrl + 'createshiping/', model);
+  }
+  updateshiping(model) {
+    return this.http.post<any>(this.baseUrl + 'updateshiping/', model);
   }
 }

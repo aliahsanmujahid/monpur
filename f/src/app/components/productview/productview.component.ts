@@ -1,3 +1,4 @@
+import { cartProduct } from './../../_models/basket';
 import { ReviewService } from './../../_services/review.service';
 import { User } from 'src/app/_models/user';
 import { Component, OnInit } from '@angular/core';
@@ -6,7 +7,7 @@ import { Product } from 'src/app/_models/product';
 import { BasketService } from 'src/app/_services/basket.service';
 import { ProductService } from 'src/app/_services/product.service';
 import { environment } from 'src/environments/environment';
-import { Editor } from 'ngx-editor';
+import { AccountService } from 'src/app/_services/account.service';
 
 @Component({
   selector: 'app-productview',
@@ -16,16 +17,18 @@ import { Editor } from 'ngx-editor';
 export class ProductviewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,private productService: ProductService,
-    private basketService: BasketService,private reviewService: ReviewService) { }
+    private basketService: BasketService,private reviewService: ReviewService,
+    public accountService: AccountService) { }
 
     imglink = environment.imgUrl;
-  product: Product;
-  cartProduct: Product = {
+    selectedimg = '';
+    product: Product;
+
+  cartProduct: cartProduct = {
     id: 0,
     cateid:0,
     subcateid:0,
     name:'',
-    details:'',
 
     price:0,
     tempprice:0,
@@ -35,23 +38,8 @@ export class ProductviewComponent implements OnInit {
     personalization:'',
 
     file1:'',
-    file2:'',
-    file3:'',
-    file4:'',
-    file5:'',
-    file6:'',
-    file7:'',
-    file8:'',
     sellerid:0,
-    hasvari1:'',
-    hasprice1:'',
-    hasquantity1:'',
 
-    hasvari2:'',
-    hasprice2:'',
-    hasquantity2:'',
-
-    hasmixedvari:'',
     vari1 : {
       id: 0,
       name:'',
@@ -71,9 +59,14 @@ export class ProductviewComponent implements OnInit {
   };
 
   alert = false;
+  vari1alert = false;
+  vari2alert = false;
+  mixvarialert = false;
+  personalizationalert = false;
+
   malert = false;
   review = false;
-  Activeuser: User;
+  activeuser: User;
   reviews: any = [];
   images = []
 
@@ -85,6 +78,11 @@ export class ProductviewComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.accountService.currentUser$.subscribe( res =>{
+      this.activeuser = res;
+    });
+
 
     this.route.data.subscribe(data => {
 
@@ -107,35 +105,35 @@ export class ProductviewComponent implements OnInit {
       if(this.product.file1 != ""){
         this.images.push({
           imageSrc:
-              this.product.file1,
+          this.imglink+this.product.file1,
           imageAlt: 'nature1',
         });
       }
       if(this.product.file2 != ""){
         this.images.push({
           imageSrc:
-              this.product.file2,
+          this.imglink+this.product.file2,
           imageAlt: 'nature1',
         });
       }
       if(this.product.file3 != ""){
         this.images.push({
           imageSrc:
-              this.product.file3,
+              this.imglink+this.product.file3,
           imageAlt: 'nature1',
         });
       }
       if(this.product.file4 != ""){
         this.images.push({
           imageSrc:
-              this.product.file4,
+          this.imglink+this.product.file4,
           imageAlt: 'nature1',
         });
       }
       if(this.product.file5 != ""){
         this.images.push({
           imageSrc:
-              this.product.file5,
+          this.imglink+this.product.file5,
           imageAlt: 'nature1',
         });
       }
@@ -187,46 +185,27 @@ export class ProductviewComponent implements OnInit {
     cateid:this.product.cateid,
     subcateid:this.product.subcateid,
     name:this.product.name,
-    details:this.product.details,
-
     price:this.product.price,
     tempprice:this.product.tempprice,
     discount:this.product.discount,
     quantity:this.product.quantity,
-    personalization:'',
-    sku:'',
+    sku:this.product.sku,
     file1:this.product.file1,
-    file2:'',
-    file3:'',
-    file4:'',
-    file5:'',
-    file6:'',
-    file7:'',
-    file8:'',
     sellerid:this.product.sellerid,
 
-    hasvari1:'',
-    hasprice1:'',
-    hasquantity1:'',
-
-    hasvari2:'',
-    hasprice2:'',
-    hasquantity2:'',
-
-    hasmixedvari:'',
-
+    personalization:'',
     vari1 : {
-      id: 0,
+      id: null,
       name:'',
       values:[]
     },
     vari2 : {
-      id: 0,
+      id: null,
       name:'',
       values:[]
     },
     mixedvari:{
-      id: 0,
+      id: null,
       vari1:'',
       vari2:'',
       values:[]
@@ -238,10 +217,15 @@ export class ProductviewComponent implements OnInit {
 
   }
 
+
   getreviews(){
   this.reviewService.getallreviews(this.product.id).subscribe( res =>{
     this.reviews = res;
   });
+  }
+
+  selectimg(img){
+    this.selectedimg = img;
   }
   alerttoggle(){
     this.malert = !this.malert;
@@ -346,10 +330,6 @@ export class ProductviewComponent implements OnInit {
     console.log(id);
   }
 
-  sendmessage(){
-
-
-  }
 
 
   // setColor(color, $event){
@@ -380,52 +360,63 @@ export class ProductviewComponent implements OnInit {
   //   }
 
   // }
+
   hidealert(){
     this.alert = !this.alert;
   }
 
-//   addItemToBasket(){
-//     console.log("this.cartProduct",this.cartProduct);
+  addItemToBasket(){
 
-//     if(this.Activeuser){
-//       if (this.Activeuser.role == "admin"
-//     || this.Activeuser.role == "admin"
-//     || this.Activeuser.role == "admin"){
-//       console.log('You Can,t Add Product');
-//     }else{
-// if(this.product.colors.length !== 0 || this.product.sizes.length !== 0){
-//  if(this.product.colors.length !== 0 && this.cartProduct.colors.length === 0){
-//    this.alert = !this.alert;
-//  }
-//  else if(this.product.sizes.length !== 0 && this.cartProduct.sizes.length === 0){
-//   this.alert = !this.alert;
-// }else{
-//   this.basketService.addItemToBasket(this.cartProduct);
-//  }
-// }else{
-//   this.basketService.addItemToBasket(this.cartProduct);
-// }
-// }
-// }else{
-// if(this.product.colors.length !== 0 || this.product.sizes.length !== 0){
-//   if(this.product.colors.length !== 0 && this.cartProduct.colors.length === 0){
-//     this.alert = !this.alert;
-//   }
-//   else if(this.product.sizes.length !== 0 && this.cartProduct.sizes.length === 0){
-//    this.alert = !this.alert;
-//  }else{
-//    this.basketService.addItemToBasket(this.cartProduct);
-//   }
-//  }else{
-//    this.basketService.addItemToBasket(this.cartProduct);
-//  }
-//     }
+    console.log("this.cartProduct",this.activeuser);
+    console.log("this.cartProduct",this.cartProduct);
 
-// }
+      if (this.activeuser?.role == "ewew"
+      || this.activeuser?.role == "wew"){
+
+        console.log('You Can,t Add Product');
+
+      }else{
+
+         if(this.product.hasmixedvari == 'true' && this.cartProduct.mixedvari.values.length == 0){
+
+            console.log("mixvari ",this.cartProduct);
+            this.alert = true;
+            this.mixvarialert = true;
+         }else{
+
+          if(this.product.ispersonalization !== 'true'){
+            this.basketService.addItemToBasket(this.cartProduct);
+          }
+
+         }
+
+         if(this.product.ispersonalization == 'true' && this.cartProduct.personalization == '' ){
+          this.alert = true;
+          this.personalizationalert = true;
+         }else{
+          if(this.cartProduct.mixedvari.values.length !== 0){
+            this.basketService.addItemToBasket(this.cartProduct);
+          }
+         }
+
+
+      }
+
+
+}
 
 
 
 onMixedChange(){
+
+  this.cartProduct.mixedvari = {
+    id: null,
+    vari1:'',
+    vari2:'',
+    values:[]
+  }
+  this.alert = false;
+
   if(this.selectedmixed !== ''){
    this.selectedmixed2 = 0;
    this.Mixvalues2 =  this.product.mixedvari.values.filter(p => p.vari1name.includes(this.selectedmixed));
@@ -433,7 +424,32 @@ onMixedChange(){
 }
 
 onMixedChange2(){
-  this.product.price = this.product.mixedvari.values.find( x => x.id == this.selectedmixed2).price;
+
+  this.cartProduct.mixedvari = {
+    id: null,
+    vari1:'',
+    vari2:'',
+    values:[]
+  }
+  this.alert = false;
+  this.mixvarialert = false;
+
+  let selected = this.product.mixedvari.values.find( x => x.id == this.selectedmixed2);
+  this.product.price = selected.price;
+
+  this.cartProduct.mixedvari.id = this.product.mixedvari.id;
+  this.cartProduct.mixedvari.vari1 = this.product.mixedvari.vari1;
+  this.cartProduct.mixedvari.vari2 = this.product.mixedvari.vari2;
+
+  this.cartProduct.mixedvari.values.push(selected);
+
+
+}
+
+inputchange(){
+  this.alert = false;
+  this.personalizationalert = false;
+  console.log("inputchange");
 }
 
 

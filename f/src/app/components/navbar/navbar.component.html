@@ -35,7 +35,7 @@
 
 
 
-  <nav class="navbar">
+  <nav [ngClass]="catelength <=4 ? 'navbar' : 'none'">
 
       <span *ngFor="let item of category" >
 
@@ -65,11 +65,19 @@
   <div class="icons">
       <a id="search-btn" routerLink='/mobilecate'  class="category fas fa-bars"> </a>
       <a id="search-btn" routerLink='/search' class=" fas fa-search"></a>
-      <a routerLink='/cart' class="cart fas fa-shopping-cart">
-        <span  *ngIf="(basketService.basket$ | async) as basket" >
-          {{basket.items.length}}
-        </span>
+
+      <ng-container *ngIf="!(basketService.basket$ | async) as basket">
+        <a routerLink='/cart' class="fas fa-shopping-cart" ></a>
+      </ng-container>
+
+      <ng-container *ngIf="(basketService.basket$ | async) as basket">
+      <a routerLink='/cart' class="cart fas fa-shopping-cart" >
+
+          <a href="#" class="tag" *ngIf="basket.items.length == 1">{{basket.items.length}} item</a>
+          <a href="#" class="tag" *ngIf="basket.items.length > 1">{{basket.items.length}} items</a>
       </a>
+     </ng-container>
+
       <a [routerLink]="['/shop', {fav: 3}]"  href="#" class="heart fas fa-heart"></a>
       <a routerLink="/dash" id="menu-btn" class="user fas fa-user"></a>
   </div>

@@ -1,0 +1,53 @@
+
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+
+<div *ngIf="alert" class="alert-box">
+
+  <div class="details2" >
+    <div class="text">
+
+      <form  #shipForm="ngForm" >
+        <div class="inputBox">
+          <div class="input">
+              <label>title</label>
+              <input  name="title" [(ngModel)]="model.title" minlength="3" required type="text" placeholder="enter copun code">
+          </div>
+          <div class="input">
+              <label>shiping fee</label>
+              <input  name="heading" [(ngModel)]="model.value" required type="text" placeholder="enter minimun budget">
+          </div>
+      </div>
+
+      <input type="submit" *ngIf="model.id == 0"  [disabled]="shipForm.invalid" (click)="createshiping()" value="Create" class="btn">
+      <input type="submit" *ngIf="model.id != 0" [disabled]="shipForm.invalid" (click)="updateshiping()" value="Update" class="btn">
+    </form>
+    </div>
+  </div>
+
+</div>
+
+ <div class="row">
+
+  <div class="column">
+    <div class="title">
+      <h1>Shiping Manage</h1>
+    </div>
+    <div class="details">
+
+
+
+     <div class="copun" *ngFor="let s of shipings">
+      <div class="copundata">
+        <p>title: {{s.title}}</p>
+        <p>value: {{s.value}}</p>
+      </div>
+      <div>
+        <button (click)="updatetoggle(s)" >Edit</button>
+      </div>
+     </div>
+
+     <button (click)="alerttoggle()">Add Slider</button>
+
+    </div>
+  </div>
+</div>

@@ -73,10 +73,10 @@ exports.updatepaymentsettings = async (req, res, next) => {
 
 exports.createcoupon = async (req, res, next) => {
 
-  const { code,minimun} = req.body;
+  const { code,value,minimun} = req.body;
      
   let data = {
-    code:code,minimun:minimun
+    code:code,value:value,minimun:minimun
     };
 
     let sql = 'INSERT INTO coupon SET ?';
@@ -98,9 +98,9 @@ exports.createcoupon = async (req, res, next) => {
 
 exports.updatecoupon = async (req, res, next) => {
 
-  const { id,code,minimun} = req.body;
+  const { id,code,value,minimun} = req.body;
 
-  var sqle = `UPDATE coupon SET code = "${code}", minimun = "${minimun}" Where id = ?`;
+  var sqle = `UPDATE coupon SET code = "${code}", value = "${value}", minimun = "${minimun}" Where id = ?`;
 
   db.query(sqle, [id], function (err, result) {
       if (err){
@@ -131,6 +131,19 @@ exports.getallcopuns = async (req, res, next) => {
           };
            res.send(result);
         })
+
+};
+
+exports.getcopun = async (req, res, next) => {
+
+  let sql = `SELECT * FROM coupon where code = ?`;
+
+  let query = db.query(sql,[req.params.code],(err, result) => {
+    if (err){
+      return sendError(res, "Not Exist!");
+    };
+     res.send(result);
+  })
 
 };
 
@@ -374,6 +387,85 @@ exports.getterm = async (req, res, next) => {
             return sendError(res, "Not Exist!");
           };
            res.send(result[0]);
+        })
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.createshiping = async (req, res, next) => {
+
+
+  const { title,value} = req.body;
+     
+  let data = {
+    title:title,
+    value:value
+    };
+
+    let sql = 'INSERT INTO shiping SET ?';
+
+    let query = db.query(sql, data, (err, result) => {
+        if(err) throw err;
+
+        let sql = `SELECT * FROM shiping where id = ?`;
+
+        let query = db.query(sql,result.insertId,(err, result) => {
+          if (err){
+            return sendError(res, "Not Exist!");
+          };
+           res.send(result[0]);
+        })
+    });   
+
+};
+
+exports.updateshiping = async (req, res, next) => {
+
+  const { id,title,value} = req.body;
+     
+  var sqle = `UPDATE shiping SET title = ?, value = ? WHERE id = ?`;
+  
+  db.query(sqle, [title,value,id], function (err, result) {
+      if (err){
+        return sendError(res, "Not Exist!");
+      };
+
+      let sql = `SELECT * FROM shiping WHERE id = ? `;
+
+      let query = db.query(sql,id,(err, result) => {
+        if (err){
+          return sendError(res, "Not Exist!");
+        };
+         res.send(result);
+      })
+    });
+                             
+
+};
+
+
+
+exports.getshiping = async (req, res, next) => {
+
+        let sql = `SELECT * FROM shiping`;
+
+        let query = db.query(sql,(err, result) => {
+          if (err){
+            return sendError(res, "Not Exist!");
+          };
+           res.send(result);
         })
 
 };

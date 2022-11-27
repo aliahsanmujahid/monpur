@@ -13,7 +13,10 @@
       ></i>
     </div> -->
     <!-- [pcontrols]="true" -->
-      <app-carousel [images] = "images" ></app-carousel>
+
+    <!-- <app-carousel [images] = "images" ></app-carousel> -->
+
+    <img src="{{imglink+selectedimg}}" alt="">
 
   </div>
 
@@ -34,53 +37,53 @@
   <div class="column1" >
       <div *ngIf="product.file1 !== '' " class="column" (click)="alerttoggle()">
 
-          <img class="img" src="{{imglink+product.file1}}" alt="">
+          <img class="img" src="{{imglink+product.file1}}" alt="" (click)="selectimg(product.file1)">
 
       </div>
 
       <div *ngIf="product.file2  !== '' " class="column" (click)="alerttoggle()">
 
-          <img class="img" src="{{imglink+product.file2}}" alt="">
+          <img class="img" src="{{imglink+product.file2}}" alt="" (click)="selectimg(product.file2)">
 
       </div>
 
       <div *ngIf="product.file3 !== '' "  class="column" (click)="alerttoggle()">
 
-          <img class="img" src="{{imglink+product.file3}}" alt="">
+          <img class="img" src="{{imglink+product.file3}}" alt="" (click)="selectimg(product.file3)">
 
       </div>
 
       <div *ngIf="product.file4 !== '' " class="column" (click)="alerttoggle()">
 
-          <img class="img" src="{{imglink+product.file4}}" alt="">
+          <img class="img" src="{{imglink+product.file4}}" alt="" (click)="selectimg(product.file4)">
 
       </div>
 
       <div *ngIf="product.file5 !== '' " class="column" (click)="alerttoggle()">
 
-        <img class="img" src="{{imglink+product.file5}}" alt="">
+        <img class="img" src="{{imglink+product.file5}}" alt="" (click)="selectimg(product.file5)">
 
     </div>
     <div *ngIf="product.file6 !== '' " class="column" (click)="alerttoggle()">
 
-      <img class="img" src="{{imglink+product.file6}}" alt="">
+      <img class="img" src="{{imglink+product.file6}}" alt="" (click)="selectimg(product.file6)">
 
   </div>
   <div *ngIf="product.file7 !== '' " class="column" (click)="alerttoggle()">
 
-    <img class="img" src="{{imglink+product.file7}}" alt="">
+    <img class="img" src="{{imglink+product.file7}}" alt="" (click)="selectimg(product.file7)">
 
 </div>
 <div *ngIf="product.file8 !== '' " class="column" (click)="alerttoggle()">
 
-  <img class="img" src="{{imglink+product.file8}}" alt="">
+  <img class="img" src="{{imglink+product.file8}}" alt="" (click)="selectimg(product.file8)">
 
 </div>
 
   </div>
 
-  <div class="column1_m" (click)="alerttoggle()">
-    <app-carousel [images] = "images" ></app-carousel>
+  <div class="column1_m" >
+    <app-carousel [images] = "images" [pcontrols]="true"></app-carousel>
  </div>
 
   <div class="column2" >
@@ -89,39 +92,35 @@
     </div>
     <div class="price">
       <h2 *ngIf="product.price" class="delprice">৳{{product.price}}</h2>
-      <h2 *ngIf="product.tempprice && !product.price" class="delprice">৳{{product.tempprice}}</h2>
-      <h2 *ngIf="product.discount > 0" class="mainprice">৳{{product.price * ( (100-this.product.discount) / 100 )}}</h2>
+      <h2 *ngIf="product.tempprice && !product.price" class="delprice">${{product.tempprice}}</h2>
+      <h2 *ngIf="product.discount > 0 && product.price" class="mainprice">${{(product.price * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
+      <h2 *ngIf="product.discount > 0 && !product.price" class="mainprice">${{(product.tempprice * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
       <h2 *ngIf="product.discount > 0" style="color: rgb(255, 0, 179);">
-        {{product.discount}}
+        {{product.discount}}% Off
       </h2>
     </div>
 
-
-
      <!-- vari1 sextion -->
-     <div  class="row" *ngIf="product.vari1.values.length > 0 && product.mixedvari.values.length == 0 ">
+     <div *ngIf="product.vari1.values.length > 0 && product.mixedvari.values.length == 0 ">
 
-      <div class="column">
         <p>{{product.vari1.name}}</p>
         <select name="format" id="format">
           <option selected disabled>Select {{product.vari1.name}}</option>
           <option *ngFor="let s of product.vari1.values" value="{{ s.name }}" >{{ s.name }}</option>
        </select>
-      </div>
 
     </div>
 
    <!-- vari2 sextion -->
 
-      <div  class="row" *ngIf="product.vari2.values.length > 0 && product.mixedvari.values.length == 0 ">
+      <div  *ngIf="product.vari2.values.length > 0 && product.mixedvari.values.length == 0 ">
 
-        <div class="column">
+
           <p>{{product.vari2.name}}</p>
           <select name="format" id="format">
             <option selected disabled>Select {{product.vari2.name}}</option>
             <option *ngFor="let s of product.vari2.values" value="{{ s.name }}" >{{ s.name }}</option>
          </select>
-        </div>
 
      </div>
 
@@ -129,73 +128,88 @@
 
      <!-- Mixed--1 sextion -->
 
-     <ng-container *ngIf="product.mixedvari.values.length > 0 ">
-
-     <div  class="row">
-
-      <div class="column">
+     <div *ngIf="product.mixedvari.values.length > 0 ">
         <p>{{product.mixedvari.vari1}}</p>
         <select (change)="onMixedChange()" [(ngModel)]="selectedmixed" name="format" id="format">
           <option selected disabled value='' >Select {{product.mixedvari.vari1}}</option>
           <option *ngFor="let s of Mixvalues1" value="{{ s.vari1name }}" >{{ s.vari1name }}</option>
        </select>
       </div>
-    </div>
-
-  </ng-container>
 
    <!-- Mixed--2 sextion -->
 
-  <ng-container *ngIf="product.mixedvari.values.length > 0 ">
-
-    <div  class="row">
-
-     <div class="column">
+  <div *ngIf="product.mixedvari.values.length > 0 ">
        <p>{{product.mixedvari.vari2}}</p>
        <select (change)="onMixedChange2()" [(ngModel)]="selectedmixed2" name="format" id="format">
-         <option *ngIf="selectedmixed == '' " selected disabled value= 0 >Select {{product.mixedvari.vari1}} First</option>
-         <option *ngIf="selectedmixed !== '' " selected disabled  value= 0>Select {{product.mixedvari.vari2}}</option>
+
+        <option *ngIf="selectedmixed !== '' " selected disabled  value= 0>Select {{product.mixedvari.vari2}}</option>
+        <option *ngIf="selectedmixed == '' " selected disabled value= 0 >Select {{product.mixedvari.vari1}} First</option>
+
          <option *ngFor="let s of Mixvalues2" value="{{ s.id }}" >{{ s.vari2name }}({{ s.price }}$)</option>
-      </select>
-     </div>
-   </div>
 
- </ng-container>
+        </select>
+ </div>
 
 
+ <div *ngIf="product.personalization !== '' " class="personalization">
+  <h3 *ngIf="product.ispersonalization == 'true' " >Add your personalization*</h3>
+  <h3 *ngIf="product.ispersonalization == 'false' " >Add your personalization(optional)</h3>
+  <div [innerHtml]="product.personalization"></div>
+
+  <div class="editor">
+
+  <textarea
+  (change)="inputchange()"
+  (input)="inputchange()"
+  [ngModel]="cartProduct.personalization | json"
+  [(ngModel)]="cartProduct.personalization"
+  ></textarea>
+
+  </div>
 
 
-     <div class="row">
-      <!-- <div id="addcart">
+
+</div>
+
+
+
+      <div>
+
            <div  *ngIf="alert" class="alert">
-              <strong *ngIf="product.colors.length > 0">Select Color
+
+              <strong *ngIf="mixvarialert">Select Variation
               </strong>
-              <strong *ngIf="product.sizes.length > 0">Select Size
+
+              <strong *ngIf="!mixvarialert && personalizationalert">Add Personalization
               </strong>
+
               <span class="closebtn"  (click)="hidealert()">&times;</span>
+
             </div>
 
 
-                 <button (click)="addItemToBasket()" *ngIf="product.qty !== 0"  class="glow-on-hover" type="button">
+                 <button (click)="addItemToBasket()" *ngIf="product.quantity !== 0"  class="glow-on-hover" type="button">
                     Add To Cart</button>
-                 <button *ngIf="product.qty == 0" class="glow-on-hover" type="button">
+                 <button *ngIf="product.quantity == 0" class="glow-on-hover" type="button">
                     No Quantity
                   </button>
-
-     </div> -->
      </div>
 
 
-     <div class="row" >
+     <div class="pdetails">
 
-      <div [innerHtml]="product.details"></div>
+      <h2>PRODUCT DETAILS <i class="fa fa-ellipsis-h"></i></h2>
+
+      <div class="text" [innerHtml]="product.details"></div>
 
      </div>
 
-     <div class="row">
+
+
+
       <div class="clolumn_full">
-        <h4>Reviews</h4>
-      <div class="reviews" *ngFor="let r of reviews">
+        <h2>Reviews</h2>
+        <div class="reviews" *ngFor="let r of reviews">
          <div class="ratting">
           <h2>{{r.ratting}}<i class="fa fa-star" aria-hidden="true"></i>
            {{r.review}}
@@ -206,13 +220,14 @@
         <img *ngIf="r.image2 !== '' "  class="rimg" src="{{imglink+r.image2}}" alt="" (click)="reviewtoggle(r.id)">
         <img *ngIf="r.image3 !== '' "  class="rimg" src="{{imglink+r.image3}}" alt="" (click)="reviewtoggle(r.id)">
         <img *ngIf="r.image4 !== '' "  class="rimg" src="{{imglink+r.image4}}" alt="" (click)="reviewtoggle(r.id)">
-     </div>
+
+      </div>
      <button>Load More</button>
      </div>
   </div>
 
   </div>
-</div>
+
 
 <div class="row">
     <div class="clolumn_full">

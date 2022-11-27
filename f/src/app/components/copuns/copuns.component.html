@@ -9,12 +9,19 @@
         <div class="inputBox">
           <div class="input">
               <label>Copun name</label>
-              <input  name="code" [(ngModel)]="model.code" minlength="3" required type="text" placeholder="enter copun code">
+              <input  name="code" [(ngModel)]="model.code" minlength="3" required type="text"
+              (change)="model.code = model.code.toLowerCase()"
+              (input)="model.code = model.code.toLowerCase()"
+              placeholder="enter copun code">
           </div>
           <div class="input">
-              <label>Minimun Budget</label>
-              <input  name="number" [(ngModel)]="model.minimun" required type="text" placeholder="enter minimun budget">
+              <label>Copun Value</label>
+              <input  name="number" [(ngModel)]="model.value" required type="number" placeholder="enter Value">
           </div>
+          <div class="input">
+            <label>Minimun Budget</label>
+            <input  name="number" [(ngModel)]="model.minimun" required type="number" placeholder="enter minimun budget">
+        </div>
       </div>
       <input type="submit" *ngIf="model.id == 0"  [disabled]="CopunForm.invalid" (click)="creatcopun()" value="Create" class="btn">
       <input type="submit" *ngIf="model.id != 0" [disabled]="CopunForm.invalid" (click)="updatecopun()" value="Update" class="btn">
@@ -34,8 +41,9 @@
 
      <div class="copun" *ngFor="let item of copuns">
       <div class="copundata">
-      <p >Code: <span (click)="copyMessage(item.code)" >{{item.code}}</span></p>
-      <p>Min: {{item.minimun}}</p>
+      <p> Code: <span (click)="copyMessage(item.code)" >{{item.code}}</span></p>
+      <p>Value: {{item.value}}</p>
+      <p>Minimun Buy: {{item.minimun}}</p>
       </div>
       <div>
         <button (click)="updatetoggle(item)" >Edit</button>

@@ -88,6 +88,7 @@ const {
   createcoupon,
   updatecoupon,
   getallcopuns,
+  getcopun,
   getallslider,
   createslider,
   updateslider,
@@ -96,7 +97,10 @@ const {
   getfooter,
   createterm,
   updateterm,
-  getterm
+  getterm,
+  createshiping,
+  updateshiping,
+  getshiping
 
 } = require("../controllers/setting");
 
@@ -247,6 +251,8 @@ router.post("/createpaymentsettings",createpaymentsettings);
 router.post("/updatepaymentsettings",updatepaymentsettings);
 
 
+
+router.get("/getcopun/:code",getcopun);
 router.get("/getallcopuns",getallcopuns);
 router.post("/createcoupon",createcoupon);
 router.post("/updatecoupon",updatecoupon);
@@ -266,6 +272,12 @@ router.post("/updatefooter",updatefooter);
 router.get("/getterm",getterm);
 router.post("/createterm",createterm);
 router.post("/updateterm",updateterm);
+
+
+
+router.get("/getshiping",getshiping);
+router.post("/createshiping",createshiping);
+router.post("/updateshiping",updateshiping);
 
 
 

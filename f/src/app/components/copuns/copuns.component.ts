@@ -14,6 +14,7 @@ export class CopunsComponent implements OnInit {
   model = {
     id:0,
     code:'',
+    value:0,
     minimun:0,
   }
 
@@ -46,11 +47,13 @@ export class CopunsComponent implements OnInit {
     this.model = {
       id:0,
       code:'',
+      value:0,
       minimun:0,
     }
   }
 
   creatcopun(){
+    this.model.code = this.model.code.toLowerCase()
     this.settingsService.createcoupon(this.model).subscribe(res => {
        this.copuns.push(res);
        this.alert = !this.alert;
@@ -58,6 +61,7 @@ export class CopunsComponent implements OnInit {
   }
 
   updatecopun(){
+    this.model.code = this.model.code.toLowerCase()
     this.settingsService.updatecoupon(this.model).subscribe(res => {
       let copun =  this.copuns.find(x => x.id == res.id);
       copun = res;
@@ -72,6 +76,7 @@ export class CopunsComponent implements OnInit {
   getallcopuns(){
     this.settingsService.getallcopuns().subscribe(res => {
       this.copuns = res;
+      console.log("cupon",res);
     });
   }
 }

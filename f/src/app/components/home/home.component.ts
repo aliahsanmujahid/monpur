@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CategoryService } from 'src/app/_services/category.service';
 
 @Component({
   selector: 'app-home',
@@ -7,13 +8,59 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  params: any = {};
+  showhide = false;
+  showbanner = false;
 
-  constructor() { }
+  params: any = {};
+  category: any = [];
+  scate: any = [];
+  catename = '';
+  cateid = 0;
+  catelength = 0;
+
+
+
+  constructor(public categoryService: CategoryService) { }
 
   ngOnInit(): void {
     this.params = "eeeeeeeeeee";
+    this.getCategoryes();
   }
+
+  over(item){
+    this.showhide = true;
+    this.cateid = item.id;
+    this.catename = item.name;
+    this.scate = item.subcate;
+    console.log("Mouseover called");
+  }
+
+  out(){
+    this.showhide = false;
+    console.log("Mouseout called");
+  }
+
+  over2(){
+    this.cateid = this.cateid;
+    this.catename =  this.catename ;
+    this.showhide = true;
+    window.scrollTo(0, 0);
+  }
+
+  out2(){
+    this.showhide = false;
+  }
+
+  getCategoryes(){
+
+    this.categoryService.getcategoryes().subscribe( res => {
+      this.category = res;
+      this.showbanner = true;
+      // this.scate = this.category[0].subcate;
+      this.catelength = this.category.length;
+      console.log("this.category.length",this.category.length);
+    })
+}
 
 
   images = [
