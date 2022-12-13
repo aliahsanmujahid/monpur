@@ -10,10 +10,8 @@ const {
   orders,
   orderitems,
   otpcheck,
-  vari1,
-  vari2,
-  vari1values,
-  vari2values,
+  vari,
+  varivalues,
   mixedvari,
   mixvalues,
   cate,
@@ -24,7 +22,9 @@ const {
   slider,
   footer,
   terms,
-  shiping
+  shiping,
+  fav,
+  address
 
 } = require("../controllers/dbcreate");
 
@@ -40,10 +40,8 @@ router.get("/orders", orders);
 router.get("/orderitems", orderitems);
 router.get("/otpcheck", otpcheck);
 
-router.get("/vari1", vari1);
-router.get("/vari2", vari2);
-router.get("/vari1values", vari1values);
-router.get("/vari2values", vari2values);
+router.get("/vari", vari);
+router.get("/varivalues", varivalues);
 
 router.get("/mixedvari", mixedvari);
 router.get("/mixvalues", mixvalues);
@@ -58,6 +56,8 @@ router.get("/slider", slider);
 router.get("/footer", footer);
 router.get("/terms", terms);
 router.get("/shiping", shiping);
+router.get("/fav", fav);
+router.get("/address", address);
 
 
 

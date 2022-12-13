@@ -1,14 +1,17 @@
 <div class="login-box">
 
-  <h3 *ngIf="message">{{message}}</h3>
+  <div class="msg" *ngIf="message">
+    <h2 >{{message}}</h2>
+    <button *ngIf="ownotp" class="agn" (click)="sendagin()">Send Again</button>
+  </div>
 
   <span *ngIf="signupform">
   <form (ngSubmit)="otpsend()">
     <label>Phone Number</label>
     <div class="mobile">
-      <span >+88</span>
+      <h3 >+88</h3>
     <input
-    [(ngModel)]="model.phonenumber"
+    [(ngModel)]="model.pnumber"
     name="phone"
     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
     type = "number"
@@ -18,12 +21,13 @@
     </div>
     <button
           type="submit"
-          class=""
+          class="button"
           >
             Send OTP
           </button>
 
   </form>
+
 </span>
 
 <span *ngIf="otpsended">
@@ -40,7 +44,7 @@
     />
     <button
           type="submit"
-          class=""
+          class="button"
           >
             Verify
           </button>
@@ -51,16 +55,18 @@
 
 
 <span *ngIf="verified">
-  <form (ngSubmit)="setac()">
+  <form class="form" (ngSubmit)="setac()">
     <label>Set Account</label>
 
     <input
-    [(ngModel)]="model.phonenumber"
+    [(ngModel)]="model.pnumber"
     name="phonenumber"
     type = "text"
     class="disabled"
     disabled
     />
+
+    <br>
 
     <input
     [(ngModel)]="setaccount.name"
@@ -68,6 +74,7 @@
     type = "text"
     placeholder="Your Name"
     />
+    <br>
     <input
     [(ngModel)]="setaccount.password"
     name="password"
@@ -76,7 +83,7 @@
     />
     <button
           type="submit"
-          class=""
+          class="button"
           >
             Set Account
           </button>
@@ -84,10 +91,19 @@
   </form>
 </span>
 
-  <div *ngIf="haveac" class="para-2">
-    Have an account? <a routerLink='/login' class='text-link'> SignIn Here </a>
-    <h1>Or</h1>
+  <div *ngIf="haveac" class="haveac">
+    Already Have an account? <a routerLink='/login' class='text-link'> SignIn Here </a>
+
+    <div class="line"></div>
+
     <p routerLink='/forgot'>Forgot Password</p>
 
+  </div>
+
+  <div class="line"></div>
+
+  <div class="social">
+    <img src="assets/google.png" alt="" class="google-img">
+    <span>Login with Google</span>
   </div>
   </div>

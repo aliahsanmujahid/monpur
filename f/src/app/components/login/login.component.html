@@ -1,6 +1,15 @@
+<app-navbar></app-navbar>
+
+
 <div class="login-box">
 
-<h1>Login</h1>
+
+<div class="header">
+  <h1 routerLink='/login'>Login</h1>
+  <h1 routerLink='/signup'>SignUp</h1>
+</div>
+
+
 <form  #LoginForm="ngForm" (ngSubmit)="login()">
   <label>Phone Number</label>
   <input
@@ -19,6 +28,8 @@
         name="password"
         type="text" />
 
+        <p class="f" routerLink='/forgot'>Forgot Password?</p>
+
         <button
         type="submit"
         class=""
@@ -27,7 +38,18 @@
         </button>
 
 </form>
-<p class="para-2">
-  Not have an account? <a routerLink='/signup' class='text-link'> SignUp here </a>
-</p>
+<br><br>
+<div class="header">
+  <p>
+    Don't have an account?
+  </p>
+  <p class="f" routerLink='/signup'> Signup</p>
+</div>
+
+<div class="line"></div>
+
+<div class="social">
+  <img src="assets/google.png" alt="" class="google-img">
+  <span>Login with Google</span>
+</div>
 </div>

@@ -16,15 +16,34 @@
 
   overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-color: rgb(233, 255, 108) rgb(255, 255, 255) !important;
+  scrollbar-width: thin !important;
 }
+.column1::-webkit-scrollbar {
+  width: 8px;
+}
+.column1::-webkit-scrollbar-thumb {
+  background: #63fff2;
+}
+
 .column2 {
   position: fixed;
   left: 20%;
   height: 100%;
   width: 80%;
-  overflow-y: scroll;
   background-color: rgb(255, 255, 255);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: rgb(233, 255, 108) rgb(255, 255, 255) !important;
+  scrollbar-width: thin !important;
+}
+.column2::-webkit-scrollbar {
+  width: 8px;
+}
 
+
+.column2::-webkit-scrollbar-thumb {
+  background: #63fff2;
 }
 .sidemenu ul{
   width: 100%;
@@ -54,9 +73,12 @@ h1{
   list-style: none;
 }
 .logout{
-  background-color: rgba(255, 127, 127, 0.795);
-  color: rgb(0, 0, 0);
+  margin-bottom: 300px;
   text-align: center;
+}
+.logout a{
+  background-color: rgba(255, 31, 68, 0.795);
+  color: rgb(255, 255, 255);
 }
 
 
@@ -142,6 +164,30 @@ section {
 
 
 
+
+a{
+  padding: 10px;
+  display: block;
+  width: 100%;
+  background: #fff;
+  cursor: pointer;
+}
+.maina{
+  background: #ffffff;
+  color: rgb(105, 105, 105);
+  border-bottom: 1px solid rgb(189, 189, 185);
+}
+.submenu{
+  display: none;
+}
+.submenu a{
+  background: rgb(245, 245, 245);
+}
+.view{
+  display: block!important;
+}
+
+
 @media (max-width: 900px) {
   .column1{
     left: -20%;
@@ -153,7 +199,7 @@ section {
   }
   #check3:checked ~ .row .column1{
     left: 0%;
-    width: 30%;
+    width: 80%;
     display: block;
     z-index: 1;
   }

@@ -1,4 +1,3 @@
-import { finalize } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -6,14 +5,14 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { delay, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { delay, finalize } from 'rxjs/operators';
 import { BusyService } from './busy.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
 
-  constructor(private busyService: BusyService,private spinner: NgxSpinnerService) {}
+  constructor(private busyService: BusyService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.busyService.busy();

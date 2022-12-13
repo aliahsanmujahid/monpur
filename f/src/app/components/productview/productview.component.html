@@ -32,9 +32,9 @@
 
   </div>
 
-<div class="row padding-top">
+<div class="row"  *ngIf="product">
 
-  <div class="column1" >
+  <div class="column1">
       <div *ngIf="product.file1 !== '' " class="column" (click)="alerttoggle()">
 
           <img class="img" src="{{imglink+product.file1}}" alt="" (click)="selectimg(product.file1)">
@@ -92,43 +92,25 @@
     </div>
     <div class="price">
       <h2 *ngIf="product.price" class="delprice">৳{{product.price}}</h2>
-      <h2 *ngIf="product.tempprice && !product.price" class="delprice">${{product.tempprice}}</h2>
       <h2 *ngIf="product.discount > 0 && product.price" class="mainprice">${{(product.price * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
-      <h2 *ngIf="product.discount > 0 && !product.price" class="mainprice">${{(product.tempprice * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
       <h2 *ngIf="product.discount > 0" style="color: rgb(255, 0, 179);">
         {{product.discount}}% Off
       </h2>
     </div>
 
      <!-- vari1 sextion -->
-     <div *ngIf="product.vari1.values.length > 0 && product.mixedvari.values.length == 0 ">
+    <div *ngIf="product.vari?.values.length > 0">
+      <p>{{product.vari.name}}</p>
+      <select (change)="onVari1change()" [(ngModel)]="selectVari1" name="format" id="format">
+        <option selected disabled value = 0>Select {{product.vari.name}}</option>
+        <option *ngFor="let s of product.vari.values" value="{{ s.id }}" >{{ s.name }}</option>
+     </select>
 
-        <p>{{product.vari1.name}}</p>
-        <select name="format" id="format">
-          <option selected disabled>Select {{product.vari1.name}}</option>
-          <option *ngFor="let s of product.vari1.values" value="{{ s.name }}" >{{ s.name }}</option>
-       </select>
-
-    </div>
-
-   <!-- vari2 sextion -->
-
-      <div  *ngIf="product.vari2.values.length > 0 && product.mixedvari.values.length == 0 ">
-
-
-          <p>{{product.vari2.name}}</p>
-          <select name="format" id="format">
-            <option selected disabled>Select {{product.vari2.name}}</option>
-            <option *ngFor="let s of product.vari2.values" value="{{ s.name }}" >{{ s.name }}</option>
-         </select>
-
-     </div>
-
-
+  </div>
 
      <!-- Mixed--1 sextion -->
 
-     <div *ngIf="product.mixedvari.values.length > 0 ">
+     <div *ngIf="product.mixedvari?.values.length > 0 ">
         <p>{{product.mixedvari.vari1}}</p>
         <select (change)="onMixedChange()" [(ngModel)]="selectedmixed" name="format" id="format">
           <option selected disabled value='' >Select {{product.mixedvari.vari1}}</option>
@@ -138,22 +120,22 @@
 
    <!-- Mixed--2 sextion -->
 
-  <div *ngIf="product.mixedvari.values.length > 0 ">
+  <div *ngIf="product.mixedvari?.values.length > 0 ">
        <p>{{product.mixedvari.vari2}}</p>
        <select (change)="onMixedChange2()" [(ngModel)]="selectedmixed2" name="format" id="format">
 
         <option *ngIf="selectedmixed !== '' " selected disabled  value= 0>Select {{product.mixedvari.vari2}}</option>
         <option *ngIf="selectedmixed == '' " selected disabled value= 0 >Select {{product.mixedvari.vari1}} First</option>
 
-         <option *ngFor="let s of Mixvalues2" value="{{ s.id }}" >{{ s.vari2name }}({{ s.price }}$)</option>
+         <option *ngFor="let s of Mixvalues2" value="{{ s.id }}" >{{ s.vari2name }}</option>
 
         </select>
  </div>
 
 
  <div *ngIf="product.personalization !== '' " class="personalization">
-  <h3 *ngIf="product.ispersonalization == 'true' " >Add your personalization*</h3>
-  <h3 *ngIf="product.ispersonalization == 'false' " >Add your personalization(optional)</h3>
+  <h3 *ngIf="product.isp == 'true' " >Add your personalization*</h3>
+  <h3 *ngIf="product.isp == 'false' " >Add your personalization(optional)</h3>
   <div [innerHtml]="product.personalization"></div>
 
   <div class="editor">
@@ -198,7 +180,7 @@
 
      <div class="pdetails">
 
-      <h2>PRODUCT DETAILS <i class="fa fa-ellipsis-h"></i></h2>
+      <h2>PRODUCT DETAILS <i class="det fa fa-bookmark" aria-hidden="true"></i></h2>
 
       <div class="text" [innerHtml]="product.details"></div>
 

@@ -1,13 +1,17 @@
 
 <div class="login-box">
 
-  <h3 *ngIf="message">{{message}}</h3>
+  <div class="msg" *ngIf="message">
+    <h2 >{{message}}</h2>
+    <button *ngIf="ownotp" class="agn" (click)="sendagin()">Send Again</button>
+  </div>
+  <br>
 
-  <span *ngIf="!verified">
-  <form (ngSubmit)="otpsend()">
+  <span *ngIf="!verify">
+  <form (ngSubmit)="otpsend()" >
     <label>Phone Number</label>
     <div class="mobile">
-      <span >+88</span>
+      <h3 >+88</h3>
     <input
     [(ngModel)]="model.pnumber"
     name="phone"
@@ -19,7 +23,7 @@
     </div>
     <button
           type="submit"
-          class=""
+          class="button"
           >
             Send OTP
           </button>
@@ -27,10 +31,8 @@
   </form>
 </span>
 
-<span *ngIf="verified">
-  <form (ngSubmit)="setac()">
-    <label>Your OTP</label>
-
+<span *ngIf="verify">
+  <form class="form" (ngSubmit)="setac()">
     <input
     [(ngModel)]="model.pnumber"
     name="pnumber"
@@ -39,11 +41,15 @@
     disabled
     />
 
+    <br>
+    <label>Your OTP</label>
     <input
     [(ngModel)]="setaccount.otp"
     name="otp"
     type = "text"
     />
+    <br>
+    <label>New Password</label>
     <input
     [(ngModel)]="setaccount.password"
     name="password"
@@ -52,7 +58,7 @@
 
     <button
           type="submit"
-          class=""
+          class="button"
           >
             Set Account
           </button>

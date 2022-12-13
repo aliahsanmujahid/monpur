@@ -1,3 +1,4 @@
+import { MessageboxComponent } from './components/messagebox/messagebox.component';
 import { MobilecateComponent } from './components/mobilecate/mobilecate.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { PaymentComponent } from './components/payment/payment.component';
@@ -7,7 +8,6 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ForgotComponent } from './components/forgot/forgot.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ProductviewComponent } from './components/productview/productview.component';
 import { CreateproductComponent } from './components/createproduct/createproduct.component';
 import { HomeComponent } from './components/home/home.component';
@@ -23,7 +23,8 @@ const routes: Routes = [
   {path: 'login',  component: LoginComponent},
   {path: 'signup',  component: SignupComponent},
   {path: 'forgot',  component: ForgotComponent},
-  {path: 'chat',  component: MessageComponent},
+  {path: 'chat/:cid/:rid',  component: MessageComponent},
+  {path: 'chatbox',  component: MessageboxComponent},
   {path: 'search',  component: SearchComponent},
 
   {path: 'msg',  component: ChatComponent},
@@ -34,7 +35,6 @@ const routes: Routes = [
   {path: 'mobilecate',  component: MobilecateComponent},
   {path: 'shop',  component: ShopComponent},
   {path: 'cart',  component: CartComponent},
-  {path: 'checkout',  component: CheckoutComponent},
   {path: 'payment/:id',  component: PaymentComponent},
 
   {path: 'product/:id',  component: ProductviewComponent, resolve: {product: ProductDetailedResolver}},

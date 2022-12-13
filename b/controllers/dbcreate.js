@@ -10,9 +10,24 @@ exports.createuser = async (req, res) => {
     });
 };
 
+
+exports.address = async (req, res) => {
+    let sql = 
+       'CREATE TABLE address(id int AUTO_INCREMENT,uid int,name VARCHAR(255), phone VARCHAR(255), email VARCHAR(255),address VARCHAR(255),city VARCHAR(255),state VARCHAR(255),zip VARCHAR(255), PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("orders table creatd");
+        res.send('orders table creatd');
+    });
+};
+
+
+
+
+
 exports.createproduct = async (req, res) => {
     let sql = 
-       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int,cateid int,subcateid int, name VARCHAR(255), details VARCHAR(700),personalization VARCHAR(255),ispersonalization VARCHAR(255),sku VARCHAR(255),price int,tempprice int,discount int, quantity int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),hasvari1 VARCHAR(255),hasprice1 VARCHAR(255),hasquantity1 VARCHAR(255),hasvari2 VARCHAR(255),hasprice2 VARCHAR(255),hasquantity2 VARCHAR(255),hasmixedvari VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int,cateid int,subcateid int, name VARCHAR(255), details VARCHAR(700),personalization VARCHAR(255),isp VARCHAR(255),sku VARCHAR(255),price int,discount int, quantity int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),hasvari VARCHAR(255),hasmixedvari VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("product table creatd");
@@ -30,36 +45,6 @@ exports.imagewatch = async (req, res) => {
     });
 };
 
-exports.chat = async (req, res) => {
-    // flag1 int,flag2 int, unread int
-    let sql = 
-       'CREATE TABLE chat(id int AUTO_INCREMENT,senderid int, receiverid int, date VARCHAR(255),PRIMARY KEY(id))';
-    db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log("chat table creatd");
-        res.send('chat table creatd');
-    });
-};
-
-exports.chatwatch = async (req, res) => {
-    let sql = 
-       'CREATE TABLE chatwatch(id int AUTO_INCREMENT,chatid int, userid int,flag int,unread int ,PRIMARY KEY(id))';
-    db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log("chatwatch table creatd");
-        res.send('chatwatch table creatd');
-    });
-};
-
-exports.message = async (req, res) => {
-    let sql = 
-       'CREATE TABLE message(id int AUTO_INCREMENT, chatid int, senderid int, message VARCHAR(255),date VARCHAR(255),PRIMARY KEY(id))';
-    db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log("message table creatd");
-        res.send('message table creatd');
-    });
-};
 
 exports.orders = async (req, res) => {
     let sql = 
@@ -132,9 +117,9 @@ exports.reviews = async (req, res) => {
 
 
 
-exports.vari1 = async (req, res) => {
+exports.vari = async (req, res) => {
     let sql = 
-       'CREATE TABLE vari1(id int AUTO_INCREMENT, pid int,name VARCHAR(255), PRIMARY KEY(id))';
+       'CREATE TABLE vari(id int AUTO_INCREMENT, pid int,name VARCHAR(255), PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("vari1 table creatd");
@@ -142,15 +127,6 @@ exports.vari1 = async (req, res) => {
     });
 };
 
-exports.vari2 = async (req, res) => {
-    let sql = 
-       'CREATE TABLE vari2(id int AUTO_INCREMENT, pid int,name VARCHAR(255), PRIMARY KEY(id))';
-    db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log("vari2 table creatd");
-        res.send('vari2 table creatd');
-    });
-};
 exports.mixedvari = async (req, res) => {
     let sql = 
        'CREATE TABLE mixedvari(id int AUTO_INCREMENT, pid int,vari1 VARCHAR(255),vari2 VARCHAR(255), PRIMARY KEY(id))';
@@ -160,18 +136,9 @@ exports.mixedvari = async (req, res) => {
         res.send('vari2 table creatd');
     });
 };
-exports.vari1values = async (req, res) => {
+exports.varivalues = async (req, res) => {
     let sql = 
-       'CREATE TABLE vari1values(id int AUTO_INCREMENT, variid int,name VARCHAR(255), price int, quantity int,sku VARCHAR(255), PRIMARY KEY(id))';
-    db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log("varivalues table creatd");
-        res.send('varivalues table creatd');
-    });
-};
-exports.vari2values = async (req, res) => {
-    let sql = 
-       'CREATE TABLE vari2values(id int AUTO_INCREMENT, variid int,name VARCHAR(255), price int, quantity int,sku VARCHAR(255), PRIMARY KEY(id))';
+       'CREATE TABLE varivalues(id int AUTO_INCREMENT, variid int,name VARCHAR(255), price int, quantity int,sku VARCHAR(255), PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("varivalues table creatd");
@@ -266,6 +233,62 @@ exports.shiping = async (req, res) => {
         res.send('terms table creatd');
     });
 };
+
+
+
+
+exports.fav = async (req, res) => {
+    let sql = 
+       'CREATE TABLE fav(id int AUTO_INCREMENT,uid int,pid int, PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("terms table creatd");
+        res.send('terms table creatd');
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+exports.chat = async (req, res) => {
+    // flag1 int,flag2 int, unread int
+    let sql = 
+       'CREATE TABLE chat(id int AUTO_INCREMENT,senderid VARCHAR(255), receiverid VARCHAR(255), date VARCHAR(255),PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("chat table creatd");
+        res.send('chat table creatd');
+    });
+};
+
+exports.chatwatch = async (req, res) => {
+    let sql = 
+       'CREATE TABLE chatwatch(id int AUTO_INCREMENT,chatid int, userid VARCHAR(255),flag int,unread int ,PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("chatwatch table creatd");
+        res.send('chatwatch table creatd');
+    });
+};
+
+exports.message = async (req, res) => {
+    let sql = 
+       'CREATE TABLE message(id int AUTO_INCREMENT, chatid int, senderid VARCHAR(255), message VARCHAR(255),date VARCHAR(255),PRIMARY KEY(id))';
+    db.query(sql, (err, result) => {
+        if(err) throw err;
+        console.log("message table creatd");
+        res.send('message table creatd');
+    });
+};
+
 
 
 

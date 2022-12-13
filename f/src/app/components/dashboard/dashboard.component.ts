@@ -15,7 +15,8 @@ export class DashboardComponent implements OnInit {
 
   producteditid:any = 0;
 
-  show = 'copuns';
+  show = 'profile';
+  view = 0;
 
   ngOnInit(): void {
 
@@ -33,11 +34,17 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  showgroup(s){
+  showgroup(i,s){
     this.router.navigateByUrl('/dash');
     this.producteditid = 0;
     this.show = s;
+    if(this.view == i){
+      this.view = 0;
+     }else{
+      this.view = i;
+     }
   }
+
 
 
   logout() {

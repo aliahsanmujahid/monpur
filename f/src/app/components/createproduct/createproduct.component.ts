@@ -1,5 +1,3 @@
-import { Imixvari, Ivalues, Ivari } from './../../_models/product';
-
 import { ProductService } from './../../_services/product.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
@@ -10,7 +8,7 @@ import { NgForm } from '@angular/forms';
 import { CategoryService } from 'src/app/_services/category.service';
 import { environment } from 'src/environments/environment';
 import { Editor } from 'ngx-editor';
-import { IProduct } from 'src/app/_models/product';
+import {  Imixvari, Ivalues,IProduct, Ivari  } from 'src/app/_models/product';
 
 @Component({
   selector: 'app-createproduct',
@@ -49,14 +47,20 @@ export class CreateproductComponent implements OnInit {
 
   product: IProduct = {
     id: 0,
+
     cateid:0,
     subcateid:0,
     name:'',
     details:'',
     sku:'',
 
-    ispersonalization:'none',
+
+    sellerid:0,
+    hasmixedvari:'',
+    hasvari:'',
+
     personalization:'',
+    isp:'none',
 
     price:null,
     discount:null,
@@ -71,27 +75,13 @@ export class CreateproductComponent implements OnInit {
     file7:'',
     file8:'',
 
-    hasvari1:'',
-    hasprice1:'',
-    hasquantity1:'',
-    hassku1:'',
-
-    hasvari2:'',
-    hasprice2:'',
-    hasquantity2:'',
-    hassku2:'',
-
-    hasmixedvari:'',
-
-    vari1 : {
-      name:'',
-      values:[]
-    },
-    vari2 : {
+    vari : {
+      id:0,
       name:'',
       values:[]
     },
     mixedvari:{
+      id:0,
       vari1:'',
       vari2:'',
       values:[]
@@ -105,14 +95,34 @@ export class CreateproductComponent implements OnInit {
   isSize:Boolean = false;
   qtyshow = false;
 
+
+  vari1 : Ivari =  {
+    id:0,
+    name:'',
+    values:[]
+  };
+  vari2 : Ivari = {
+    id:0,
+    name:'',
+    values:[]
+  };
+
+  mixedvari: Imixvari = {
+    id:0,
+    vari1:'',
+    vari2:'',
+    values:[]
+  }
+
   values1 : Ivalues = {
+      id:0,
       name:'',
       quantity: 0,
       price: 0,
       sku: '',
   };
-
   values2 : Ivalues = {
+    id:0,
     name:'',
     quantity: 0,
     price: 0,
@@ -120,6 +130,7 @@ export class CreateproductComponent implements OnInit {
 };
 
 tempmixedvari: Imixvari = {
+  id: 0,
   vari1:'',
   vari2:'',
   values:[]
@@ -151,62 +162,61 @@ Math: any;
     if(this.producteditid !== 0){
       this.productService.getEditProduct(this.producteditid).subscribe(res =>{
         this.product = res;
-        this.editmode = true;
 
         if(this.product.personalization != ''){
           this.showpersonalization = true
         }
 
-        if(this.product.vari1.values.length > 0){
-          this.vari1added = true;
-        }
-        if(this.product.vari2.values.length > 0){
-          this.vari2added = true;
+        if(this.product.vari.values.length > 0){
+           console.log("setting vari1",this.vari1);
+           this.vari1 = res.vari;
+           this.vari1added = true;
+
+
         }
 
         if(this.product.mixedvari.values.length > 0){
+          console.log("setting mixedvari",this.vari1);
+
+          this.mixedvari = res.mixedvari;
+          this.tempmixedvari = res.mixedvari;
+
+          this.vari1.name = this.mixedvari.vari1;
+          this.vari2.name = this.mixedvari.vari2;
           this.vari1added = true;
           this.vari2added = true;
-          this.pricemixedvari = true;
-          this.quantitymixedvari = true;
-          this.saved = true;
 
-        this.product.mixedvari.values.forEach(e1 => {
+          this.mixedvari.values.forEach(e => {
 
-          this.product.vari1.name = this.product.mixedvari.vari1;
-          this.product.vari2.name = this.product.mixedvari.vari2;
+            if(!this.vari1.values.find(x => x.name === e.vari1name)){
+              console.log("this.vari1",this.vari1);
+              this.vari1.values.push({
+                id:e.id,
+                name:e.vari1name,
+                quantity: e.quantity,
+                price: e.price,
+                sku: e.sku,
+              });
+            }
 
-          if(!this.product.vari1.values.find(x => x.name ==  e1.vari1name)){
-            this.product.vari1.values.push(
-              {
-                name:e1.vari1name,
-                price: e1.price,
-                quantity: e1.quantity,
-                sku: '',
-              }
-            );
-          }
-          if(!this.product.vari2.values.find(x => x.name ==  e1.vari2name)){
-            this.product.vari2.values.push(
-              {
-                name:e1.vari2name,
-                price: e1.price,
-                quantity: e1.quantity,
-                sku: '',
-              }
-            );
-          }
+            if(!this.vari2.values.find(x => x.name === e.vari2name)){
+              this.vari2.values.push({
+                id:e.id,
+                name:e.vari2name,
+                quantity: e.quantity,
+                price: e.price,
+                sku: e.sku,
+              });
+            }
 
-          this.tempmixedvari = this.product.mixedvari;
-
-
-        });
+          });
 
         }
 
         console.log("edited product ",this.product);
       });
     }
+
     this.getcate();
     this.getsubcate();
   }
@@ -217,199 +227,14 @@ Math: any;
     this.editor2.destroy();
   }
 
-  showproductdata(){
-    console.log("Product Data",this.product);
-  }
-
-  // calculateDiscount(){
-  //    this.showdiscount = true;
-  // }
-
-
-  saveandcontinue(){
-    this.disabledbtn = true;
-    this.editmode = true;
-    this.alert = !this.alert;
-    this.product.hasmixedvari = "";
-    if( this.product.hasprice1 == 'true' &&  this.product.hasprice2 == 'true'){
-      this.pricemixedvari = true;
-      this.product.mixedvari = {
-        vari1:'',
-        vari2:'',
-        values:[]
-      }
-
-      this.product.hasmixedvari = "true";
-      this.product.mixedvari.vari1 = this.product.vari1.name;
-      this.product.mixedvari.vari2 = this.product.vari2.name;
-      this.product.vari1.values.forEach(vari1 => {
-        this.product.vari2.values.forEach(vari2 => {
-
-          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
-          // console.log("findvari",findvari);
-
-           this.product.mixedvari.values.push({
-            vari1name:vari1.name,
-            vari2name: vari2.name,
-            quantity:findvari?.quantity,
-            price:findvari?.price,
-            sku:findvari?.sku,
-           });
-
-        });
-      });
-      this.saved = true;
-
-    }
-    if( this.product.hasquantity1 == 'true' &&  this.product.hasquantity2 == 'true'){
-      this.quantitymixedvari = true;
-      this.product.mixedvari = {
-        vari1:'',
-        vari2:'',
-        values:[]
-      }
-
-      this.product.hasmixedvari = "true";
-      this.product.mixedvari.vari1 = this.product.vari1.name;
-      this.product.mixedvari.vari2 = this.product.vari2.name;
-      this.product.vari1.values.forEach(vari1 => {
-        this.product.vari2.values.forEach(vari2 => {
-
-          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
-          // console.log("findvari",findvari);
-
-           this.product.mixedvari.values.push({
-            vari1name:vari1.name,
-            vari2name: vari2.name,
-            quantity:findvari?.quantity,
-            price:findvari?.price,
-            sku:findvari?.sku,
-           });
-
-        });
-      });
-      this.saved = true;
-    }
-
-    if( this.product.hassku1 == 'true' &&  this.product.hassku2 == 'true'){
-      this.skumixedvari = true;
-      this.product.mixedvari = {
-        vari1:'',
-        vari2:'',
-        values:[]
-      }
-
-      this.product.hasmixedvari = "true";
-      this.product.mixedvari.vari1 = this.product.vari1.name;
-      this.product.mixedvari.vari2 = this.product.vari2.name;
-      this.product.vari1.values.forEach(vari1 => {
-        this.product.vari2.values.forEach(vari2 => {
-
-          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
-          // console.log("findvari",findvari);
-
-           this.product.mixedvari.values.push({
-            vari1name:vari1.name,
-            vari2name: vari2.name,
-            quantity:findvari?.quantity,
-            price:findvari?.price,
-            sku:findvari?.sku,
-           });
-        });
-      });
-      this.saved = true;
-    }
-
-
-
-    if( this.product.hasprice1 == '' ||  this.product.hasprice2 == ''){
-      this.pricemixedvari = false;
-    }
-
-    if(this.product.hasprice1 !== '' ||  this.product.hasprice2 !== ''){
-      this.product.price = null;
-    }
-
-    if( this.product.hasquantity1 == '' ||  this.product.hasquantity2 == ''){
-      this.quantitymixedvari = false;
-    }
-    if(this.product.hasquantity1 !== '' ||  this.product.hasquantity2 !== ''){
-      this.product.quantity = null;
-    }
-    if( this.product.hassku1 == '' ||  this.product.hassku2 == ''){
-      this.skumixedvari = false;
-    }
-    if(this.product.hassku1 !== '' ||  this.product.hassku2 !== ''){
-      this.product.sku = '';
-    }
-
-  }
-
   inputchange(){
-    this.tempmixedvari = this.product.mixedvari;
+    this.tempmixedvari = this.mixedvari;
   }
+
   discountchange(){
     console.log("discount changing");
     if(this.product.discount > 100){
       this.product.discount = 100;
-    }
-  }
-
-  onFeatureToggle($event) {
-    this.disabledbtn = false;
-    if ($event.target.checked){
-      if($event.target.value == 'hasprice1'){
-          this.product.hasprice1 = 'true'
-      }
-      if($event.target.value == 'hasprice2'){
-        this.product.hasprice2 = 'true'
-      }
-      if($event.target.value == 'hasquantity1'){
-        this.product.hasquantity1 = 'true'
-      }
-      if($event.target.value == 'hasquantity2'){
-        this.product.hasquantity2 = 'true'
-      }
-      if($event.target.value == 'personalization'){
-        this.product.ispersonalization = "true";
-        this.showpersonalization = true;
-      }
-      if($event.target.value == 'ispersonalization'){
-        this.product.ispersonalization = "false";
-      }
-      if($event.target.value == 'hassku1'){
-        this.product.hassku1 = 'true'
-      }
-      if($event.target.value == 'hassku2'){
-        this.product.hassku2 = 'true';
-      }
-    }
-    else {
-      if($event.target.value == 'hasprice1'){
-        this.product.hasprice1 = ''
-      }
-      if($event.target.value == 'hasprice2'){
-        this.product.hasprice2 = ''
-      }
-      if($event.target.value == 'hasquantity1'){
-       this.product.hasquantity1 = ''
-      }
-      if($event.target.value == 'hasquantity2'){
-       this.product.hasquantity2 = ''
-      }
-      if($event.target.value == 'personalization'){
-        this.product.ispersonalization = "none";
-        this.showpersonalization = false;
-      }
-      if($event.target.value == 'ispersonalization'){
-        this.product.ispersonalization = "true";
-      }
-      if($event.target.value == 'hassku1'){
-        this.product.hassku1 = ''
-      }
-      if($event.target.value == 'hassku2'){
-        this.product.hassku2 = '';
-      }
     }
   }
 
@@ -429,20 +254,8 @@ Math: any;
   deletevariname1(){
     this.disabledbtn = false;
     this.vari1added = false;
-    this.product.vari1 = {
-      name:'',
-      values:[]
-    }
-  }
-
-  renamevari2(){
-    this.disabledbtn = false;
-    this.vari2added = false;
-  }
-  deletevariname2(){
-    this.disabledbtn = false;
-    this.vari2added = false;
-    this.product.vari2 = {
+    this.vari1 = {
+      id:0,
       name:'',
       values:[]
     }
@@ -451,9 +264,10 @@ Math: any;
   addvari1(){
      this.disabledbtn = false;
      if(this.values1.name != ''){
-      this.product.vari1.values.push(this.values1)
+      this.vari1.values.push(this.values1)
       this.disabledbtn = false;
       this.values1 = {
+         id:0,
          name:'',
          quantity: 0,
          price: 0,
@@ -463,18 +277,15 @@ Math: any;
   }
 
   deletevari1(index){
-    this.disabledbtn = false;
-    if(this.product.vari1.values.length == 1){
-      this.disabledbtn = true;
-    }
-    this.product.vari1.values.splice(index,1)
+    this.vari1.values.splice(index,1)
   }
 
   addvari2(){
     this.disabledbtn = false;
     if(this.values2.name != ''){
-     this.product.vari2.values.push(this.values2)
+     this.vari2.values.push(this.values2)
      this.values2 = {
+        id:0,
         name:'',
         quantity: 0,
         price: 0,
@@ -483,49 +294,99 @@ Math: any;
     }
  }
 
+renamevari2(){
+  this.disabledbtn = false;
+  this.vari2added = false;
+}
+deletevariname2(){
+  this.disabledbtn = false;
+  this.vari2added = false;
+  this.vari2 = {
+    id:0,
+    name:'',
+    values:[]
+  }
+}
+
  deletevari2(index){
-   this.disabledbtn = false;
-   this.product.vari2.values.splice(index,1)
- }
-
-
- cancelvaripopup(){
-  if(this.vari1added && this.product.vari1.values.length == 0){
-     this.disabledbtn = true;
-  }
-  // if(this.vari2added && this.product.vari2.values.length == 0){
-  //   this.disabledbtn = true;
-  // }
-
-  if(this.editmode == false){
-    this.product.hasprice1 = ''
-    this.product.hasprice2 = ''
-    this.product.hasquantity1 = ''
-    this.product.hasquantity2 = ''
-    this.product.vari1 = {
-      name:'',
-      values:[]
-    },
-    this.product.vari2 = {
-      name:'',
-      values:[]
-    }
-    this.values2 = {
-      name:'',
-      quantity: 0,
-      price: 0,
-      sku: '',
-   }
-   this.vari1added = false;
-   this.vari2added = false;
-  }
-  this.alert = !this.alert;
-
+   this.vari2.values.splice(index,1)
  }
 
   alerttoggle(){
     this.alert = !this.alert;
   }
+
+  saveandcontinue(){
+
+    this.mixedvari = {
+      id:0,
+      vari1:'',
+      vari2:'',
+      values:[]
+    }
+
+    if(this.vari1.values.length > 0 && this.vari2.values.length > 0){
+      this.mixedvari.vari1 = this.vari1.name;
+      this.mixedvari.vari2 = this.vari2.name;
+      this.vari1.values.forEach(vari1 => {
+        this.vari2.values.forEach(vari2 => {
+
+          let findvari = this.tempmixedvari.values.find(x=> x.vari1name == vari1.name && x.vari2name == vari2.name);
+
+           this.mixedvari.values.push({
+            id:0,
+            vari1name:vari1.name,
+            vari2name: vari2.name,
+            quantity:findvari?.quantity,
+            price:findvari?.price,
+            sku:findvari?.sku,
+           });
+        });
+      });
+    }
+
+    this.alert = false;
+
+  }
+
+  onFeatureToggle($event) {
+    console.log("$event.target.value",$event.target.value);
+    if ($event.target.checked){
+      if($event.target.value == 'personalization'){
+        this.product.isp = "false";
+        this.showpersonalization = true;
+      }
+      if($event.target.value == 'ispersonalization'){
+        this.product.isp = "true";
+      }
+    }
+    else{
+      if($event.target.value == 'personalization'){
+        this.product.isp = "false";
+        this.showpersonalization = false;
+      }
+      if($event.target.value == 'ispersonalization'){
+        this.product.isp = "false";
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   getcate(){
     this.categoryService.getallcate().subscribe( res => {
@@ -635,7 +496,37 @@ if(val == 8){
 
    createProduct(){
 
-    console.log("this.product",this.product);
+
+    if(this.vari1.values.length > 0 && this.mixedvari.values.length == 0){
+     this.product.vari = this.vari1;
+     this.product.price = this.vari1.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
+     this.product.quantity  = this.vari1.values.reduce((a, b) => (b.quantity) + a, 0);
+
+     this.product.hasvari = "true";
+     this.product.hasmixedvari = "";
+
+     this.product.mixedvari = {
+      id:0,
+      vari1:'',
+      vari2:'',
+      values:[]
+    }
+    }
+    if(this.mixedvari.values.length > 0){
+      this.product.mixedvari = this.mixedvari;
+      this.product.price = this.mixedvari.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
+      this.product.quantity  = this.mixedvari.values.reduce((a, b) => (b.quantity) + a, 0);
+
+      this.product.hasvari = "";
+      this.product.hasmixedvari = "true";
+
+      this.product.vari = {
+        id:0,
+        name:'',
+        values:[]
+      }
+    }
+
 
     if(this.product.id == 0){
       if(this.product.file1 !== ''){
@@ -652,7 +543,7 @@ if(val == 8){
     }else{
 
         this.productService.updateproduct(this.product).subscribe( res =>{
-            console.log("res",res);
+            console.log("update res",res);
        }),
        error => {
 
@@ -665,7 +556,7 @@ if(val == 8){
 
 
 
-   onCateChange(){
+  onCateChange(){
     if(this.product.cateid !== 0){
       this.categoryService.getsubcatebyid(this.product.cateid).subscribe( res => {
         this.subcategoryes = res;
@@ -687,8 +578,12 @@ if(val == 8){
       details:'',
       sku:'',
 
-      ispersonalization:'none',
+      sellerid:0,
+      hasmixedvari:'',
+      hasvari:'',
+
       personalization:'',
+      isp:'none',
 
       price:null,
       discount:null,
@@ -703,40 +598,19 @@ if(val == 8){
       file7:'',
       file8:'',
 
-      hasvari1:'',
-      hasprice1:'',
-      hasquantity1:'',
-      hassku1:'',
 
-      hasvari2:'',
-      hasprice2:'',
-      hasquantity2:'',
-      hassku2:'',
-
-      hasmixedvari:'',
-
-      vari1 : {
-        name:'',
-        values:[]
-      },
-      vari2 : {
+      vari : {
+        id:0,
         name:'',
         values:[]
       },
       mixedvari:{
+        id:0,
         vari1:'',
         vari2:'',
         values:[]
       }
     };
-
-          this.vari1added = false;
-          this.vari2added = false;
-          this.pricemixedvari = false;
-          this.quantitymixedvari = false;
-          this.saved = false;
-          this.showpersonalization = false
-          this.editmode = false;
 
   }
 

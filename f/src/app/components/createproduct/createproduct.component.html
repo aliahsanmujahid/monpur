@@ -1,6 +1,6 @@
 
 
- <div (click)="cancelvaripopup()"  *ngIf="alert" class="backdrop "></div>
+ <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
  <div *ngIf="alert" class="alert-box">
 
   <div class="alert-details">
@@ -14,27 +14,10 @@
       <div class="variadd">
         <div class="left">
           <ul>
-            <li> <p>{{this.product.vari1.name}}</p></li>
+            <li> <p>{{vari1.name}}</p></li>
             <li> <a (click)="renamevari1()">Rename</a></li>
             <li> <a (click)="deletevariname1()">Delete</a></li>
           </ul>
-
-          <div class="inputs">
-            <input type="checkbox" value="hasprice1" (change)="onFeatureToggle($event)" [checked]="product.hasprice1 == 'true'" id="hasprice1" name="hasprice" >
-            <label class="lables" for="hasprice1">Prices vary for each {{product.vari1.name}}</label>
-          </div>
-
-          <div class="inputs">
-            <input type="checkbox" value="hasquantity1" (change)="onFeatureToggle($event)" [checked]="product.hasquantity1 == 'true'" id="hasquantity1" name="hasquantity">
-            <label  class="lables" for="hasquantity1">Quantities vary for each {{product.vari1.name}}</label>
-          </div>
-
-          <div class="inputs">
-            <input type="checkbox" value="hassku1" (change)="onFeatureToggle($event)" [checked]="product.hassku1 == 'true'" id="hassku1" name="hassku1">
-            <label  class="lables" for="hassku1">SKU vary for each {{product.vari1.name}}</label>
-          </div>
-
-
         </div>
         <div class="right">
           <div class="flexContainer justifyleft">
@@ -42,9 +25,11 @@
             <button (click)="addvari1()">ADD</button>
           </div>
 
-          <div class="flexContainer justifyleft sminput" *ngFor="let item of product.vari1.values ; let i = index ">
-            <input value="{{item.name}}" type="text" disabled placeholder="Name the options" class="inputField">
-            <button (click)="deletevari1(i)"><i class="fa fa-times" aria-hidden="true"></i></button>
+          <div class="values">
+            <div class="sminput" *ngFor="let item of vari1.values; let i = index ">
+              <p>{{item.name}}</p>
+              <button (click)="deletevari1(i)"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
           </div>
 
         </div>
@@ -53,7 +38,7 @@
     <span *ngIf="!vari1added">
       <label for="">Add a variation(1st)</label>
       <div class="flexContainer">
-        <input [(ngModel)]="product.vari1.name" type="text" placeholder="Name the variation" class="inputField">
+        <input [(ngModel)]="vari1.name" type="text" placeholder="Name the variation" class="inputField">
         <button (click)="addvariation1()">ADD</button>
       </div>
     </span>
@@ -70,27 +55,10 @@
       <div class="variadd">
         <div class="left">
           <ul>
-            <li> <p>{{this.product.vari2.name}}</p></li>
+            <li> <p>{{vari2.name}}</p></li>
             <li> <a (click)="renamevari2()">Rename</a></li>
             <li> <a (click)="deletevariname2()">Delete</a></li>
           </ul>
-
-          <div class="inputs">
-            <input type="checkbox"  value="hasprice2" (change)="onFeatureToggle($event)" [checked]="product.hasprice2 == 'true'" id="hasprice2" name="hasprice" >
-            <label class="lables" for="hasprice2">Prices vary for each {{product.vari2.name}}</label>
-          </div>
-
-          <div class="inputs">
-            <input type="checkbox"  value="hasquantity2" (change)="onFeatureToggle($event)" [checked]="product.hasquantity2 == 'true'" id="hasquantity2" name="hasquantity">
-            <label  class="lables" for="hasquantity2">Quantities vary for each {{product.vari2.name}}</label>
-          </div>
-
-
-          <div class="inputs">
-            <input type="checkbox"  value="hassku2" (change)="onFeatureToggle($event)" [checked]="product.hassku2 == 'true'" id="hassku2" name="hassku2">
-            <label  class="lables" for="hassku2">SKU vary for each {{product.vari2.name}}</label>
-          </div>
-
 
         </div>
         <div class="right">
@@ -99,8 +67,8 @@
             <button (click)="addvari2()">ADD</button>
           </div>
 
-          <div class="flexContainer justifyleft sminput" *ngFor="let item of product.vari2.values ; let i = index ">
-            <input value="{{item.name}}" type="text" disabled placeholder="Name the options" class="inputField">
+          <div class="sminput" *ngFor="let item of vari2.values; let i = index ">
+            <p>{{item.name}}</p>
             <button (click)="deletevari2(i)"><i class="fa fa-times" aria-hidden="true"></i></button>
           </div>
 
@@ -110,7 +78,7 @@
     <span *ngIf="!vari2added">
       <label for="">Add a variation(2nd)</label>
       <div class="flexContainer">
-        <input [(ngModel)]="product.vari2.name" type="text" placeholder="Name the variation" class="inputField">
+        <input [(ngModel)]="vari2.name" type="text" placeholder="Name the variation" class="inputField">
         <button (click)="addvariation2()">ADD</button>
       </div>
     </span>
@@ -120,8 +88,8 @@
 
 
   <div class="alert-footer">
-    <button (click)="cancelvaripopup()">Cancel</button>
-    <button *ngIf="vari1added" [disabled]="disabledbtn" (click)="saveandcontinue()">Save and Continue</button>
+    <button (click)="alerttoggle()">Cancel</button>
+    <button *ngIf="vari1added" (click)="saveandcontinue()">Save and Continue</button>
   </div>
   </div>
  </div>
@@ -142,34 +110,30 @@
 
     <div class="details2">
 
-      <button *ngIf="!vari1added" (click)="alerttoggle()">Add variations</button>
-
+      <button *ngIf="!vari1added" (click)="alerttoggle()" class="button">Add variations</button>
 
       <!-- variation one -->
-
-      <div class="variations" *ngIf="vari1added && !pricemixedvari && !quantitymixedvari && !skumixedvari">
-        <h4>{{product.vari1.name}}</h4>
-        <h1 *ngIf="product.vari1.values.length == 0">No Variation</h1>
-        <table  *ngIf="product.vari1.values.length > 0">
+      <div class="variations" *ngIf="vari1.values.length > 0 && mixedvari.values.length == 0">
+        <h4>{{vari1.name}}</h4>
+        <h1 *ngIf="vari1.values.length == 0">No Variation</h1>
+        <table  *ngIf="vari1.values.length > 0">
           <tr>
-
-
             <th>Options</th>
-            <th *ngIf="product.hasprice1 == 'true' ">
+            <th>
               Price
             </th>
-            <th *ngIf="product.hasquantity1 == 'true' ">
+            <th>
               Quantity
             </th>
-            <th *ngIf="product.hassku1 == 'true' ">
+            <th>
               Sku
             </th>
           </tr>
-          <tr *ngFor="let item of product.vari1.values ; let i = index">
+          <tr *ngFor="let item of vari1.values ; let i = index">
             <td class="td">{{item.name}}</td>
-            <td *ngIf="product.hasprice1 == 'true' ">
+            <td>
               <input
-              [(ngModel)]="product.vari1.values[i].price"
+              [(ngModel)]="vari1.values[i].price"
               required
               placeholder="Original Price"
               name="orgprice"
@@ -177,9 +141,9 @@
               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
               type="number" />
             </td>
-            <td *ngIf="product.hasquantity1 == 'true' ">
+            <td>
               <input
-          [(ngModel)]="product.vari1.values[i].quantity"
+          [(ngModel)]="vari1.values[i].quantity"
           required
           placeholder="Original Price"
           name="orgprice"
@@ -187,9 +151,9 @@
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
           type="number" />
             </td>
-          <td *ngIf="product.hassku1 == 'true' ">
+          <td>
           <input
-          [(ngModel)]="product.vari1.values[i].sku"
+          [(ngModel)]="vari1.values[i].sku"
           required
           placeholder="hassku1"
           name="hassku1"
@@ -202,84 +166,30 @@
       </div>
 
 
-      <!-- variation 2 -->
-
-
-      <div class="variations margin" *ngIf="vari2added && !pricemixedvari && !quantitymixedvari && !skumixedvari">
-        <h4>{{product.vari2.name}}</h4>
-        <h1 *ngIf="product.vari2.values.length == 0">No Variation</h1>
-        <table *ngIf="product.vari2.values.length > 0">
-          <tr>
-            <th>Options</th>
-            <th *ngIf="product.hasprice2 == 'true' ">Price</th>
-            <th *ngIf="product.hasquantity2 == 'true' ">Quantity</th>
-            <th *ngIf="product.hassku2 == 'true' ">
-              Sku
-            </th>
-          </tr>
-          <tr *ngFor="let item of product.vari2.values ; let i = index">
-            <td class="td">{{item.name}}</td>
-            <td *ngIf="product.hasprice2 == 'true' ">
-              <input
-              [(ngModel)]="product.vari2.values[i].price"
-              required
-              placeholder="Original Price"
-              name="orgprice"
-              oninput="this.value =
-              !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
-              type="number" />
-            </td>
-            <td *ngIf="product.hasquantity2 == 'true' ">
-              <input
-          [(ngModel)]="product.vari2.values[i].quantity"
-          required
-          placeholder="Original Price"
-          name="orgprice"
-          oninput="this.value =
-          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
-          type="number" />
-            </td>
-            <td *ngIf="product.hassku2 == 'true' ">
-            <input
-              [(ngModel)]="product.vari2.values[i].sku"
-              required
-              placeholder="hassku2"
-              name="hassku2"
-              type="text" />
-            </td>
-          </tr>
-
-        </table>
-
-      </div>
-
-
 
       <!-- multi variation start -->
 
 
-      <div class="variations" *ngIf="pricemixedvari && saved || quantitymixedvari && saved || skumixedvari && saved">
+      <div class="variations" *ngIf="mixedvari.values.length > 0">
 
-        <h1 *ngIf="product.mixedvari.values.length == 0">No Variation</h1>
-
-        <table *ngIf="product.mixedvari.values.length > 0">
+        <table>
           <tr>
-            <th>{{product.mixedvari.vari1}}</th>
-            <th>{{product.mixedvari.vari2}}</th>
-            <th *ngIf="product.hasprice1 == 'true' || product.hasprice2 == 'true' ">Price</th>
-            <th *ngIf="product.hasquantity1 == 'true' || product.hasquantity2 == 'true' ">Quantity</th>
-            <th *ngIf="product.hassku1 == 'true' || product.hassku2 == 'true' ">Sku</th>
+            <th>{{mixedvari.vari1}}</th>
+            <th>{{mixedvari.vari2}}</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sku</th>
 
           </tr>
 
-          <tr *ngFor="let item of product.mixedvari.values ; let i = index">
+          <tr *ngFor="let item of mixedvari.values ; let i = index">
             <td class="td">{{item.vari1name}}</td>
             <td class="td">{{item.vari2name}}</td>
 
-            <td *ngIf="product.hasprice1 == 'true' || product.hasprice2 == 'true'  ">
+            <td>
               <input
               (change)="inputchange()"
-              [(ngModel)]="product.mixedvari.values[i].price"
+              [(ngModel)]="mixedvari.values[i].price"
               required
               placeholder="Original Price"
               name="orgprice"
@@ -287,10 +197,10 @@
               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
               type="number" />
             </td>
-            <td *ngIf="product.hasquantity1 == 'true' || product.hasquantity2 == 'true'">
+            <td>
             <input
             (change)="inputchange()"
-            [(ngModel)]="product.mixedvari.values[i].quantity"
+            [(ngModel)]="mixedvari.values[i].quantity"
           required
           placeholder="Original Price"
           name="orgprice"
@@ -298,10 +208,10 @@
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
           type="number" />
             </td>
-            <td *ngIf="product.hassku1 == 'true' || product.hassku2 == 'true'">
+            <td>
               <input
               (change)="inputchange()"
-              [(ngModel)]="product.mixedvari.values[i].sku"
+              [(ngModel)]="mixedvari.values[i].sku"
             required
             placeholder="sku"
             name="sku"
@@ -315,9 +225,6 @@
 
 
        <!-- multi variation end -->
-
-
-      <!-- <button (click)="showproductdata()">Submit</button> -->
 
     </div>
   </div>
@@ -343,13 +250,13 @@
     </div>
 
     <div class="details">
-      <ng-container *ngIf="product.hasprice1 !== '' || product.hasprice2 !== ''">
+      <ng-container *ngIf="vari1.values.length > 0 || vari2.values.length > 0 || mixedvari.values.length > 0">
         <a class="a" (click)="alerttoggle()">Set Price On Variation</a>
       </ng-container>
       <br>
 
 
-      <ng-container *ngIf="product.hasprice1 == '' && product.hasprice2 == '' ">
+      <ng-container *ngIf="vari1.values.length == 0 && vari2.values.length == 0 && mixedvari.values.length == 0">
         <label>Price</label>
       <input
           [(ngModel)]="product.price"
@@ -362,13 +269,13 @@
       </ng-container>
 
 
-      <ng-container *ngIf="product.hasquantity1 !== '' || product.hasquantity2  !== ''">
+      <ng-container *ngIf="vari1.values.length > 0 || vari2.values.length > 0 || mixedvari.values.length > 0">
         <br>
         <a class="a" (click)="alerttoggle()">Set Quantity On Variation</a>
       </ng-container>
       <br>
 
-      <ng-container *ngIf="product.hasquantity1  == '' && product.hasquantity2  == '' ">
+      <ng-container *ngIf="vari1.values.length == 0 && vari2.values.length == 0 && mixedvari.values.length == 0">
         <label>Quantity</label>
         <input
                 [(ngModel)]="product.quantity"
@@ -380,14 +287,10 @@
                 type="number" />
       </ng-container>
 
-      <ng-container *ngIf="product.hassku1 !== '' || product.hassku2  !== ''">
-        <br>
-        <a class="a" (click)="alerttoggle()">Set Sku On Variation</a>
-      </ng-container>
       <br>
 
-      <ng-container *ngIf="product.hassku1  == '' && product.hassku2  == '' ">
-        <label>SKU(Optional)</label>
+      <ng-container >
+        <label>SKU</label>
         <input
                 [(ngModel)]="product.sku"
                 placeholder="sku"
@@ -421,13 +324,13 @@
 
       <div class="leftcolumn">
 
-        <ng-container *ngIf="product.price == null && product.hasprice1 == '' && product.hasprice2 == '' ">
+        <ng-container *ngIf="product.price == null && vari1.values.length == 0 && mixedvari.values.length == 0">
 
           <a>Set Price First</a>
 
         </ng-container>
 
-        <ng-container *ngIf="product.price  !== null || product.hasprice1 != '' || product.hasprice2 != '' " >
+        <ng-container *ngIf="product.price  !== null || vari1.values.length > 0 || mixedvari.values.length > 0">
 
           <label>Set Discount</label>
           <input
@@ -441,8 +344,6 @@
                     onKeyUp="if(this.value>100){this.value='100';}else if(this.value<0){this.value='0';}"
                     class="lilinput" />
 
-          <!-- <button (click)="calculateDiscount()">Calculate Discount</button> -->
-
         </ng-container>
 
       </div>
@@ -454,10 +355,10 @@
 
 
           <!-- only price -->
-          <ng-container *ngIf="product.hasprice1 !== 'true' && product.hasprice2 !== 'true' && product.hasmixedvari !== 'true' && product.discount !== null">
+          <ng-container *ngIf="vari1.values.length == 0 && mixedvari.values.length == 0">
 
             <ng-container *ngIf="product.price !== null">
-              <label >only price Product Price: {{ (this.product.price)?.toFixed(0) }}</label>
+              <label >Product Price: {{ (this.product.price)?.toFixed(0) }}</label>
 
               <ng-container *ngIf="product.discount !== null">
               <label >Product Discount: {{ (this.product.discount)?.toFixed(0) }}%</label>
@@ -468,13 +369,13 @@
           </ng-container>
 
           <!-- for vari1 -->
-          <ng-container *ngIf="product.hasprice1 == 'true' && product.hasmixedvari !== 'true' && product.discount !== null">
-            <label >vari1 Product Variation: {{this.product.vari1.name}}</label>
+          <ng-container *ngIf="vari1.values.length > 0 && mixedvari.values.length == 0">
+            <label >Product Variation: {{vari1?.name}}</label>
 
             <ng-container *ngIf="product.discount !== null">
             <label >Product Discount: {{ (this.product.discount)?.toFixed(0) }}%</label>
 
-            <ng-container *ngFor="let item of this.product.vari1.values">
+            <ng-container *ngFor="let item of vari1?.values">
 
               <label>{{item.name}} Price: {{(item.price)?.toFixed(0) }} Discounted Price: {{(item.price * ( (100-this.product.discount) / 100 ))?.toFixed(0)}}</label>
 
@@ -483,31 +384,17 @@
           </ng-container>
 
 
-           <!-- for vari2 -->
+           <!-- for multivari -->
 
-          <ng-container *ngIf="product.hasprice2 == 'true' && product.hasmixedvari !== 'true' && product.discount !== null">
-            <label >vari2 Product Variation: {{this.product.vari2.name}}</label>
+          <ng-container *ngIf="mixedvari.values.length > 0">
+
+            <label >Product Variation: {{vari1?.name}} and {{vari2?.name}}</label>
+
 
             <ng-container *ngIf="product.discount !== null">
             <label >Product Discount: {{(this.product.discount)?.toFixed(0)}}%</label>
 
-            <ng-container *ngFor="let item of this.product.vari2.values">
-
-              <label >{{item.name}} Price: {{(item.price)?.toFixed(0) }} Discounted Price: {{(item.price * ( (100-this.product.discount) / 100 ))?.toFixed(0)}}</label>
-
-            </ng-container>
-          </ng-container>
-          </ng-container>
-
-
-           <!-- for multivari -->
-
-          <ng-container *ngIf="pricemixedvari || quantitymixedvari || product.hasmixedvari == 'true' && product.discount !== null">
-
-            <ng-container *ngIf="product.discount !== null">
-            <label >multivari Product Discount: {{(this.product.discount)?.toFixed(0)}}%</label>
-
-            <ng-container *ngFor="let item of this.product.mixedvari.values">
+            <ng-container *ngFor="let item of this.mixedvari.values">
 
               <label >{{item.vari1name}}+{{item.vari2name}} Price: {{(item.price)?.toFixed(0)}} Discounted Price: {{(item.price * ( (100-this.product.discount) / 100 ))?.toFixed(0)}}</label>
 
@@ -543,14 +430,14 @@
     <div class="details2">
 
       <div class="inputs">
-        <input type="checkbox"  value="personalization" (change)="onFeatureToggle($event)" [checked]="product.personalization !== ''" id="personalization" name="personalization">
+        <input type="checkbox"  (change)="onFeatureToggle($event)" [checked]="product.personalization !== ''" value="personalization" id="personalization" name="personalization">
         <label  class="lables" for="personalization">Add Personalization</label>
       </div>
 
 
 
       <div class="inputs"  *ngIf="showpersonalization">
-        <input type="checkbox"  value="ispersonalization" (change)="onFeatureToggle($event)" [checked]="product.ispersonalization == 'false' " id="ispersonalization" name="ispersonalization">
+        <input type="checkbox" (change)="onFeatureToggle($event)" [checked]="product.isp == 'true' " value="ispersonalization" id="ispersonalization" name="ispersonalization">
         <label  class="lables" for="ispersonalization">Optional</label>
       </div>
 

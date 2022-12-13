@@ -1,7 +1,8 @@
+import { MessageService } from 'src/app/_services/message.service';
 import { Conversation, MessageSend } from './../../_models/message';
-import { MessageService } from './../../_services/message.service';
 import { Component, ElementRef, Input, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { AccountService } from 'src/app/_services/account.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-message',
@@ -12,170 +13,234 @@ export class MessageComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
   @ViewChildren('messages') messages: QueryList<any>;
 
-  constructor(public accountService: AccountService,public messageService: MessageService) { }
+  constructor(public accountService: AccountService,public messageService: MessageService,
+    private route: ActivatedRoute, private router: Router) { }
 
   @Input() ChatId: any;
   @Input() ReceiverId: any;
 
-  UserId: string;
-  // ChatId:string;
-  // ReceiverId:string;
-  MessagedUser:any;
-  active:any;
+  userid: any  = 'a';
+
+  messagedUser:any;
+  tempUser:any;
+  page = 1;
+
 
   message: MessageSend ={
-    chatid:'',
+    chatid:null,
     senderid:'',
     receiverid:'',
     message:''
   };
 
   ngOnChanges() {
+    this.page = 1;
+    
+    this.route.params.subscribe(p => {
+      if(p['cid'] != undefined && p['rid'] != undefined){
+        this.ChatId = p['cid'];
+        this.ReceiverId =  p['rid'];
+      }
+    });
 
-    this.UserId = this.accountService.getuserid()
+    //setting userid
+    this.accountService.currentUser$.subscribe( user => {
+      if(user){
+        if(user.role == 'admin' || user.role == 'moderator'){
+          this.userid = 'a';
+        }else{
+          this.userid = user.userId;
+        }
+      }
+    });
 
-    if(this.UserId !== undefined){
-      this.messageService.createHubConnection(this.UserId);
-      //this.messageService.getConversation(this.UserId);
+    //setting hub connection
+    if(this.userid !== undefined){
+      this.messageService.createHubConnection(this.userid);
     }
 
+        //getting chat user and load message
+        if(this.ChatId){
+          this.messageService.chatUser$.subscribe(res => {
+            this.messagedUser = res.find(x => x.chatid == this.ChatId);
+            if(this.messagedUser !== undefined){
+              this.tempUser = this.messagedUser;
+            }
+            if(this.messagedUser == undefined){
+              this.messagedUser = this.tempUser;
+            }
+          });
+        }
+
+        if(this.messagedUser == undefined){
+          // this.router.navigateByUrl("/msg");
+          this.messageService.getConversation(this.userid);
+
+           //getting chat user and load message
+        if(this.ChatId){
+          this.messageService.chatUser$.subscribe(res => {
+            this.messagedUser = res.find(x => x.chatid == this.ChatId);
+            if(this.messagedUser !== undefined){
+              this.tempUser = this.messagedUser;
+            }
+            if(this.messagedUser == undefined){
+              this.messagedUser = this.tempUser;
+            }
+          });
+        }
+        this.messageService.loadmessage(this.ChatId,this.userid);
+        }
+
+        //null the form
+        this.message = {
+          chatid:null,
+          senderid:'',
+          receiverid:'',
+          message:''
+        };
+
+  }
+
+  ngOnInit(): void {
+    this.page = 1;
+
+    this.route.params.subscribe(p => {
+      if(p['cid'] != undefined && p['rid'] != undefined){
+        this.ChatId = p['cid'];
+        this.ReceiverId =  p['rid'];
+      }
+    });
+
+     //setting userid
+     this.accountService.currentUser$.subscribe( user => {
+      if(user){
+        if(user.role == 'admin' || user.role == 'moderator'){
+          this.userid = 'a';
+        }else{
+          this.userid = user.userId;
+        }
+      }
+    });
+
+     //setting hub connection
+     if(this.userid !== undefined){
+      this.messageService.createHubConnection(this.userid);
+    }
+
+    //getting chat user and load message
     if(this.ChatId){
       this.messageService.chatUser$.subscribe(res => {
-        this.MessagedUser = res.find(x => x.chatid == this.ChatId);
-      });
-    }
 
-    if(this.ReceiverId){
-
-
-      this.messageService.getChatUsers(this.ReceiverId).subscribe(res => {
-        this.MessagedUser = res;
-      });
-      this.messageService.haschat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
-
-        //console.log("haschat res",res);
-
-        if(!res.error){
-          this.ChatId = res[0].id
-          // console.log("this.ChatId ",this.ChatId );
-          this.messageService.loadmessage(this.ChatId,this.UserId);
-        }else{
-          this.messageService.nullmessage();
+          this.messagedUser = res.find(x => x.chatid == this.ChatId);
+         if(this.messagedUser !== undefined){
+          this.tempUser = this.messagedUser;
+        }
+        if(this.messagedUser == undefined){
+          this.messagedUser = this.tempUser;
         }
 
       });
 
     }
+
+    // if(this.messagedUser == undefined){
+    //   this.router.navigateByUrl("/msg");
+    // }
+
+    if(this.messagedUser == undefined){
+      // this.router.navigateByUrl("/msg");
+      this.messageService.getConversation(this.userid);
+
+       //getting chat user and load message
+    if(this.ChatId){
+      this.messageService.chatUser$.subscribe(res => {
+        this.messagedUser = res.find(x => x.chatid == this.ChatId);
+        if(this.messagedUser !== undefined){
+          this.tempUser = this.messagedUser;
+        }
+        if(this.messagedUser == undefined){
+          this.messagedUser = this.tempUser;
+        }
+      });
+    }
+    this.messageService.loadmessage(this.ChatId,this.userid);
+    }
+
+   //null the form
+   this.message = {
+        chatid:null,
+        senderid:'',
+        receiverid:'',
+        message:''
+    };
+
   }
 
-  ngOnInit(): void {
 
-    // this.UserId = this.accountService.getuserid()
-
-    // if(this.UserId !== undefined){
-    //   this.messageService.createHubConnection(this.UserId);
-    //   //this.messageService.getConversation(this.UserId);
-    // }
-
-    // if(this.ChatId){
-    //   this.messageService.chatUser$.subscribe(res => {
-    //     this.MessagedUser = res.find(x => x.chatid == this.ChatId);
-    //   });
-    // }
-
-    // if(this.ReceiverId){
-
-
-    //   this.messageService.getChatUsers(this.ReceiverId).subscribe(res => {
-    //     this.MessagedUser = res;
-    //   });
-    //   this.messageService.haschat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
-
-    //     // console.log("res",res);
-    //     if(!res.error){
-    //       this.ChatId = res[0].id
-    //       this.messageService.loadmessage(this.ChatId);
-    //     }
-    //   });
-
-    // }
-
-    // console.log(this.accountService.currentUserSource)
-
+  //loading more message
+  loadmessage(){
+      this.messageService.ploadmessage(this.ChatId,this.userid,++this.page);
+      this.scrollToTop();
+      this.messages.changes.subscribe(this.scrollToTop);
   }
 
   sendmsg(){
+    this.scrollToBottom();
+    this.messages.changes.subscribe(this.scrollToBottom);
 
     // console.log(this.ChatId)
 
     if(this.ChatId){
 
-      this.message.senderid = this.UserId;
+      this.message.senderid = this.userid;
       this.message.receiverid = this.ReceiverId;
       this.message.chatid = this.ChatId;
       if(this.message.message != ''){
         this.messageService.sendmsg(this.message,this.ReceiverId);
         this.message = {
-          chatid:'',
+          chatid:null,
           senderid:'',
           receiverid:'',
           message:''
         }
       }
+    }
+  }
+
+
+
+  isUserOnline(user){
+    if(user){
+    var  online = false;
+    if(user.role == "admin" || user.role == "moderator"){
+      this.messageService.isOnline$.subscribe( x => {
+        online = x.find((u) => u.userId == 'a') ? true : false ;
+      });
+      return online;
 
     }else{
-      this.messageService.createchat({ senderid: this.UserId,receiverid: this.ReceiverId}).subscribe(res => {
-
-        console.log("again chat ",res);
-        if(!res.error){
-          this.message.senderid = this.UserId;
-          this.message.receiverid = this.ReceiverId;
-          this.message.chatid = res[0].id;
-          this.ChatId =  res[0].id;
-          if(this.message.message != ''){
-          this.messageService.sendmsg(this.message,this.ReceiverId);
-          this.message = {
-          chatid:'',
-          senderid:'',
-          receiverid:'',
-          message:''
-        }
-        }
-        }
-
-      });
-    }
-
-    //console.log("chat id ", this.message);
-  }
-
-  activeclass(userid){
-    this.active = userid;
-  }
-
-
-  // loadmessage(id,receiveid){
-  //  this.ChatId = id
-  //  this.ReceiverId = receiveid;
-
-  //  this.messageService.chatUser$.subscribe(res => {
-
-  //  this.MessagedUser = res.find(x => x.chatid == id);
-
-  //  });
-  //  console.log(this.MessagedUser);
-
-  //  this.messageService.loadmessage(id);
-
-  // }
-
-  isUserOnline(id){
-    var  online = false;
     this.messageService.isOnline$.subscribe( x => {
-      online = x.find((user) => user.userId == id) ? true : false ;
+      online = x.find((u) => u.userId == user.id) ? true : false ;
     });
     return online;
+    }
+    }
+    return false;
+
   }
+
+  flagit(chatid){
+    this.messageService.flagchat({chatid:chatid,userid:this.userid});
+  }
+
+  unflagchat(chatid){
+
+    this.messageService.unflagchat({chatid:chatid,userid:this.userid});
+
+  }
+
+
+
 
   ngAfterViewInit() {
     this.scrollToBottom();
@@ -185,6 +250,11 @@ export class MessageComponent implements OnInit {
   scrollToBottom = () => {
     try {
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    } catch (err) {}
+  }
+  scrollToTop = () => {
+    try {
+      this.content.nativeElement.scrollTop = 0;
     } catch (err) {}
   }
 

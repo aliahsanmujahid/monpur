@@ -1,8 +1,7 @@
-<div class="Chat">
+<!-- <div class="Chat">
   <div class="Left-side-chat">
     <div class="Chat-container">
       <ul>
-        <!-- *appHasRole='["admin"]' -->
         <li (click)="getchats()">Chats</li>
         <li  (click)="getflagchats()">Flag Chats</li>
       </ul>
@@ -11,8 +10,8 @@
 
         <div class="follower conversation" *ngFor="let user of (messageService.chatUser$ | async)"
         [ngClass]="{'active' : active === user.id}">
-          <div (click)="loadmessage(user.chatid,user.id)" >
-            <div *ngIf="isUserOnline(user.id)" class="online-dot"></div>
+          <div (click)="loadmessage(user)" >
+            <div *ngIf="isUserOnline(user)" class="online-dot"></div>
             <img
               src="{{user.image || './assets/user.png'}}"
               alt="Profile"
@@ -51,4 +50,139 @@
   </span>
 
 
+</div> -->
+
+
+
+
+ <div class="row">
+  <div class="column1">
+      <ul>
+        <li (click)="showchats()"><i class="fa fa-envelope" aria-hidden="true"></i> Chats</li>
+        <li  (click)="showflagchats()"><i class="star fa fa-star" aria-hidden="true"></i> Chats</li>
+      </ul>
+
+      <br>
+
+
+      <!-- all chats -->
+      <ng-container *ngIf="flag">
+
+      <ng-container  *ngFor="let user of (messageService.chatUser$ | async)">
+       <div class="chat" [ngClass]="{'active' : active?.id == user?.id}">
+
+        <!-- desktop show -->
+        <span class="deskshow">
+        <h4 (click)="loadmessage(user)" >
+          <i *ngIf="isUserOnline(user)" class="online fa fa-user-circle" aria-hidden="true"></i>
+          <i *ngIf="!isUserOnline(user)" class="fa fa-user-circle" aria-hidden="true"></i>
+           {{user.name}}</h4>
+
+        <span
+         (click)="loadmessage(user)" class="unread" *ngIf="user.unread >= 1" class="unread">
+         {{user.unread}}</span>
+        </span>
+
+         <!-- mobile show -->
+         <span class="mobshow">
+         <h4 (click)="mloadmessage(user)" >
+          <i *ngIf="isUserOnline(user)" class="online fa fa-user-circle" aria-hidden="true"></i>
+          <i *ngIf="!isUserOnline(user)" class="fa fa-user-circle" aria-hidden="true"></i>
+          {{user.name}}</h4>
+
+        <span
+         (click)="mloadmessage(user)" class="unread" *ngIf="user.unread >= 1" class="unread">
+         {{user.unread}}</span>
+        </span>
+
+
+         <div *ngIf="user.flag == 0"  (click)="flagit(user.chatid)" class="unflag">
+          <i class="fa fa-star" aria-hidden="true"></i>
+         </div>
+         <div  *ngIf="user.flag == 1"  (click)="unflagchat(user.chatid)" class="flag">
+          <i class="fa fa-star" aria-hidden="true"></i>
+         </div>
+
+       </div>
+
+
+      </ng-container>
+
+
+      <h3 *ngIf="(messageService.chatUser$ | async).length == 0" (click)="pgetflagchats()">No More</h3>
+      <h3 *ngIf="(messageService.chatUser$ | async).length > 0" (click)="pgetchats()">Load More</h3>
+
+      </ng-container>
+
+
+      <!-- flaged chats -->
+      <ng-container *ngIf="unflag">
+
+        <ng-container  *ngFor="let user of (messageService.fchatUser$ | async)">
+         <div class="chat" [ngClass]="{'active' : active?.id == user?.id}">
+
+          <!-- desktop show -->
+          <span class="deskshow">
+          <h4 (click)="loadmessage(user)" >
+            <i *ngIf="isUserOnline(user)" class="online fa fa-user-circle" aria-hidden="true"></i>
+            <i *ngIf="!isUserOnline(user)" class="fa fa-user-circle" aria-hidden="true"></i>
+             {{user.name}}</h4>
+
+          <span
+           (click)="loadmessage(user)" class="unread" *ngIf="user.unread >= 1" class="unread">
+           {{user.unread}}</span>
+          </span>
+
+           <!-- mobile show -->
+           <span class="mobshow">
+           <h4 (click)="mloadmessage(user)" >
+            <i *ngIf="isUserOnline(user)" class="online fa fa-user-circle" aria-hidden="true"></i>
+            <i *ngIf="!isUserOnline(user)" class="fa fa-user-circle" aria-hidden="true"></i>
+            {{user.name}}</h4>
+
+          <span
+           (click)="mloadmessage(user)" class="unread" *ngIf="user.unread >= 1" class="unread">
+           {{user.unread}}</span>
+          </span>
+
+
+           <div *ngIf="user.flag == 0"  (click)="flagit(user.chatid)" class="unflag">
+            <i class="fa fa-star" aria-hidden="true"></i>
+           </div>
+           <div  *ngIf="user.flag == 1"  (click)="unflagchat(user.chatid)" class="flag">
+            <i class="fa fa-star" aria-hidden="true"></i>
+           </div>
+
+         </div>
+
+
+        </ng-container>
+
+        <h3 *ngIf="(messageService.fchatUser$ | async).length  == 0" (click)="pgetflagchats()">No More</h3>
+        <h3 *ngIf="(messageService.fchatUser$ | async).length > 0" (click)="pgetflagchats()">Load More</h3>
+
+
+        </ng-container>
+
+  </div>
+
+  <div class="column2">
+
+    <ng-container *ngIf="!viewmessage">
+      <div class="head">
+        <h4>
+           <i class="fa fa-user-circle" aria-hidden="true"></i>
+          Select Chat
+        </h4>
+       </div>
+       <div class="body">
+
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="viewmessage">
+      <app-message [ChatId]="ChatId" [ReceiverId]="ReceiverId" ></app-message>
+    </ng-container>
+
+  </div>
 </div>

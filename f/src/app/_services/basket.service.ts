@@ -57,29 +57,50 @@ export class BasketService {
   }
 
   private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
+
     const item = items.filter(i => i.id === itemToAdd.id);
-    console.log("item",item)
-    if(item.length === 0){
+
+    console.log("item",item);
+
+    console.log("itemToAdd",itemToAdd);
+
+
+    if(item.length == 0){
       itemToAdd.quantity = quantity;
       items.push(itemToAdd);
     }else{
-      // var notsame:Number = 0;
-      // var notsame2:Number = 1;
-      // item.forEach( i => {
-      // if(JSON.stringify(i.color) === JSON.stringify(itemToAdd.color)
-      // && JSON.stringify(i.size) === JSON.stringify(itemToAdd.size)){
-      //   i.quantity += quantity;
-      //   notsame = 0;
-      //   notsame2 = 0;
 
-      // }else{
-      //   notsame = 1;
-      // }
-      //});
-      // if(notsame == 1 && notsame2 == 1){
-      //   itemToAdd.quantity = quantity;
-      //   items.push(itemToAdd);
-      // }
+
+      console.log("same product");
+
+      var same = 0;
+
+
+      item.forEach( p => {
+
+        // if(p.mixedvari?.values?.length > 0 && itemToAdd.mixedvari?.values?.length > 0){
+        //   if(p.mixedvari?.values[0]?.id == itemToAdd.mixedvari?.values[0]?.id){
+        //     same = 1;
+        //     console.log("mixedvari same",same);
+        // }
+        // }
+        // if((p.vari1?.values?.length > 0 && itemToAdd.vari1?.values?.length > 0) && (p.vari2?.values?.length > 0 && itemToAdd.vari2?.values?.length > 0)){
+        //   if((p.vari1?.values[0]?.id == itemToAdd.vari1?.values[0]?.id) && (p.vari2?.values[0]?.id == itemToAdd.vari2?.values[0]?.id)){
+        //     same = 1;
+        //     console.log("vari same",same);
+
+        //     console.log("vari same",p.vari1?.values[0]?.id,itemToAdd.vari1?.values[0]?.id,p.vari2?.values[0]?.id,itemToAdd.vari2?.values[0]?.id);
+        //   }
+        // }
+
+      });
+
+      if(same == 0){
+        console.log("not same",same);
+        items.push(itemToAdd);
+      }
+
+
 
     }
 
@@ -146,13 +167,12 @@ export class BasketService {
       eachid: uuid4(),
       id: item.id,
       productName: item.name,
-      price: item.tempprice,
+      price: item.price,
       pictureUrl: item.file1,
       quantity,
       sku:item.sku,
       personalization:item.personalization,
-      vari1 : item.vari1,
-      vari2 : item.vari2,
+      vari : item.vari,
       mixedvari:item.mixedvari
 
     }

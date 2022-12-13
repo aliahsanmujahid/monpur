@@ -157,22 +157,22 @@
 
         <div class="input">
           <span>Email</span>
-          <input [(ngModel)]="orderCreate.email" type="text" placeholder="enter Email">
+          <input [(ngModel)]="orderCreate.email" name="email" required type="text" placeholder="enter Email">
          </div>
           <div class="input">
               <span>City</span>
-              <input [(ngModel)]="orderCreate.city" type="text" placeholder="enter City">
+              <input [(ngModel)]="orderCreate.city" name="city" required type="text" placeholder="enter City">
           </div>
 
       </div>
       <div class="inputBox">
           <div class="input">
           <span>state</span>
-          <input [(ngModel)]="orderCreate.state" type="test" placeholder="extra with food">
+          <input [(ngModel)]="orderCreate.state" name="state" required type="test" placeholder="extra with food">
           </div>
           <div class="input">
               <span>zip</span>
-              <input [(ngModel)]="orderCreate.zip"  type="text" placeholder="how many orders">
+              <input [(ngModel)]="orderCreate.zip"  name="zip" required type="text" placeholder="how many orders">
           </div>
       </div>
       <div class="inputBox">
@@ -234,9 +234,20 @@
 
        <div class="details">
          <p>{{item.productName}}</p>
+
+
+
+         <p *ngIf="item.vari.values.length > 0" >
+          {{item.vari.name}}: {{item.vari.values[0].name}}
+         </p>
+
+
          <p *ngIf="item.mixedvari.values.length > 0" >
           {{item.mixedvari.vari1}}: <span>{{item.mixedvari.values[0].vari1name}}</span> | {{item.mixedvari.vari2}}: <span>{{item.mixedvari.values[0].vari2name}}</span>
          </p>
+
+
+
          <p>{{item.quantity}} * {{item.price}} = {{item.quantity * item.price}}</p>
        </div>
     </div>

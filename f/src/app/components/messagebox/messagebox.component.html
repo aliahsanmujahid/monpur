@@ -1,0 +1,47 @@
+
+<div class="row">
+
+  <button class="loadmore" (click)="loadmessage()">Load more...</button>
+
+  <div #content class="chat-body" *ngIf="(messageService.userMessage$ | async).length > 0">
+
+
+    <div
+    #messages
+    *ngFor="let msg of (messageService.userMessage$ | async)"
+    [ngClass]="msg.senderid == this.userid ? 'message own' : 'message'"
+     >
+     <h4>{{msg.message}}</h4>
+     <h6 >{{msg.date | timeago}}</h6>
+    </div>
+
+  </div>
+
+
+<div class="nomsg" *ngIf="(messageService.userMessage$ | async).length == 0 && !noerror">
+  <h1>No Message Yet</h1>
+</div>
+
+
+<div class="chat-sender" >
+
+    <h1 *ngIf="noerror">Not Allowed</h1>
+
+
+  <form *ngIf="!noerror" #msgForm="ngForm" >
+    <p *ngIf="showcheck == true" (click)="unblock()" class="showcheck">Click to Open</p>
+
+    <input
+    [(ngModel)]="message.message"
+    label="Message"
+    placeholder="Write Your Message"
+    name="msg" />
+
+    <button class="send-button button" *ngIf="showcheck == false"  (click)="sendmsg()" >Send</button>
+
+  </form>
+
+</div>
+
+
+</div>

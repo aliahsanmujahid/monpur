@@ -1,10 +1,101 @@
 
 const db = require("../config/db");
-const jwt = require("jsonwebtoken");
 const { sendError } = require("../utils/helper");
 const fs = require('fs');
 const connection = require("../config/db2");
-const { sizes } = require("./dbcreate");
+
+
+
+
+
+exports.addfav = async (req, res, next) => {
+
+  const con = await connection;
+
+  let [data] = await con.execute('SELECT * FROM fav WHERE uid = ? and pid = ? ', [ req.params.uid,req.params.pid ]);
+  
+  if(data.length > 0){
+    res.send({
+      already:true
+    }); 
+  }else{
+  await con.query (
+    "INSERT INTO fav (uid,pid) VALUES (?,?)", 
+    [ 
+     req.params.uid,req.params.pid
+    ]
+  ); 
+
+  res.send({
+    success:true
+  });
+  }
+
+};
+
+exports.removefav = async (req, res, next) => {
+
+  const con = await connection;
+  
+  await con.execute('DELETE FROM fav WHERE uid = ? and pid = ?', [ req.params.uid,req.params.pid ]);
+
+  res.send({
+    success:true
+  }); 
+
+};
+
+exports.getfavp = async (req, res, next) => {
+
+  const con = await connection;
+
+  var numPerPage = 10;
+  var skip = (req.params.page-1) * numPerPage; 
+  var limit = skip + ',' + numPerPage;
+
+  let [data] = await con.execute(`SELECT pid FROM fav WHERE uid = ? LIMIT ` + limit, [ req.params.uid ]);
+  
+  let fp = [];
+
+  if(data.length > 0){
+
+  for(let i = 0; i<data.length; i++){
+    let [p] = await con.execute('SELECT * FROM products WHERE id = ? ', [ data[i].pid ]);
+    fp.push(p[0]);
+  }
+
+  res.send(fp);
+
+  }else{
+    res.send([]); 
+  }
+
+};
+
+exports.isfav = async (req, res, next) => {
+
+  const con = await connection;
+
+  let [data] = await con.execute('SELECT * FROM fav WHERE uid = ? and pid = ? ', [ req.params.uid,req.params.pid ]);
+  
+  if(data.length > 0){
+    res.send({
+      success:true
+    });
+  }else{
+    res.send({
+      success:false
+    });
+  }
+
+};
+
+
+
+
+
+
+
 
 
 exports.getcateproducts = async (req, res, next) => {
@@ -82,26 +173,42 @@ exports.searchproducts = async (req, res, next) => {
 
 };
 
-exports.getcolors = async (req, res, next) => {
+exports.getmixedvari = async (req, res, next) => {
 
-  let sql = `SELECT * from colors where pid = ?`;
-  let query = db.query(sql,[req.params.id], (err, result) => {
-    if(err) throw err;
-   
-    res.send(result);
- });  
+  const con = await connection;
+
+  const [mixedvaridata] = await con.execute('SELECT * FROM mixedvari WHERE pid = ? ', [req.params.id]);
+
+  const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE vid = ? ', [mixedvaridata[0].id]);
+
+  var mixedvari = {
+          id:mixedvaridata[0].id,
+          vari1: mixedvaridata[0].vari1,
+          vari2: mixedvaridata[0].vari2,
+          values:mixvalues
+  }
+
+
+  res.send(mixedvari);
 
 };
-exports.getsizes = async (req, res, next) => {
 
-  let sql = `SELECT * from sizes where pid = ?`;
-  let query = db.query(sql,[req.params.id], (err, result) => {
-    if(err) throw err;
-   
-    res.send(result);
- });  
+exports.getvari = async (req, res, next) => {
+  
+  const con = await connection;
+  const [varidata] = await con.execute('SELECT * FROM vari WHERE pid = ? ', [req.params.id]);
+  if(varidata.length > 0){
+  const [varivalues] = await con.execute('SELECT * FROM varivalues WHERE variid = ? ', [varidata[0].id]);
+  var vari = {
+    id:varidata[0].id,
+    name: varidata[0].name,
+    values:varivalues
+  };
+  res.send(vari);
+  }
 
 };
+
 
 
 
@@ -120,12 +227,7 @@ exports.getsingleproduct = async (req, res, next) => {
       }
 
       var data = result[0]
-      var vari1 = {
-        id:0,
-        name: '',
-        values:[]
-      };
-      var vari2 = {
+      var vari = {
         id:0,
         name: '',
         values:[]
@@ -137,26 +239,20 @@ exports.getsingleproduct = async (req, res, next) => {
         values:[]
       };
 
-      if(data.hasmixedvari != "true"){
-        const [vari1data] = await con.execute('SELECT * FROM vari1 WHERE pid = ? ', [data.id]);
-        const [vari2data] = await con.execute('SELECT * FROM vari2 WHERE pid = ? ', [data.id]);
-        const [vari1values] = await con.execute('SELECT * FROM vari1values WHERE variid = ? ', [vari1data[0].id]);
-        const [vari2values] = await con.execute('SELECT * FROM vari2values WHERE variid = ? ', [vari2data[0].id]);
-      
-        vari1 = {
-          id:vari1data[0].id,
-          name: vari1data[0].name,
-          values:vari1values
+      if(data.hasvari == "true"){
+        const [varidata] = await con.execute('SELECT * FROM vari WHERE pid = ? ', [data.id]);
+       
+        if(varidata.length>0){
+          const [varivalues] = await con.execute('SELECT * FROM varivalues WHERE variid = ? ', [varidata[0].id]);
+          vari = {
+            id:varidata[0].id,
+            name: varidata[0].name,
+            values:varivalues
+          }
+          data = {...data,mixedvari,vari}
         }
-        vari2 = {
-          id:vari2data[0].id,
-          name: vari2data[0].name,
-          values:vari2values
-        }
-
-        data = {...data,mixedvari,vari1,vari2}
-
-      }else{
+      }
+      if(data.hasmixedvari == "true"){
         const [mixedvaridata] = await con.execute('SELECT * FROM mixedvari WHERE pid = ? ', [data.id]);
 
         const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE vid = ? ', [mixedvaridata[0].id]);
@@ -169,7 +265,7 @@ exports.getsingleproduct = async (req, res, next) => {
           values:mixvalues
         }
 
-        data = {...data,mixedvari,vari1,vari2}
+        data = {...data,mixedvari,vari}
      
       }
 
@@ -204,48 +300,20 @@ exports.getsingleproduct = async (req, res, next) => {
 
 
 exports.createproduct = async (req, res, next) => {
-    const con = await connection;
 
+    const { cateid,subcateid,name, details,personalization,isp,sku, price,quantity,discount,
+      file1,file2,file3,file4,file5,file6,file7,file8,
+      hasvari,hasmixedvari} = req.body;
   
-    const { cateid,subcateid,name, details,personalization,ispersonalization,sku, price,quantity,discount,file1,file2,file3,file4,file5,file6,file7,file8,
-      hasvari1,
-      hasprice1,
-      hasquantity1,
-      hasvari2,
-      hasprice2,
-      hasquantity2,
-      hasmixedvari
-     } = req.body;
-  
-     var tempprice = 0;
-
-     if(req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.mixedvari.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-
-     }
-     if(req.body.hasprice1 == 'true' && !req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.vari1.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-
-     }
-     if(req.body.hasprice2 == 'true' && !req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.vari2.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-
-     }
 
     let product = {cateid:cateid,subcateid:subcateid,sellerid:req.user.id,name: name, details:details,
-          personalization:personalization,ispersonalization:ispersonalization,sku:sku,
-          price:price,tempprice:tempprice,discount:discount,quantity:quantity,
+          personalization:personalization,isp:isp,sku:sku,
+          price:price,discount:discount,quantity:quantity,
           file1:file1,
           file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
           file7:file7,file8:file8,
-
-          hasvari1:hasvari1, hasprice1:hasprice1,hasquantity1:hasquantity1,
-          hasvari2:hasvari2, hasprice2:hasprice2,hasquantity2:hasquantity2,
+          hasvari:hasvari,
           hasmixedvari:hasmixedvari
-
         };
 
       let sql = 'INSERT INTO products SET ?';
@@ -253,54 +321,26 @@ exports.createproduct = async (req, res, next) => {
           if(err) throw err;
           console.log("product added");
 
-          if(req.body.vari1.values.length > 0 && hasmixedvari != "true"){
-            let vari1data = {pid:result.insertId,name: req.body.vari1.name}; 
+          if(req.body.vari.values.length > 0){
+            let vari1data = {pid:result.insertId,name: req.body.vari.name}; 
 
-                let sql = 'INSERT INTO vari1 SET ?';
+                let sql = 'INSERT INTO vari SET ?';
                 let query = db.query(sql, vari1data, (err, result) => {
                 if(err){
                   return sendError(res, "Not Exist!");
                 }
-                for (let i = 0; i < req.body.vari1.values.length; i++) {
+                for (let i = 0; i < req.body.vari.values.length; i++) {
 
-                  let vari1values = {
+                  let varivalues = {
                       variid:result.insertId,
-                      name: req.body.vari1.values[i].name,
-                      price:req.body.vari1.values[i].price,
-                      quantity:req.body.vari1.values[i].quantity,
-                      sku:req.body.vari1.values[i].sku
+                      name: req.body.vari.values[i].name,
+                      price:req.body.vari.values[i].price,
+                      quantity:req.body.vari.values[i].quantity,
+                      sku:req.body.vari.values[i].sku
                   }; 
   
-                  let sql = 'INSERT INTO vari1values SET ?';
-                  let query = db.query(sql, vari1values, (err, result) => {
-                  if(err){
-                    return sendError(res, "Not Exist!");
-                  }
-                  });
-                }
-
-                });
-          }
-          if(req.body.vari2.values.length > 0 && hasmixedvari != "true"){
-            let vari2data = {pid:result.insertId,name: req.body.vari2.name}; 
-
-                let sql = 'INSERT INTO vari2 SET ?';
-                let query = db.query(sql, vari2data, (err, result) => {
-                if(err){
-                  return sendError(res, "Not Exist!");
-                }
-                for (let i = 0; i < req.body.vari2.values.length; i++) {
-
-                  let vari2values = {
-                      variid:result.insertId,
-                      name: req.body.vari2.values[i].name,
-                      price:req.body.vari2.values[i].price,
-                      quantity:req.body.vari2.values[i].quantity,
-                      sku:req.body.vari2.values[i].sku
-                  }; 
-  
-                  let sql = 'INSERT INTO vari2values SET ?';
-                  let query = db.query(sql, vari2values, (err, result) => {
+                  let sql = 'INSERT INTO varivalues SET ?';
+                  let query = db.query(sql, varivalues, (err, result) => {
                   if(err){
                     return sendError(res, "Not Exist!");
                   }
@@ -423,73 +463,33 @@ exports.createproduct = async (req, res, next) => {
     const con = await connection;
 
   
-    const { id,cateid,subcateid,name, details,personalization,ispersonalization,sku, price,quantity,discount,file1,file2,file3,file4,file5,file6,file7,file8,
-      hasvari1,
-      hasprice1,
-      hasquantity1,
-      hasvari2,
-      hasprice2,
-      hasquantity2,
-      hasmixedvari
+    const { id,cateid,subcateid,name, details,personalization,isp,sku, price,quantity,discount,
+      file1,file2,file3,file4,file5,file6,file7,file8,hasvari,hasmixedvari
      } = req.body;
   
-     var tempprice = 0;
+    
 
-     if(req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.mixedvari.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
 
-     }
-     if(req.body.hasprice1 == 'true' && !req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.vari1.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-
-     }
-     if(req.body.hasprice2 == 'true' && !req.body.hasmixedvari == 'true'){
-      
-      tempprice = req.body.vari2.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-
-     }
-
-     const [vari1data] = await con.execute('SELECT * FROM vari1 WHERE pid = ? ', [id]);
-     if(vari1data.length > 0){
-     let vari1values = `DELETE FROM  vari1values WHERE variid = ${vari1data[0].id}`;
+     const [varidata] = await con.execute('SELECT * FROM vari WHERE pid = ? ', [id]);
+     if(varidata.length > 0){
+     let vari1values = `DELETE FROM  varivalues WHERE variid = ${varidata[0].id}`;
      await db.query(vari1values, (err, result) => {
        if(err) throw err;
-
-       console.log("delete",result);
      });
     }
 
-     const [vari2data] = await con.execute('SELECT * FROM vari2 WHERE pid = ? ', [id]);
-     if(vari2data.length > 0){
-     let vari2values = `DELETE FROM  vari2values WHERE variid = ${vari2data[0].id}`;
-     await db.query(vari2values, (err, result) => {
-       if(err) throw err;
-
-       console.log("delete",result);
-     });
-     }
-     const [mixvari] = await con.execute('SELECT * FROM mixedvari WHERE pid = ? ', [id]);
+    const [mixvari] = await con.execute('SELECT * FROM mixedvari WHERE pid = ? ', [id]);
 
      if(mixvari.length > 0){
       let mixvalues = `DELETE FROM  mixvalues WHERE vid = ${mixvari[0].id}`;
       await db.query(mixvalues, (err, result) => {
         if(err) throw err;
- 
-        console.log("delete",result);
       });
      }
        
        
-     let sqlc = `DELETE FROM  vari1 WHERE pid = ${id}`;
-     let queryc = db.query(sqlc, (err, result) => {
-       if(err) throw err;
-
-       console.log("delete",result);
-     });
-
-     let sqls = `DELETE FROM  vari2 WHERE pid = ${id}`;
+     //deleting vari
+     let sqls = `DELETE FROM  vari WHERE pid = ${id}`;
      let querys = db.query(sqls, (err, result) => {
        if(err) throw err;
      });   
@@ -498,36 +498,38 @@ exports.createproduct = async (req, res, next) => {
      let querym = db.query(sqlm, (err, result) => {
        if(err) throw err;
      });
+
+
+
  
-     if(req.body.vari1.values.length > 0 && hasmixedvari != "true"){
+     if(req.body.vari.values.length > 0){
 
 
        await con.execute (
-         "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, ispersonalization = ? ,sku = ?, price = ? ,tempprice = ?, discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari1 = ?, hasvari2 = ?,hasprice1 = ?,hasquantity1 = ?,hasvari2 = ?,hasprice2 = ? ,hasquantity2 = ?,hasmixedvari = ?  WHERE id = ?", 
-         [cateid,subcateid,req.user.id,name,details,personalization,ispersonalization,sku,price,tempprice,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,hasvari1,hasvari2,hasprice1,hasquantity1,
-          hasvari2,hasprice2,hasquantity2,
-          hasmixedvari,id]
+         "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, isp = ? ,sku = ?, price = ? , discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari = ?, hasmixedvari = ?  WHERE id = ?", 
+         [cateid,subcateid,req.user.id,name,details,personalization,isp,sku,price,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,
+          hasvari,hasmixedvari,id]
        ); 
          
-            let vari1data = {pid:id,name: req.body.vari1.name}; 
+            let varidata = {pid:id,name: req.body.vari.name}; 
 
-            let sql = 'INSERT INTO vari1 SET ?';
-            let query = db.query(sql, vari1data, (err, result) => {
+            let sql = 'INSERT INTO vari SET ?';
+            let query = db.query(sql, varidata, (err, result) => {
             if(err){
               return sendError(res, "Not Exist!");
             }
-            for (let i = 0; i < req.body.vari1.values.length; i++) {
+            for (let i = 0; i < req.body.vari.values.length; i++) {
 
-              let vari1values = {
+              let varivalues = {
                   variid:result.insertId,
-                  name: req.body.vari1.values[i].name,
-                  price:req.body.vari1.values[i].price,
-                  quantity:req.body.vari1.values[i].quantity,
-                  sku:req.body.vari1.values[i].sku
+                  name: req.body.vari.values[i].name,
+                  price:req.body.vari.values[i].price,
+                  quantity:req.body.vari.values[i].quantity,
+                  sku:req.body.vari.values[i].sku
               }; 
 
-              let sql = 'INSERT INTO vari1values SET ?';
-              let query = db.query(sql, vari1values, (err, result) => {
+              let sql = 'INSERT INTO varivalues SET ?';
+              let query = db.query(sql, varivalues, (err, result) => {
               if(err){
                 return sendError(res, "Not Exist!");
               }
@@ -539,53 +541,13 @@ exports.createproduct = async (req, res, next) => {
 
      }
 
-     if(req.body.vari2.values.length > 0 && hasmixedvari != "true"){
+    if(req.body.mixedvari.values.length > 0){
 
       await con.execute (
-        "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, ispersonalization = ? ,sku = ?, price = ? ,tempprice = ?, discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari1 = ?, hasvari2 = ?,hasprice1 = ?,hasquantity1 = ?,hasvari2 = ?,hasprice2 = ? ,hasquantity2 = ?,hasmixedvari = ?  WHERE id = ?", 
-        [cateid,subcateid,req.user.id,name,details,personalization,ispersonalization,sku,price,tempprice,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,hasvari1,hasvari2,hasprice1,hasquantity1,
-         hasvari2,hasprice2,hasquantity2,
-         hasmixedvari,id]
+        "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, isp = ? ,sku = ?, price = ? , discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari = ?, hasmixedvari = ?  WHERE id = ?", 
+        [cateid,subcateid,req.user.id,name,details,personalization,isp,sku,price,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,
+         hasvari,hasmixedvari,id]
       );  
-         
- 
-      let vari2data = {pid:id,name: req.body.vari1.name}; 
-
-      let sql = 'INSERT INTO vari2 SET ?';
-      let query = db.query(sql, vari2data, (err, result) => {
-      if(err){
-        return sendError(res, "Not Exist!");
-      }
-      for (let i = 0; i < req.body.vari1.values.length; i++) {
-
-        let vari2values = {
-            variid:result.insertId,
-            name: req.body.vari1.values[i].name,
-            price:req.body.vari1.values[i].price,
-            quantity:req.body.vari1.values[i].quantity,
-            sku:req.body.vari1.values[i].sku
-        }; 
-
-        let sql = 'INSERT INTO vari2values SET ?';
-        let query = db.query(sql, vari2values, (err, result) => {
-        if(err){
-          return sendError(res, "Not Exist!");
-        }
-        });
-      }
-
-      });
-
-
-       }
-
-       if(req.body.mixedvari.values.length > 0){
-        await con.execute (
-          "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, ispersonalization = ? ,sku = ?, price = ? ,tempprice = ?, discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari1 = ?, hasvari2 = ?,hasprice1 = ?,hasquantity1 = ?,hasvari2 = ?,hasprice2 = ? ,hasquantity2 = ?,hasmixedvari = ?  WHERE id = ?", 
-          [cateid,subcateid,req.user.id,name,details,personalization,ispersonalization,sku,price,tempprice,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,hasvari1,hasvari2,hasprice1,hasquantity1,
-           hasvari2,hasprice2,hasquantity2,
-           hasmixedvari,id]
-        ); 
 
 
         let mixdata = {pid:id,vari1: req.body.mixedvari.vari1,vari2: req.body.mixedvari.vari2}; 
@@ -619,14 +581,13 @@ exports.createproduct = async (req, res, next) => {
        }
 
 
-      if(req.body.vari1.values.length == 0 && req.body.vari2.values.length == 0 && req.body.mixedvari.values.length == 0){
+      if(req.body.vari.values.length == 0 && req.body.mixedvari.values.length == 0){
        
         await con.execute (
-          "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, ispersonalization = ? ,sku = ?, price = ? ,tempprice = ?, discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari1 = ?, hasvari2 = ?,hasprice1 = ?,hasquantity1 = ?,hasvari2 = ?,hasprice2 = ? ,hasquantity2 = ?,hasmixedvari = ?  WHERE id = ?", 
-          [cateid,subcateid,req.user.id,name,details,personalization,ispersonalization,sku,price,tempprice,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,hasvari1,hasvari2,hasprice1,hasquantity1,
-           hasvari2,hasprice2,hasquantity2,
-           hasmixedvari,id]
-        ); 
+          "UPDATE products SET cateid = ?, subcateid = ?, sellerid = ?, name = ? , details = ? ,personalization = ?, isp = ? ,sku = ?, price = ? , discount = ? , quantity = ? , file1 = ? , file2 = ?, file3 = ?, file4 = ?, file5 = ?, file6 = ?, file7 = ?, file8 = ?, hasvari = ?, hasmixedvari = ?  WHERE id = ?", 
+          [cateid,subcateid,req.user.id,name,details,personalization,isp,sku,price,discount,quantity,file1,file2,file3,file4,file5,file6,file7,file8,
+           hasvari,hasmixedvari,id]
+        );  
       
         }
 

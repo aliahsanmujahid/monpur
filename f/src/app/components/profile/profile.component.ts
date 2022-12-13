@@ -10,24 +10,23 @@ import { AccountService } from 'src/app/_services/account.service';
 })
 export class ProfileComponent implements OnInit {
 
+  editmode:boolean = false;
+  noaddress:boolean = false;
 
-  noaddress = false;
-  changenam = false;
-  createaddress: any = {
-    district:'None',
-    upazila:'None'
-  };
-  name: any = {
-    name:''
-  };
   useraddress:any = [];
-  districts: any = [];
-  upazilla: any = [];
-  userId:number = null;
-  model ={
-    username: '',
-    email: '',
-    image:''
+  user:any = {};
+
+
+  model = {
+    id:0,
+    uid:'',
+    name:'',
+    phone:'',
+    email:'',
+    address:'',
+    city:'',
+    state:'',
+    zip:''
   };
 
   constructor(public accountService: AccountService,public router: Router) { }
@@ -36,67 +35,60 @@ export class ProfileComponent implements OnInit {
 
       this.accountService.currentUser$.subscribe( user => {
         if(user){
+          this.user = user;
+          this.model.uid = this.user.userId;
           console.log(user)
+          this.getaddress();
         }
       });
 
 
   }
 
-
-
-
-  ondisChange(){
-
-      const selected = this.districts.find(m => m.name === this.createaddress.district);
-
-      this.createaddress.upazila = "None";
-
-      this.createaddress.districtId = selected ? selected.id : 0;
-
-      this.upazilla = selected ? selected.subDto : [];
-  }
-  onupaChange(){
-      const selected = this.upazilla.find(m => m.name === this.createaddress.upazila);
-      this.createaddress.upazilaId =  selected ? selected.id : 0;
-  }
-  seeaddress(){
-    if(this.useraddress !== null){
-      this.createaddress=this.useraddress;
-    }
-    this.noaddress = !this.noaddress;
-  }
-  changename(){
-       this.changenam = !this.changenam;
-  }
-
-  setAddress(){
-    this.accountService.createaddress(this.createaddress).subscribe(res=>{
-        localStorage.setItem('address'+this.userId , JSON.stringify(res));
+  createAddress(){
+    this.accountService.createaddress(this.model).subscribe(res=>{
         this.useraddress = res;
-        this.noaddress = !this.noaddress;
+        if(this.useraddress.length > 0){
+          console.log("create res",res);
+          this.model = this.useraddress[0];
+          this.noaddress = false;
+          this.editmode = false;
+         }
     });
   }
-  setName(){
 
-
-
-
+  updateAddress(){
+    this.accountService.updateaddress(this.model).subscribe(res=>{
+      this.useraddress = res;
+      if(this.useraddress.length > 0){
+        this.model = this.useraddress[0];
+        this.noaddress = false;
+        this.editmode = false;
+       }
+  });
   }
 
   getaddress(){
-     this.useraddress = [];
-     const address = JSON.parse(localStorage.getItem('address'+this.userId));
-     if(address){
-      this.useraddress = address;
-     }else{
-      if(this.userId != null){
-        this.accountService.getaddress().subscribe(res =>{
+        this.accountService.getaddress(this.user.userId).subscribe(res =>{
           this.useraddress = res;
-          localStorage.setItem('address'+this.userId , JSON.stringify(res));
+          if(this.useraddress.length == 0){
+             this.noaddress = true;
+          }
+          if(this.useraddress.length > 0){
+           this.model = this.useraddress[0];
+          }
+          console.log("get address",this.useraddress.length);
        });
-      }
-     }
+
   }
+
+
+  editaddress(){
+    this.editmode = !this.editmode;
+    this.noaddress = !this.noaddress;
+  }
+
+
+
 
 }

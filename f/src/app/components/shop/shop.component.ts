@@ -14,8 +14,16 @@ import { BasketService } from 'src/app/_services/basket.service';
 export class ShopComponent implements OnInit {
 
   @Input() filters = true;
+  @Input() favh = false;
+
+  throttle = 0;
+  distance = 1;
+  page:number = 1;
+  stopscroll  = false;
+  noproduct = false;
 
   imglink = environment.imgUrl;
+  userid: string;
   products: any = [];
   Activeuser: User;
   params: any = {};
@@ -52,6 +60,9 @@ export class ShopComponent implements OnInit {
     public accountService: AccountService,public basketService: BasketService) { }
 
   ngOnInit(): void {
+
+    this.userid = this.accountService.getuserid()
+
     this.basketService.basket$.subscribe(res =>{
       // console.log("basket",res);
     });
@@ -64,8 +75,6 @@ export class ShopComponent implements OnInit {
     if(this.route.params){
       this.route.params.subscribe(params => {
 
-        window.scrollTo(0, 0);
-
         if (Object.keys(params).length === 0) {
           this.params = 0;
           this.products = [];
@@ -73,7 +82,7 @@ export class ShopComponent implements OnInit {
         }else{
           this.params = params;
           this.products = [];
-          this.paramsproducts(this.params,this.sortby);
+          this.paramsproducts(this.sortby);
         }
 
       });
@@ -82,11 +91,38 @@ export class ShopComponent implements OnInit {
   }
 
 
+  addtofav(id){
+    this.productService.addfav(this.userid,id).subscribe(res => {
+      console.log("addfav",res);
+    });
+  }
+
+  onScroll(): void {
+    if(this.stopscroll == false){
+      if(this.params.fav){
+        this.productService.getfavp(this.userid,++this.page).subscribe( res =>{
+              this.products.push(...res);
+              console.log("onScroll",res);
+              if(res.length == 0 || res == null || res.length < 10){
+               this.stopscroll = true;
+               this.noproduct = true;
+              }else{
+                this.noproduct = false;
+                this.stopscroll = false;
+              }
+        }),
+        error => {
+        };
+      }
+    }
+    console.log("throttle distance",this.throttle,this.distance,"+",this.page);
+  }
+
   getProducts(){
-   // this.products = [];
+   this.products = [];
      this.productService.getallproducts(this.sortby).subscribe( res =>{
        this.products = res;
-        console.log("all products",res)
+       console.log("getProducts",res);
      }),
      error => {
       console.log(error)
@@ -98,7 +134,7 @@ export class ShopComponent implements OnInit {
       console.log("this.params ", this.params);
       this.getProducts();
     }else{
-      this.paramsproducts(this.params,this.sortby);
+      this.paramsproducts(this.sortby);
     }
 
   }
@@ -120,11 +156,11 @@ export class ShopComponent implements OnInit {
 
 
 
-  paramsproducts(params,sortby){
+  paramsproducts(sortby){
 
-    if(params.cate){
-      console.log("cate params",params.cate);
-      this.productService.getcateproducts(params.cate,sortby).subscribe( res =>{
+    if(this.params.cate){
+      console.log("cate params",this.params.cate);
+      this.productService.getcateproducts(this.params.cate,sortby).subscribe( res =>{
         this.products = res;
         console.log("this.products",res);
       }),
@@ -132,9 +168,9 @@ export class ShopComponent implements OnInit {
 
       };
     }
-    if(params.subcate){
+    if(this.params.subcate){
       // console.log("search params",params.search);
-      this.productService.getsubcateproducts(params.subcate,sortby).subscribe( res =>{
+      this.productService.getsubcateproducts(this.params.subcate,sortby).subscribe( res =>{
         this.products = res;
         console.log("this.products",res);
       }),
@@ -142,9 +178,9 @@ export class ShopComponent implements OnInit {
 
       };
     }
-    if(params.search){
+    if(this.params.search){
       // console.log("search params",params.search);
-      this.productService.searchProducts(params.search,sortby).subscribe( res =>{
+      this.productService.searchProducts(this.params.search,sortby).subscribe( res =>{
         this.products = res;
         console.log("this.products",res);
       }),
@@ -152,9 +188,20 @@ export class ShopComponent implements OnInit {
 
       };
     }
-    if(params.fav){
+    if(this.params.fav){
       this.filters = false;
-      this.getProducts();
+      this.favh = true;
+      this.productService.getfavp(this.userid,this.page).subscribe( res =>{
+        this.products = res;
+        console.log("this.fav ",res);
+        if(res.length == 0 || res == null || res.length < 10){
+          this.stopscroll = true;
+          this.noproduct = true;
+         }else{
+           this.noproduct = false;
+           this.stopscroll = false;
+         }
+      })
     }
   }
 

@@ -1,7 +1,5 @@
 
-<div>
   <app-navbar></app-navbar>
-</div>
 <!--
 
   <div class="wrapper">
@@ -40,7 +38,12 @@
 
 <!-- products section starts  -->
 
-<div class="row">
+<div class="row"
+  infinite-scroll
+  [infiniteScrollDistance]="distance"
+  [infiniteScrollThrottle]="throttle"
+  (scrolled)="onScroll()"
+  >
   <!-- <div class="column1" *ngIf="filters">
     <div class="text">
 
@@ -55,8 +58,12 @@
 
 
 
-  <div class="column2" [ngClass]="filters === false ? 'width' : ''">
 
+
+  <div class="column2" [ngClass]="favh == true ? 'width' : ''">
+
+
+    <h1 class="heading" *ngIf="favh">Favorite <span>products</span> </h1>
 
       <div class="selectbox" *ngIf="filters">
         <div class="select">
@@ -76,35 +83,40 @@
   <div class="box-container">
 
       <div class="box" data-item="featured"  *ngFor="let item of products">
+
+          <div class="discount">{{item.discount}}% off</div>
+
           <div class="image">
-          <div class="icons">
-              <a href="#" class="fas fa-shopping-cart"></a>
-              <a href="#" class="fas fa-heart"></a>
-              <a href="#"  routerLink="/product/{{item.id}}" class="fas fa-eye"></a>
-          </div>
+          <!-- <div class="icons">
+              <a class="fas fa-shopping-cart"></a>
+              <a (click)="addtofav(item.id)" class="fas fa-heart"></a>
+              <a routerLink="/product/{{item.id}}" class="fas fa-eye"></a>
+          </div> -->
               <img routerLink="/product/{{item.id}}" src="{{imglink+item.file1}}" alt="">
           </div>
           <div routerLink="/product/{{item.id}}" class="content">
-              <h3>{{item.name}}</h3>
-              <div class="price">
-                  <div class="amount">${{item.discprice}}</div>
-                  <div class="cut">${{item.orgprice}}</div>
-                  <div class="offer">{{(item.orgprice-(100-item.discprice)) / 100}}% off</div>
-              </div>
-              <div class="stars">
+              <h3>{{item.name | slice:0:15}}...</h3>
+              <div class="bcontent">
+
+                <div class="price">
+                  <div class="cut">${{item.price.toFixed(0)}}</div>
+                  <div class="offer">${{(item.price * ( (100-this.item.discount) / 100 )).toFixed(0)}}</div>
+                </div>
+
+                 <div class="rate">
                   <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <span>(50)</span>
+                  <span>50</span>
+                 </div>
               </div>
           </div>
       </div>
 
-
-
   </div>
+
+
+  <div *ngIf="noproduct" class="nomore">
+    <h1 class="nomore">No Product</h1>
+   </div>
 
 </section>
 <!-- products section ends -->

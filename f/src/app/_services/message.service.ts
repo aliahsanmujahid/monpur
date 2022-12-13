@@ -22,12 +22,11 @@ export class MessageService {
   private isOnline = new BehaviorSubject<Online[]>([]);
   isOnline$ = this.isOnline.asObservable();
 
-  // private Conversation = new BehaviorSubject<Conversation[]>([]);
-  // Conversation$ = this.Conversation.asObservable();
-
   public chatUser = new BehaviorSubject<Conversation[]>([]);
   chatUser$ = this.chatUser.asObservable();
 
+  public fchatUser = new BehaviorSubject<Conversation[]>([]);
+  fchatUser$ = this.fchatUser.asObservable();
 
   public userMessage = new BehaviorSubject<Message[]>([]);
   userMessage$ = this.userMessage.asObservable();
@@ -49,13 +48,15 @@ export class MessageService {
 
     this.socket.on("recieve-message", (data) => {
 
+
+      console.log("recieve-message",data);
+
+
       this.userMessage$.pipe(take(1)).subscribe(datas => {
 
        if (datas.some((msg) => msg.chatid == data.chatid)) {
           this.userMessage.next([...datas, data])
        }
-       //console.log("recieve-message",datas);
-
       })
       this.chatUser$.pipe(take(1)).subscribe(datas => {
         var index = datas.findIndex(x => x.chatid == data.chatid);
@@ -100,49 +101,28 @@ export class MessageService {
 
   sendmsg(model,receiverId){
 
-    // if(model.chatid !== this.activechat){
 
       this.http.post(this.baseUrl + 'createmessege/',model ).pipe(
         map((data: any) => {
-
-          // console.log(data);
-
             this.userMessage$.pipe(take(1)).subscribe(datas => {
                 this.userMessage.next([...datas, data])
                 this.socket.emit("send-message", {...data,receiverId});
                 this.socket.emit("chat-send", {...data,receiverId});
-            })
-            this.chatUser$.pipe(take(1)).subscribe(datas => {
+            });
 
-              var index = datas.findIndex(x => x.chatid == model.chatid);
-
-              if(index !== -1){
-                // console.log("index",index)
-
-                // console.log("main",datas)
-                // console.log("date",data.date)
-                datas[index].date = data.date;
-                // console.log("modify",datas[index])
-                // console.log("modify main",datas)
-
-              }
-
-              const newdata = datas.sort(
-              (objA, objB) => Math.floor(new Date(objB.date).getTime()/ 1000) - Math.floor(new Date(objA.date).getTime()/ 1000),
-              );
-
-              this.chatUser.next(newdata)
-
-              // datas.forEach( res =>{
-              //   console.log("name",res.name,"asasas", new Date(res.date).getSeconds());
-              // });
-
-            })
+            // this.chatUser$.pipe(take(1)).subscribe(datas => {
+            //   var index = datas.findIndex(x => x.chatid == model.chatid);
+            //   if(index !== -1){
+            //     datas[index].date = data.date;
+            //   }
+            //   const newdata = datas.sort(
+            //   (objA, objB) => Math.floor(new Date(objB.date).getTime()/ 1000) - Math.floor(new Date(objA.date).getTime()/ 1000),
+            //   );
+            //   this.chatUser.next(newdata);
+            // })
         })
       ).subscribe();
-    // }else{
-    //   console.log("acyive")
-    // }
+
 
   }
 
@@ -150,17 +130,62 @@ export class MessageService {
     this.userMessage.next([]);
   }
 
-  loadmessage(chatid,userid){
-
+  loadmessage(chatid,userid,page = 1){
     this.userMessage.next([]);
-
     this.activechat = chatid;
-    // console.log("this.activechat load",this.activechat );
-    return this.http.get(this.baseUrl + 'getmessages/' + chatid + '/' + userid).pipe(
+
+    return this.http.get(this.baseUrl + 'getmessages/' + chatid + '/' + userid + '/' + page).pipe(
       map((data: Message[]) => {
+
         const newdata = [...data].sort((a, b) => a.id - b.id);
 
-        this.userMessage.next(newdata);
+          if(page == 1){
+            newdata.forEach( e => {
+              this.userMessage$.pipe(take(1)).subscribe(datas => {
+              this.userMessage.next([...datas,e]);
+            });
+            });
+          }else{
+            newdata.forEach( e => {
+              this.userMessage$.pipe(take(1)).subscribe(datas => {
+              this.userMessage.next([e,...datas]);
+            });
+            });
+          }
+
+        this.chatUser$.pipe(take(1)).subscribe(datas => {
+          var index = datas.findIndex(x => x.chatid == chatid);
+          // console.log(data);
+          if(index !== -1){
+            datas[index].unread = 0;
+          }
+        })
+
+
+      })
+    ).subscribe();
+  }
+
+  ploadmessage(chatid,userid,page){
+    this.activechat = chatid;
+    return this.http.get(this.baseUrl + 'getmessages/' + chatid + '/' + userid + '/' + page).pipe(
+      map((data: Message[]) => {
+
+        const newdata = [...data].sort((a, b) => a.id - b.id);
+
+          if(page == 1){
+            newdata.forEach( e => {
+              this.userMessage$.pipe(take(1)).subscribe(datas => {
+              this.userMessage.next([...datas,e]);
+            });
+            });
+          }else{
+            newdata.forEach( e => {
+              this.userMessage$.pipe(take(1)).subscribe(datas => {
+              this.userMessage.next([e,...datas]);
+            });
+            });
+          }
 
         this.chatUser$.pipe(take(1)).subscribe(datas => {
           var index = datas.findIndex(x => x.chatid == chatid);
@@ -176,13 +201,13 @@ export class MessageService {
   }
 
 
-  isUserOnline(id){
-    var  online = false;
-    this.isOnline$.subscribe( x => {
-      online = x.find((user) => user.userId == id) ? true : false ;
-    });
-    return online;
-  }
+  // isUserOnline(id){
+  //   var  online = false;
+  //   this.isOnline$.subscribe( x => {
+  //     online = x.find((user) => user.userId == id) ? true : false ;
+  //   });
+  //   return online;
+  // }
 
   flagchat(model){
     console.log(model);
@@ -193,6 +218,12 @@ export class MessageService {
 
         if(data.flaged == true){
           this.chatUser$.pipe(take(1)).subscribe(datas => {
+            var index = datas.findIndex(x => x.chatid == model.chatid);
+            if(index !== -1){
+              datas[index].flag = 1;
+            }
+          })
+          this.fchatUser$.pipe(take(1)).subscribe(datas => {
             var index = datas.findIndex(x => x.chatid == model.chatid);
             if(index !== -1){
               datas[index].flag = 1;
@@ -213,6 +244,12 @@ export class MessageService {
 
         if(data.unflaged == true){
           this.chatUser$.pipe(take(1)).subscribe(datas => {
+            var index = datas.findIndex(x => x.chatid == model.chatid);
+            if(index !== -1){
+              datas[index].flag = 0;
+            }
+          });
+          this.fchatUser$.pipe(take(1)).subscribe(datas => {
             var index = datas.findIndex(x => x.chatid == model.chatid);
             if(index !== -1){
               datas[index].flag = 0;
@@ -244,46 +281,68 @@ export class MessageService {
     return this.http.post<any>(this.baseUrl + 'haschat/',model );
   }
 
-  getConversation(id){
+  //getting conversition
+  getConversation(id,page = 1){
     this.chatUser.next([])
-    this.http.get(this.baseUrl + 'getchats/' + id).pipe(
+    this.http.get(this.baseUrl + 'getchats/' + id + '/' + page).pipe(
       map((data: any) => {
-
-        // console.log(data)
-
+       console.log("chat---",data);
         data.forEach(e => {
           const receiverid = e.senderid == id ? e.receiverid : e.senderid;
+
           this.getUsers(receiverid,e.id,e.date,e.flag,e.unread);
         });
 
-        // console.log(this.chatUser$)
       })
     ).subscribe();
   }
-  getflagConversation(id){
-    this.chatUser.next([])
-    this.http.get(this.baseUrl + 'getflagchats/' + id).pipe(
+
+  pgetConversation(id,page){
+    this.http.get(this.baseUrl + 'getchats/' + id + '/' + page).pipe(
       map((data: any) => {
-
-        console.log(data)
-
+        console.log("pchat---",data);
         data.forEach(e => {
           const receiverid = e.senderid == id ? e.receiverid : e.senderid;
+
           this.getUsers(receiverid,e.id,e.date,e.flag,e.unread);
         });
 
-        // console.log(this.chatUser$)
+      })
+    ).subscribe();
+  }
+
+  getflagConversation(id,page = 1){
+    console.log("getting flag chats.........");
+    this.fchatUser.next([])
+    this.http.get(this.baseUrl + 'getflagchats/' + id + '/' + page).pipe(
+      map((data: any) => {
+        console.log("fchat---",data);
+        console.log("getting flag chats.........",data);
+
+        data.forEach(e => {
+          const receiverid = e.senderid == id ? e.receiverid : e.senderid;
+          this.fgetUsers(receiverid,e.id,e.date,e.flag,e.unread);
+        });
+      })
+    ).subscribe();
+  }
+  pgetflagConversation(id,page = 1){
+    this.http.get(this.baseUrl + 'getflagchats/' + id + '/' + page).pipe(
+      map((data: any) => {
+        console.log("pfchat---",data);
+        data.forEach(e => {
+          const receiverid = e.senderid == id ? e.receiverid : e.senderid;
+          this.fgetUsers(receiverid,e.id,e.date,e.flag,e.unread);
+        });
       })
     ).subscribe();
   }
 
   getUsers(id,chatid,date,flag,unread){
-
     this.http.get(this.baseUrl + 'getsingleuser/' + id).pipe(
       map((data: any) => {
-
       this.chatUser$.pipe(take(1)).subscribe(datas => {
-        if (!datas.some((user) => user.id == data.id)) {
+        if (!datas.some((user) => user?.id == data?.id)) {
           data.chatid = chatid;
           data.date = date;
           data.flag = flag;
@@ -309,6 +368,43 @@ export class MessageService {
 
     })).subscribe();
   }
+
+  //flaged user getting
+  fgetUsers(id,chatid,date,flag,unread){
+    this.http.get(this.baseUrl + 'getsingleuser/' + id).pipe(
+      map((data: any) => {
+      this.fchatUser$.pipe(take(1)).subscribe(datas => {
+        if (!datas.some((user) => user?.id == data?.id)) {
+          data.chatid = chatid;
+          data.date = date;
+          data.flag = flag;
+          data.unread = unread;
+          data.date = date;
+          this.fchatUser.next([...datas, data])
+        }
+      })
+
+      this.fchatUser$.pipe(take(1)).subscribe(datas => {
+
+          const newdata = datas.sort(
+            (objA, objB) => Math.floor(new Date(objB.date).getTime()/ 1000) - Math.floor(new Date(objA.date).getTime()/ 1000),
+            );
+
+          this.fchatUser.next(newdata)
+
+          // datas.forEach( res =>{
+          //   console.log("name",res.name,"asasas", new Date(res.date).getSeconds());
+          // });
+
+      })
+
+    })).subscribe();
+  }
+
+
+
+
+
   getChatUsers(id){
     return this.http.get(this.baseUrl + 'getsingleuser/' + id);
   }

@@ -1,4 +1,3 @@
-import { Values, Mixvari } from './../../_models/product';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -27,8 +26,9 @@ export class CartComponent implements OnInit {
   alert2 = false;
   alert3 = false;
 
-
   noshiping = false;
+
+  user:any={};
   cuponvalid: boolean = null;
   minvalid: boolean = false;
   coupondata:any = [];
@@ -38,6 +38,18 @@ export class CartComponent implements OnInit {
 
 
   showpersonalizationdata = '';
+
+  addressmodel = {
+    id:null,
+    uid:'',
+    name:'',
+    phone:'',
+    email:'',
+    address:'',
+    city:'',
+    state:'',
+    zip:''
+  };
 
   orderCreate: IOrder = {
     name: '',
@@ -64,7 +76,15 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.setCurrentUser();
+    this.accountService.currentUser$.subscribe( user => {
+      if(user){
+        this.user = user;
+        this.addressmodel.uid = this.user.userId;
+        console.log(user)
+        this.getaddress();
+      }
+    });
+
     this.getshiping();
     this.basketService.getBasket();
     this.basket$ = this.basketService.basket$;
@@ -82,9 +102,7 @@ export class CartComponent implements OnInit {
   }
 
   createorder(){
-
-    console.log("orderCreate",this.orderCreate);
-
+    // console.log("orderCreate",this.orderCreate);
     this.orderService.orderCreate(this.orderCreate).subscribe(res =>{
 
       console.log("order res",res);
@@ -154,6 +172,30 @@ export class CartComponent implements OnInit {
   setaddressform(){
     this.setaddress = true;
     this.alert = !this.alert;
+
+
+    console.log("address",this.addressmodel);
+    console.log("address",this.orderCreate);
+
+        this.addressmodel.name =  this.orderCreate.name;
+        this.addressmodel.email =  this.orderCreate.email;
+        this.addressmodel.phone =  this.orderCreate.phone;
+        this.addressmodel.city =  this.orderCreate.city;
+        this.addressmodel.state =  this.orderCreate.state;
+        this.addressmodel.zip =  this.orderCreate.zip;
+        this.addressmodel.address =  this.orderCreate.address;
+
+    if(this.addressmodel.id == null){
+      this.accountService.createaddress(this.addressmodel).subscribe(res =>{
+
+     });
+    }
+    else{
+      this.accountService.updateaddress(this.addressmodel).subscribe(res =>{
+
+     });
+    }
+
   }
   alerttoggle(){
     this.alert = !this.alert;
@@ -170,13 +212,23 @@ export class CartComponent implements OnInit {
     this.alert3 = !this.alert3;
     this.showpersonalizationdata = data;
   }
+  getaddress(){
+    this.accountService.getaddress(this.user.userId).subscribe(res =>{
+      if(res.length > 0){
+        console.log("setting address");
+        this.addressmodel = res[0];
+        this.orderCreate.name =  this.addressmodel.name;
+        this.orderCreate.email =  this.addressmodel.email;
+        this.orderCreate.phone =  this.addressmodel.phone;
+        this.orderCreate.city =  this.addressmodel.city;
+        this.orderCreate.state =  this.addressmodel.state;
+        this.orderCreate.zip =  this.addressmodel.zip;
+        this.orderCreate.address =  this.addressmodel.address;
+      }
+      console.log("get address",res);
+   });
 
-  setCurrentUser() {
-    const token = localStorage.getItem('monpuruser');
-    if(token){
-      this.accountService.setUser(token);
-    }
-  }
+}
 
 
 
@@ -246,6 +298,9 @@ export class CartComponent implements OnInit {
     const basket = JSON.parse(localStorage.getItem('basket'));
 
 
+    console.log("basket",basket)
+
+
     this.orderCreate.sellerid = basket.sellerid;
 
     basket.items.forEach(item =>{
@@ -260,12 +315,7 @@ export class CartComponent implements OnInit {
         sku:item.sku,
         personalization:item.personalization,
 
-        vari1 : {
-          id: 0,
-          name:'',
-          values:[]
-        },
-        vari2 : {
+        vari : {
           id: 0,
           name:'',
           values:[]
@@ -279,12 +329,8 @@ export class CartComponent implements OnInit {
 
       }
 
-      if(item.vari1.values.length > 0){
-        orderItem.vari1 = item.vari1;
-      }
-
-      if(item.vari2.values.length  > 0){
-        orderItem.vari2 = item.vari2;
+      if(item.vari.values.length > 0){
+        orderItem.vari = item.vari;
       }
 
       if(item.mixedvari.values.length  > 0){

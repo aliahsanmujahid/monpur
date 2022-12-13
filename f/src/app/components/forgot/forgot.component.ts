@@ -11,7 +11,8 @@ export class ForgotComponent implements OnInit {
   constructor(public accountService: AccountService) { }
 
   message: string = null;
-  verified: Boolean = false;
+  verify: Boolean = false;
+  ownotp:Boolean = false;
 
   model = {
     pnumber:null
@@ -29,13 +30,32 @@ export class ForgotComponent implements OnInit {
     if(this.model.pnumber !== null){
       this.accountService.fsendotp(this.model).subscribe( res =>{
         if(res.otpsended == true){
-          this.verified = true;
+          this.verify = true;
           this.message = res.message;
+        }
+        if(res.ownotp == true){
+          this.message = res.message;
+          this.ownotp = true;
+          this.verify = true;
         }
         console.log("otp res,", res);
       });
     }
 
+  }
+
+  sendagin(){
+    if(this.model.pnumber !== null){
+      this.accountService.ownotp(this.model).subscribe(res =>{
+        console.log("sendagin---- ",res);
+        if(res.otpsended == true){
+          this.verify = true;
+          this.message = res.message;
+          this.message = res.message;
+          this.ownotp = false;
+        }
+      });
+    }
   }
 
   setac(){

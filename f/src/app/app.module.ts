@@ -13,7 +13,6 @@ import { TimeagoModule } from 'ngx-timeago';
 import { CreateproductComponent } from './components/createproduct/createproduct.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ProductviewComponent } from './components/productview/productview.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ForgotComponent } from './components/forgot/forgot.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -42,6 +41,9 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ShipingComponent } from './components/shiping/shiping.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MessageboxComponent } from './components/messagebox/messagebox.component';
 
 
 @NgModule({
@@ -55,7 +57,6 @@ import { ShipingComponent } from './components/shiping/shiping.component';
     HomeComponent,
     CreateproductComponent,
     ProductviewComponent,
-    CheckoutComponent,
     ForgotComponent,
     DashboardComponent,
     ProfileComponent,
@@ -76,7 +77,8 @@ import { ShipingComponent } from './components/shiping/shiping.component';
     SlidermanageComponent,
     MobilecateComponent,
     FootermanageComponent,
-    ShipingComponent
+    ShipingComponent,
+    MessageboxComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -88,12 +90,13 @@ import { ShipingComponent } from './components/shiping/shiping.component';
     NgxPayPalModule,
     NgxEditorModule,
     NgxPrintModule,
+    CarouselModule,
+    InfiniteScrollModule,
     TimeagoModule.forRoot()
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    // {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

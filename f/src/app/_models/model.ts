@@ -4,7 +4,7 @@ export interface OTP {
 }
 
 export interface ModelS {
-    phonenumber: Number;
+    pnumber: Number;
     otp:Number
 }
 

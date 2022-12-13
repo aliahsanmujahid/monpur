@@ -21,8 +21,8 @@ export class PaymentComponent implements OnInit {
   cashondelevart: Boolean = false;
   ifpaypal: Boolean = false;
   ifstripe: Boolean = false;
-  alert = false;
   handler:any = null;
+  alert = false;
 
   constructor(private http: HttpClient,
     private route: ActivatedRoute,private router: Router,private orderService: OrderService) { }
@@ -50,10 +50,6 @@ export class PaymentComponent implements OnInit {
 
 
   }
-  alerttoggle(){
-    this.alert = !this.alert;
-  }
-
 
 
   private initConfig(): void {
@@ -116,6 +112,10 @@ export class PaymentComponent implements OnInit {
   };
   }
 
+  alerttoggle(){
+    this.alert = !this.alert;
+  }
+
 
   paycashondelevart(){
     this.cashondelevart = true;
@@ -139,8 +139,8 @@ export class PaymentComponent implements OnInit {
     this.orderService.setcod(id).subscribe(res =>{
       console.log("payment res",res)
       if(res.success == true){
-          this.alert = !this.alert;
           this.order.cashondelevary = 1;
+          this.alert = false;
       }
     });
   }

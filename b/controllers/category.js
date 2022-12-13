@@ -165,6 +165,8 @@ function deletecateimage(imagePath){
 
 exports.detetesubcate = async (req, res, next) => {
 
+  const con = await connection;
+
   const [result] = await con.execute('SELECT * FROM subcate WHERE id = ? ', [req.body.id]);
   
   await deletecateimage(result[0].image);

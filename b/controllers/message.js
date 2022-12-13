@@ -11,87 +11,77 @@ const connection = require("../config/db2");
 
 exports.createchat = async (req, res, next) => {
 
+  const con = await connection;
+
   const { senderid, receiverid } = req.body;
 
   if(senderid == receiverid){
-    return sendError(res, "Same Chat Not Allowed");
+    return sendError(res,{
+      same:true,
+    });
   }
 
-  let sql1 = `SELECT * FROM chat WHERE (senderid = ${senderid} && receiverid = ${receiverid}) || (senderid = ${receiverid} && receiverid = ${senderid})`;
+  let [data] = await con.execute('SELECT * FROM chat WHERE (senderid = ? && receiverid = ?) || (senderid = ? && receiverid = ?)', [senderid,receiverid,receiverid,senderid]);
 
-                  let query1 = db.query(sql1, (err, result) => {
-                    if(err) throw err;
-                    if(result.length !== 0){
-                      console.log("chat exist");
-                      res.send(result);
-                    }else{
-                      console.log("cretting chat");
+  if(data.length !== 0){
+    
+    res.send(data);
 
-                      const date = new Date();
-                      // flag1:0,flag2:0,unread:0
+  }else{
+    const date = new Date();
 
-                      let data = {senderid: senderid, receiverid:receiverid,date:date };
+    const chatr = await con.query (
+      "INSERT INTO chat (senderid,receiverid,date) VALUES (?,?,?)", 
+      [ 
+        senderid,receiverid,date
+      ]
+    );
+    await con.query (
+      "INSERT INTO chatwatch (chatid,userid,flag,unread) VALUES (?,?,?,?)", 
+      [ 
+        chatr[0].insertId,senderid,0,0
+      ]
+    );
+    await con.query (
+      "INSERT INTO chatwatch (chatid,userid,flag,unread) VALUES (?,?,?,?)", 
+      [ 
+        chatr[0].insertId,receiverid,0,0
+      ]
+    );
 
-                      let sql = 'INSERT INTO chat SET ?';
-                      let query = db.query(sql, data, (err, result) => {
+    let [data] = await con.execute('SELECT * FROM chat WHERE id = ?', [chatr[0].insertId]);
 
-                      if(err) throw err;
-                        console.log("chat added");
-
-                      let chatwatchdata = {chatid: result.insertId, userid:senderid,flag:0,unread:0 };
-                      let chatwatch = 'INSERT INTO chatwatch SET ?';
-                      db.query(chatwatch, chatwatchdata, (err, result) => {
-                      if(err) throw err;
-                        console.log("chat added");
-                      });
-                      
-                      let chatwatchdata2 = {chatid: result.insertId, userid:receiverid,flag:0,unread:0 };
-                      let chatwatch2 = 'INSERT INTO chatwatch SET ?';
-                      db.query(chatwatch2, chatwatchdata2, (err, result) => {
-                      if(err) throw err;
-                        console.log("chat added");
-                      }); 
-
-
-                        let sql = `SELECT * FROM chat WHERE id = ${result.insertId}`;
-                                  let query = db.query(sql, (err, result) => {
-                                    if(err) throw err;
-                                      res.send(result);
-                                });
-                      });    
-                    }
-                });
-
+    res.send(data);
+  }
 
 };
 
 
 exports.haschat = async (req, res, next) => {
 
+
+  const con = await connection;
+
   const { senderid, receiverid } = req.body;
 
-  // console.log("haschat res",senderid, receiverid);
 
   if(senderid == receiverid){
-    return sendError(res, "Same Chat Not Allowed");
+    return sendError(res,{
+      same:true,
+    });
   }
 
-  let sql1 = `SELECT * FROM chat WHERE (senderid = ${senderid} && receiverid = ${receiverid}) || (senderid = ${receiverid} && receiverid = ${senderid})`;
-                  let query1 = db.query(sql1, (err, result) => {
-                    if(err) throw err;
-                    if(result.length !== 0){
-                      // console.log("has chat");
-                      // let sql = `SELECT * FROM message WHERE chatid = ${result[0].id}`;
-                      // let query = db.query(sql, (err, result) => {
-                      //   if(err) throw err;
-                      //     res.send(result);
-                      // }); 
-                      res.send(result);
+  let [data] = await con.execute('SELECT * FROM chat WHERE (senderid = ? && receiverid = ?) || (senderid = ? && receiverid = ?)', [senderid,receiverid,receiverid,senderid]);
 
-                    }else{
-                      return sendError(res, "Chat Not exists");
-                    }
-                });
+  if(data.length !== 0){ 
+    res.send(data);
+
+  }else{
+
+    return sendError(res, "Chat Not exists");
+
+  }
+
 };
 
 
@@ -164,11 +154,20 @@ exports.createmessege = async (req, res, next) => {
 
 exports.getchats = async (req, res, next) => {
   
-  const  userId  = req.params.id;
   const con = await connection;
 
-  const [result] = await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ${userId}  ORDER BY chat.date DESC limit 1`);
-      
+  const  userId  = req.params.id;
+  const  page  = req.params.page;
+
+  var numPerPage = 10;
+  var skip = (page-1) * numPerPage; 
+  var limit = skip + ',' + numPerPage;
+
+
+  const [result] = 
+  await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ? ORDER BY chat.date DESC LIMIT ` + limit, [userId]);
+  
+  // console.log("chat",result);
   
   res.send(result);
                           
@@ -177,12 +176,17 @@ exports.getchats = async (req, res, next) => {
 
 exports.getflagchats = async (req, res, next) => {
 
-    const  userId  = req.params.id;
-
     const con = await connection;
 
-    const [result] = await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ${userId} && chatwatch.flag = 1`);
-        
+    const  userId  = req.params.id;
+    const  page  = req.params.page;
+  
+    var numPerPage = 10;
+    var skip = (page-1) * numPerPage; 
+    var limit = skip + ',' + numPerPage;
+  
+
+    const [result] = await con.execute(`SELECT chat.id,chat.senderid,chat.receiverid,chat.date,chatwatch.flag,chatwatch.unread FROM chat JOIN  chatwatch on chatwatch.chatid = chat.id WHERE chatwatch.userid = ? && chatwatch.flag = 1 ORDER BY chat.date DESC LIMIT ` + limit, [userId]);    
     
     res.send(result);                     
   
@@ -238,11 +242,13 @@ exports.getmessages = async (req, res, next) => {
   const con = await connection;
   const  chatid  = req.params.chatid;
   const  userid  = req.params.userid;
-
+  const  page  = req.params.page;
 
   var numPerPage = 10;
-  var skip = (1-1) * numPerPage; 
+  var skip = (page-1) * numPerPage; 
   var limit = skip + ',' + numPerPage;
+
+  console.log("limit",limit,page);
 
   let sql = `SELECT * FROM message WHERE chatid = ${chatid} ORDER BY id DESC LIMIT ` + limit ;
   let query = db.query(sql, (err, result) => {

@@ -17,6 +17,8 @@ export class NavbarComponent implements OnInit {
   category: any = [];
   catelength = 0;
 
+  btnclick:boolean = false;
+
   constructor(public categoryService: CategoryService,public accountService: AccountService,private router: Router,public basketService: BasketService) { }
 
   ngOnInit(): void {
@@ -34,6 +36,12 @@ export class NavbarComponent implements OnInit {
         this.category = res;
         this.catelength = this.category.length;
       })
+  }
+
+
+
+  addclass(){
+    this.btnclick = !this.btnclick;
   }
 
 }

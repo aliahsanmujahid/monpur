@@ -128,6 +128,7 @@ export class OrderComponent implements OnInit {
         image3:'',
         image4:'',
       }
+      this.rateingalert = false;
 
     });
 

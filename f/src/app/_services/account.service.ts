@@ -55,6 +55,15 @@ export class AccountService {
       })
     );
   }
+
+  ownotp(model) {
+    return this.http.post(this.baseUrl + 'ownotp', model).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
   fsetac(model) {
     return this.http.post(this.baseUrl + 'fsetac', model).pipe(
       map((res: any) => {
@@ -118,13 +127,13 @@ setCurrentUser(token: any) {
 
 
   createaddress(model) {
-    return this.http.post(this.baseUrl + 'address/createaddress', model);
+    return this.http.post<any>(this.baseUrl + 'createaddress', model);
   }
-  changeName(name) {
-    return this.http.post(this.baseUrl + 'Account/setname/' + name.name , {});
+  updateaddress(model) {
+    return this.http.post<any>(this.baseUrl + 'updateaddress', model);
   }
-  getaddress() {
-    return this.http.get(this.baseUrl + 'address/getaddress/');
+  getaddress(id) {
+    return this.http.get<any>(this.baseUrl + 'getaddress/'+id);
   }
 
 

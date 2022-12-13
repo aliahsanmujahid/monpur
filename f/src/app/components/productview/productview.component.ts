@@ -1,9 +1,10 @@
+import { Mixvari } from './../../_models/order';
 import { cartProduct } from './../../_models/basket';
 import { ReviewService } from './../../_services/review.service';
 import { User } from 'src/app/_models/user';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from 'src/app/_models/product';
+import { IProduct } from 'src/app/_models/product';
 import { BasketService } from 'src/app/_services/basket.service';
 import { ProductService } from 'src/app/_services/product.service';
 import { environment } from 'src/environments/environment';
@@ -22,7 +23,7 @@ export class ProductviewComponent implements OnInit {
 
     imglink = environment.imgUrl;
     selectedimg = '';
-    product: Product;
+    product: IProduct;
 
   cartProduct: cartProduct = {
     id: 0,
@@ -31,7 +32,6 @@ export class ProductviewComponent implements OnInit {
     name:'',
 
     price:0,
-    tempprice:0,
     discount:0,
     quantity:0,
     sku:'',
@@ -40,12 +40,7 @@ export class ProductviewComponent implements OnInit {
     file1:'',
     sellerid:0,
 
-    vari1 : {
-      id: 0,
-      name:'',
-      values:[]
-    },
-    vari2 : {
+    vari: {
       id: 0,
       name:'',
       values:[]
@@ -70,153 +65,151 @@ export class ProductviewComponent implements OnInit {
   reviews: any = [];
   images = []
 
+
   selectedmixed = '';
   selectedmixed2 = 0;
+  selectVari1 = 0;
+  selectVari2 = 0;
   Mixvalues1:any = [];
   Mixvalues2:any = [];
 
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     this.accountService.currentUser$.subscribe( res =>{
       this.activeuser = res;
     });
 
-
     this.route.data.subscribe(data => {
-
-      console.log("route data",data);
       this.product = data['product'];
 
-      if(this.product.mixedvari.values.length > 0){
+      this.filldata();
+      this.getreviews();
 
-        this.product.mixedvari.values.forEach(e1 => {
-
-          if(!this.Mixvalues1.find(x => x.vari1name ==  e1.vari1name)){
-            this.Mixvalues1.push(e1);
-          }
-
-        });
-
+      //getting variations
+      if(this.product.hasmixedvari == "true" && this.product.mixedvari == undefined){
+          this.productService.getmixedvari(this.product.id).subscribe( res => {
+          this.product = {...this.product,"mixedvari":res}
+          this.setmaxvari();
+         });
+      }
+      if(this.product.mixedvari?.values.length > 0){
+        this.setmaxvari();
       }
 
-
-      if(this.product.file1 != ""){
-        this.images.push({
-          imageSrc:
-          this.imglink+this.product.file1,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file2 != ""){
-        this.images.push({
-          imageSrc:
-          this.imglink+this.product.file2,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file3 != ""){
-        this.images.push({
-          imageSrc:
-              this.imglink+this.product.file3,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file4 != ""){
-        this.images.push({
-          imageSrc:
-          this.imglink+this.product.file4,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file5 != ""){
-        this.images.push({
-          imageSrc:
-          this.imglink+this.product.file5,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file6 != ""){
-        this.images.push({
-          imageSrc:
-              this.product.file6,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file7 != ""){
-        this.images.push({
-          imageSrc:
-              this.product.file7,
-          imageAlt: 'nature1',
-        });
-      }
-      if(this.product.file8 != ""){
-        this.images.push({
-          imageSrc:
-              this.product.file8,
-          imageAlt: 'nature1',
-        });
+      //getting vari1 values
+      if(this.product.hasvari == "true" && this.product.vari == undefined){
+        this.productService.getvari(this.product.id).subscribe( res => {
+          this.product = {...this.product,"vari":res};
+          console.log("getting vari1 values",res);
+          console.log("this.product ",this.product);
+         });
       }
 
-      console.log("this.product",this.product);
+    });
 
-      // if(!this.product.colors || !this.product.sizes ){
-
-      //     if(this.product.hascolor == "true"){
-      //       console.log("setting color");
-      //       this.productService.getcolors(this.product.id).subscribe( res => {
-      //        this.product = {...this.product,"colors":res,"sizes":[]}
-      //       // console.log(this.product);
-      //       });
-      //     }
-      //     if(this.product.hassize == "true"){
-      //       this.productService.getsizes(this.product.id).subscribe( res => {
-      //         this.product = {...this.product,"sizes":res,"colors":[]}
-      //        // console.log(this.product);
-      //       });
-      //     }
-      // }
-      window.scrollTo(0, 0);
-    })
-
-    this.cartProduct = {
-    id: this.product.id,
-    cateid:this.product.cateid,
-    subcateid:this.product.subcateid,
-    name:this.product.name,
-    price:this.product.price,
-    tempprice:this.product.tempprice,
-    discount:this.product.discount,
-    quantity:this.product.quantity,
-    sku:this.product.sku,
-    file1:this.product.file1,
-    sellerid:this.product.sellerid,
-
-    personalization:'',
-    vari1 : {
-      id: null,
-      name:'',
-      values:[]
-    },
-    vari2 : {
-      id: null,
-      name:'',
-      values:[]
-    },
-    mixedvari:{
-      id: null,
-      vari1:'',
-      vari2:'',
-      values:[]
-    }
-
-    };
-
-  this.getreviews();
 
   }
+  //end of ngonit
 
+
+  setmaxvari(){
+    if(this.product.mixedvari.values.length > 0){
+      this.product.mixedvari.values.forEach(e1 => {
+        if(!this.Mixvalues1.find(x => x.vari1name ==  e1.vari1name)){
+          this.Mixvalues1.push(e1);
+        }
+      });
+      }
+  }
+  filldata(){
+    if(this.product.file1 != ""){
+      this.images.push({
+        imageSrc:
+        this.imglink+this.product.file1,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file2 != ""){
+      this.images.push({
+        imageSrc:
+        this.imglink+this.product.file2,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file3 != ""){
+      this.images.push({
+        imageSrc:
+            this.imglink+this.product.file3,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file4 != ""){
+      this.images.push({
+        imageSrc:
+        this.imglink+this.product.file4,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file5 != ""){
+      this.images.push({
+        imageSrc:
+        this.imglink+this.product.file5,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file6 != ""){
+      this.images.push({
+        imageSrc:
+            this.product.file6,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file7 != ""){
+      this.images.push({
+        imageSrc:
+            this.product.file7,
+        imageAlt: 'nature1',
+      });
+    }
+    if(this.product.file8 != ""){
+      this.images.push({
+        imageSrc:
+            this.product.file8,
+        imageAlt: 'nature1',
+      });
+    }
+
+
+
+    this.cartProduct = {
+      id: this.product.id,
+      cateid:this.product.cateid,
+      subcateid:this.product.subcateid,
+      name:this.product.name,
+      price:this.product.price,
+      discount:this.product.discount,
+      quantity:this.product.quantity,
+      sku:this.product.sku,
+      file1:this.product.file1,
+      sellerid:this.product.sellerid,
+
+      personalization:'',
+      vari : {
+        id: null,
+        name:'',
+        values:[]
+      },
+      mixedvari:{
+        id: null,
+        vari1:'',
+        vari2:'',
+        values:[]
+      }
+
+      };
+  }
 
   getreviews(){
   this.reviewService.getallreviews(this.product.id).subscribe( res =>{
@@ -332,43 +325,16 @@ export class ProductviewComponent implements OnInit {
 
 
 
-  // setColor(color, $event){
-  //   if ($event.target.checked){
-  //     this.cartProduct.colors = [];
-
-  //     this.cartProduct.colors.push(color);
-  //     this.alert = false;
-
-  //   }
-  //   else {
-  //     const index = this.cartProduct.colors.indexOf(color);
-  //     this.cartProduct.colors.splice(index, 1);
-
-  //   }
-
-  // }
-  // setSize(size, $event){
-  //   if ($event.target.checked){
-  //     this.cartProduct.sizes = [];
-  //     this.cartProduct.sizes.push(size);
-  //     this.alert = false;
-  //   }
-  //   else {
-  //     const index = this.cartProduct.sizes.indexOf(size);
-  //     this.cartProduct.sizes.splice(index, 1);
-
-  //   }
-
-  // }
-
   hidealert(){
     this.alert = !this.alert;
   }
 
   addItemToBasket(){
 
-    console.log("this.cartProduct",this.activeuser);
+    // console.log("this.cartProduct",this.activeuser);
     console.log("this.cartProduct",this.cartProduct);
+
+      var error = 0;
 
       if (this.activeuser?.role == "ewew"
       || this.activeuser?.role == "wew"){
@@ -379,28 +345,43 @@ export class ProductviewComponent implements OnInit {
 
          if(this.product.hasmixedvari == 'true' && this.cartProduct.mixedvari.values.length == 0){
 
-            console.log("mixvari ",this.cartProduct);
             this.alert = true;
             this.mixvarialert = true;
-         }else{
-
-          if(this.product.ispersonalization !== 'true'){
-            this.basketService.addItemToBasket(this.cartProduct);
-          }
+            error = 1;
 
          }
 
-         if(this.product.ispersonalization == 'true' && this.cartProduct.personalization == '' ){
+
+        if(this.product.isp == 'true' && this.cartProduct.personalization == '' ){
           this.alert = true;
           this.personalizationalert = true;
-         }else{
-          if(this.cartProduct.mixedvari.values.length !== 0){
-            this.basketService.addItemToBasket(this.cartProduct);
-          }
-         }
+           error = 1;
+        }
 
+        if(this.product.hasvari == 'true' && this.cartProduct.vari.values.length == 0){
+
+          this.alert = true;
+          this.mixvarialert = true;
+          error = 1;
+
+       }
+
+       if(this.product.hasmixedvari == 'true' && this.cartProduct.mixedvari.values.length == 0){
+
+        this.alert = true;
+        this.mixvarialert = true;
+        error = 1;
 
       }
+
+
+    if(error == 0){
+      this.basketService.addItemToBasket(this.cartProduct);
+    }
+
+
+
+    }
 
 
 }
@@ -423,6 +404,27 @@ onMixedChange(){
   }
 }
 
+
+onVari1change(){
+  let selected = this.product.vari.values.find( x => x.id == this.selectVari1);
+  console.log("selected1",selected,this.selectVari1)
+
+  this.product.price = selected?.price;
+  this.cartProduct.price = selected.price;
+
+  this.cartProduct.vari = {
+    id: 0,
+    name:'',
+    values:[]
+  },
+
+  this.cartProduct.vari.id = this.product.vari.id;
+  this.cartProduct.vari.name = this.product.vari.name;
+  this.cartProduct.vari.values.push(selected);
+
+}
+
+
 onMixedChange2(){
 
   this.cartProduct.mixedvari = {
@@ -435,7 +437,11 @@ onMixedChange2(){
   this.mixvarialert = false;
 
   let selected = this.product.mixedvari.values.find( x => x.id == this.selectedmixed2);
-  this.product.price = selected.price;
+
+  if(this.product.hasmixedvari == "true"){
+    this.product.price = selected.price;
+    this.cartProduct.price = selected.price;
+  }
 
   this.cartProduct.mixedvari.id = this.product.mixedvari.id;
   this.cartProduct.mixedvari.vari1 = this.product.mixedvari.vari1;

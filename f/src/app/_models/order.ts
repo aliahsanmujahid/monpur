@@ -52,8 +52,7 @@ export interface OrderItem {
 
     sku:string,
     personalization:string,
-    vari1 : Vari,
-    vari2 : Vari
+    vari : Vari,
     mixedvari : Mixvari
   }
 

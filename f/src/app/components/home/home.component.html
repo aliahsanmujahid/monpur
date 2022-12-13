@@ -11,9 +11,9 @@
   <div class="row" *ngIf="showbanner">
 
 
-      <div [ngClass]="catelength <=4 ? 'column3' : 'none' " >
+    <div [ngClass]="catelength <=4 ? 'column3' : 'none' " >
         <app-carousel [images] = "images" [content] = "true" [autoSlide]="true" [controls]="true"></app-carousel>
-      </div>
+    </div>
 
    <div [ngClass]="catelength > 4 ? '' : 'none' ">
 
@@ -45,12 +45,44 @@
 </section>
 
 
-<section class="padding-top">
+<section class="padding">
 
 
-  <h1 class="heading"> exclusive <span>products</span> </h1>
+   <!-- <div class="owlcate">
+    <owl-carousel-o [options]="customOptions">
+      <ng-template carouselSlide *ngFor="let item of allcategory">
 
-  <app-shop [filters] = "false"></app-shop>
+        <div class="content" *ngIf="!item.cateid" [routerLink]="['/shop', {cate: item.id}]">
+          <div class="img">
+            <img src="{{imglink+item.image}}" alt="">
+           </div>
+
+           <div class="details">
+             <p>{{item.name}}</p>
+             </div>
+        </div>
+
+
+        <div class="content" *ngIf="item.cateid" [routerLink]="['/shop', {subcate: item.id}]">
+          <div class="img">
+            <img src="{{imglink+item.image}}" alt="">
+           </div>
+
+           <div class="details">
+             <p>{{item.name}}</p>
+             </div>
+        </div>
+
+      </ng-template>
+
+    </owl-carousel-o>
+   </div> -->
+
+
+  <h1 class="heading">Featcher <span>products</span> </h1>
+
+
+  <app-shop [filters]="false" [favh]="false"></app-shop>
 
 
 

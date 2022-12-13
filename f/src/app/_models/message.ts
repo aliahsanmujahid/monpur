@@ -1,6 +1,6 @@
 export interface Message {
     id: number;
-    chatid: string;
+    chatid: number;
     senderid: string;
     message: string;
     date: number;
@@ -10,12 +10,12 @@ export interface Message {
     senderid : string,
     receiverid : string,
     message: string,
-    chatid: string,
+    chatid: number,
   }
 
   export interface Online {
-    userId: number;
-    socketId: number;
+    userId: string;
+    socketId: string;
   }
 
   export interface Conversation {

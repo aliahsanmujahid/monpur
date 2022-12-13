@@ -1,12 +1,93 @@
 
+<app-navbar></app-navbar>
+
 <input type="checkbox" id="check3">
 
 <div class="row">
   <div class="column1" >
-   <div class="sidemenu">
+
+    <h1 routerLink="" >View Site</h1>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(1,'dash')">
+        <i class="far fa-clone pr-1"> </i>  Dashboard
+      </a>
+
+      <div class="submenu" [ngClass]=" view == 1 ? 'view' : ''">
+        <a href="">erferf</a>
+        <a href="">erferf</a>
+        <a href="">erferf</a>
+      </div>
+
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(2,'profile')">
+      <i class="far fa-clone pr-1"></i> Profile</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(3,'createproduct')">createproduct</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(4,'category')">category</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'sellerproduct')">sellerproduct</a>
+    </div>
+
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'order')">order</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'manageorder')">manageorder</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'chat')">chat</a>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'paymentmanage')">paymentmanage</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'usermanage')">usermanage</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'slidermanage')">slidermanage</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'copuns')">copuns</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'footermanage')">footer & terms</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'shipingmanage')">shipingmanage</a>
+    </div>
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(5,'shipingmanage')">Review Manage</a>
+    </div>
+
+    <div class="logout" >
+      <a (click)="logout()">Log Out</a>
+    </div>
+
+
+   <!-- <div class="sidemenu">
     <ul>
-      <h1 routerLink="" >View Site</h1>
-      <li (click)="showgroup('dash')"  >Dashboard</li>
+
+      <li (click)="showgroup('dash')"  >Dashboard
+        <ul class="submenu" [ngClass]=" 4 == 4 ? 'view' : ''" >
+          <li>erferf</li>
+          <li>erferf</li>
+          <li>erferf</li>
+        </ul>
+      </li>
       <li (click)="showgroup('profile')" >Profile</li>
       <li (click)="showgroup('createproduct')" >Create Product</li>
       <li (click)="showgroup('category')" >Create Category</li>
@@ -23,7 +104,8 @@
 
       <li class="logout" (click)="logout()">Log Out</li>
     </ul>
-   </div>
+   </div> -->
+
   </div>
   <div class="column2">
 

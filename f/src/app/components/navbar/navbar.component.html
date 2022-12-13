@@ -78,8 +78,14 @@
       </a>
      </ng-container>
 
-      <a [routerLink]="['/shop', {fav: 3}]"  href="#" class="heart fas fa-heart"></a>
-      <a routerLink="/dash" id="menu-btn" class="user fas fa-user"></a>
+      <a [routerLink]="['/shop', {fav: '+'}]"  href="#" class="heart fas fa-heart"></a>
+
+      <div class="user"  routerLink="/dash">
+        <a id="menu-btn" class="fas fa-user"></a>
+        <p> {{'Sign In' | slice:0:10}}</p>
+      </div>
+
+
   </div>
 
 </header>
@@ -106,7 +112,19 @@
 
 </footer>
 
-<div class="whatsapp" >
-  <img src="../assets/whatsapp.png" alt="">
+<div *appHasRole='["user"]' [ngClass]="btnclick == true ? 'msgboxv' : 'msgbox' ">
+
+  <div class="box">
+    <div class="boxtitle">
+      <button class="msgbtn" (click)="addclass()"><i class="fa fa-envelope" aria-hidden="true"></i> message</button>
+
+      <button *ngIf="btnclick == true" (click)="addclass()" class="crosbtn">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <app-messagebox *ngIf="btnclick == true"></app-messagebox>
+
+  </div>
+
 </div>
 

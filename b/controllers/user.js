@@ -5,10 +5,6 @@ const fs = require('fs');
 const connection = require("../config/db2");
 
 
-var productCache = new Map();
-
-
-
 exports.signIn = async (req, res, next) => {
 
   let sql = `SELECT * FROM users WHERE pnumber = ?`;
@@ -90,122 +86,6 @@ exports.deleteimage = async (req, res, next) => {
 
 
 
-
-exports.createchat = async (req, res, next) => {
-
-  const { senderid, receiverid } = req.body;
-
-  if(senderid == receiverid){
-    return sendError(res, "Same Chat Not Allowed");
-  }
-
-  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid} or senderid = ${receiverid} && receiverid = ${senderid}`;
-
-                  let query1 = db.query(sql1, (err, result) => {
-                    if(err) throw err;
-                    if(result.length !== 0){
-                      console.log("chat exist");
-                      res.send(result);
-                    }else{
-                      console.log("cretting chat");
-
-                      let data = {senderid: senderid, receiverid:receiverid };
-
-                      let sql = 'INSERT INTO chat SET ?';
-                      let query = db.query(sql, data, (err, result) => {
-
-                        if(err) throw err;
-                        console.log("chat added");
-                        let sql = `SELECT * FROM chat WHERE id = ${result.insertId}`;
-                                  let query = db.query(sql, (err, result) => {
-                                    if(err) throw err;
-                                      res.send(result);
-                                });
-                      });    
-                    }
-                });
-
-
-};
-
-
-exports.haschat = async (req, res, next) => {
-
-  const { senderid, receiverid } = req.body;
-
-  if(senderid == receiverid){
-    return sendError(res, "Same Chat Not Allowed");
-  }
-
-  let sql1 = `SELECT * FROM chat WHERE senderid = ${senderid} && receiverid = ${receiverid} or senderid = ${receiverid} && receiverid = ${senderid}`;
-                  let query1 = db.query(sql1, (err, result) => {
-                    if(err) throw err;
-                    if(result.length !== 0){
-                      console.log("has chat");
-                      // let sql = `SELECT * FROM message WHERE chatid = ${result[0].id}`;
-                      // let query = db.query(sql, (err, result) => {
-                      //   if(err) throw err;
-                      //     res.send(result);
-                      // }); 
-                      res.send(result);
-
-                    }else{
-                      return sendError(res, "Chat Not exists");
-                    }
-                });
-};
-
-
-
-exports.createmessege = async (req, res, next) => {
-
-  const { chatid, senderid, message  } = req.body;
-
-  let data = {chatid: chatid, senderid:senderid, message: message};
-
-                      let sql = 'INSERT INTO message SET ?';
-                      let query = db.query(sql, data, (err, result) => {
-
-                        if(err) throw err;
-                        let sql = `SELECT * FROM message WHERE id = ${result.insertId}`;
-                                  let query = db.query(sql, (err, result) => {
-                                    if(err) throw err;
-                                      res.send(result[0]);
-                                });
-                      });  
-};
-
-
-exports.getchats = async (req, res, next) => {
-  
-  const  userId  = req.params.id;
-
-  let sql = `SELECT * FROM chat WHERE senderid = ${userId} || receiverid =  ${userId}`;
-  let query = db.query(sql, (err, result) => {
-    if(err) throw err;
-      res.send(result);
-  });                        
-
-};
-
-exports.getmessages = async (req, res, next) => {
-  const  chatid  = req.params.id;
-
-
-  var numPerPage = 10;
-  var skip = (1-1) * numPerPage; 
-  var limit = skip + ',' + numPerPage;
-
-  let sql = `SELECT * FROM message WHERE chatid = ${chatid} ORDER BY id DESC LIMIT ` + limit ;
-  let query = db.query(sql, (err, result) => {
-    if(err) throw err;
-      res.send(result);
-  });   
-
-};
-
-
-
 exports.getsellers = async (req, res, next) => {
   
   let sql = `SELECT * FROM users`;
@@ -241,11 +121,22 @@ exports.getusers = async (req, res, next) => {
 
 exports.getsingleuser = async (req, res, next) => {
 
+  if(req.params.id == 'a'){
+    console.log("admin",req.params.id);
+
+    let sql = `SELECT * FROM users WHERE role = ?`;
+    let query = db.query(sql,['admin'], (err, result) => {
+      if(err) throw err;
+       res.send(result[0]);
+    });
+  }else{
+    
   let sql = `SELECT * FROM users WHERE id = ?`;
   let query = db.query(sql,[req.params.id], (err, result) => {
     if(err) throw err;
      res.send(result[0]);
   });
+  }
 
 };
 
@@ -255,17 +146,17 @@ exports.signup = async (req, res, next) => {
 
   const con = await connection;
 
-  if(req.body.otp !== null && req.body.phonenumber !== null){
+  if(req.body.otp !== null && req.body.pnumber !== null){
 
-    const [data] = await con.execute('SELECT * FROM otpcheck WHERE pnumber = ? ', [ req.body.phonenumber ]);
+    const [data] = await con.execute('SELECT * FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
     
     if(data[0].otp == req.body.otp ){
 
-      await con.execute('DELETE FROM otpcheck WHERE pnumber = ? ', [ req.body.phonenumber ]);
+      await con.execute('DELETE FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
 
       let sql = 'INSERT INTO users SET ?';
       let data = {
-        pnumber: req.body.phonenumber,
+        pnumber: req.body.pnumber,
         isVerified:"true",
         role:"user"
       };
@@ -282,7 +173,7 @@ exports.signup = async (req, res, next) => {
       // console.log("Otp mached")
     }else{
       res.send({
-        otpsended:false,
+        nomach:false,
         message:"Otp not mached"
         });
     }
@@ -327,7 +218,7 @@ exports.sendotp = async (req, res, next) => {
 
   const con = await connection;
 
-  const [data] = await con.execute('SELECT * FROM users WHERE pnumber = ? ', [ req.body.phonenumber ]);
+  const [data] = await con.execute('SELECT * FROM users WHERE pnumber = ? ', [ req.body.pnumber ]);
     
   if(data.length > 0){
     if(data[0].password == null && data[0].isVerified == "true"){
@@ -343,34 +234,22 @@ exports.sendotp = async (req, res, next) => {
       });
   }
 
-  if(req.body.phonenumber !== null){
+  if(req.body.pnumber !== null){
 
-    const [data] = await con.execute('SELECT * FROM otpcheck WHERE pnumber = ? ', [ req.body.phonenumber ]);
+    const [data] = await con.execute('SELECT * FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
     
     //console.log("data",data);
 
     if(data.length !== 0){
        
-      const [timeago] = await con.execute('SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) AS secondsAgo  FROM otpcheck WHERE pnumber = ? ', [ req.body.phonenumber ]);
+      const [timeago] = await con.execute('SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) AS secondsAgo  FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
 
       if(timeago[0].secondsAgo > 100){
-        await con.execute('DELETE FROM otpcheck WHERE pnumber = ? ', [ req.body.phonenumber ]);
 
-        var random = Math.floor(1000 + Math.random() * 9000);
-        let otpdata = {
-        pnumber: req.body.phonenumber,
-        otp:random
-       };
-      let sql = 'INSERT INTO otpcheck SET ?';
-      let query = db.query(sql, otpdata, (err, result) => {
-        if(err){
-          return sendError(res, "Otp Can,t send");
-        }
         res.send({
-          otpsended:true,
-          message:"New OTP sended"
+          ownotp:true,
+          message:"ALREADY HAVE AN OTP"
           });
-      });
         
       }else{
         res.send({
@@ -384,7 +263,7 @@ exports.sendotp = async (req, res, next) => {
       console.log("Sending otp")
       var random = Math.floor(1000 + Math.random() * 9000);
       let otpdata = {
-        pnumber: req.body.phonenumber,
+        pnumber: req.body.pnumber,
         otp:random
       };
       let sql = 'INSERT INTO otpcheck SET ?';
@@ -413,6 +292,30 @@ exports.sendotp = async (req, res, next) => {
 
 }
 
+
+exports.ownotp = async (req, res, next) => {
+
+  const con = await connection;
+
+  await con.execute('DELETE FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
+
+        var random = Math.floor(1000 + Math.random() * 9000);
+        let otpdata = {
+        pnumber: req.body.pnumber,
+        otp:random
+       };
+      let sql = 'INSERT INTO otpcheck SET ?';
+      let query = db.query(sql, otpdata, (err, result) => {
+        if(err){
+          return sendError(res, "Otp Can,t send");
+        }
+        res.send({
+          otpsended:true,
+          message:"New OTP sended"
+          });
+      });
+
+}
 
 
 exports.fsetac = async (req, res, next) => {
@@ -462,23 +365,11 @@ exports.fsendotp = async (req, res, next) => {
       const [timeago] = await con.execute('SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) AS secondsAgo  FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
 
       if(timeago[0].secondsAgo > 100){
-        await con.execute('DELETE FROM otpcheck WHERE pnumber = ? ', [ req.body.pnumber ]);
-
-        var random = Math.floor(1000 + Math.random() * 9000);
-        let otpdata = {
-        pnumber: req.body.pnumber,
-        otp:random
-       };
-      let sql = 'INSERT INTO otpcheck SET ?';
-      let query = db.query(sql, otpdata, (err, result) => {
-        if(err){
-          return sendError(res, "Otp Can,t send");
-        }
+        
         res.send({
-          otpsended:true,
-          message:"New OTP sended"
+          ownotp:true,
+          message:"ALREADY HAVE AN OTP"
           });
-      });
         
       }else{
         res.send({
@@ -579,6 +470,104 @@ exports.setadminmoderator = async (req, res, next) => {
   });
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.createaddress = async (req, res, next) => {
+
+  const { uid,name,phone,email,address,
+    city,state,zip} = req.body;
+     
+  let data = {
+    uid:uid,   name:name,  phone:phone,  email:email, address:address, city:city,
+    state:state, zip:zip
+    };
+
+    let sql = 'INSERT INTO address SET ?';
+
+    let query = db.query(sql, data, (err, result) => {
+        if(err) throw err;
+
+        let sql = `SELECT * FROM address where id = ?`;
+
+        let query = db.query(sql,result.insertId,(err, result) => {
+          if (err){
+            return sendError(res, "Not Exist!");
+          };
+           res.send(result);
+        })
+    });   
+
+};
+
+exports.updateaddress = async (req, res, next) => {
+
+  const { id,uid,name,phone,email,address,
+    city,state,zip} = req.body;
+     
+  var sqle = `UPDATE address SET uid = ?, name = ?,
+  phone = ?,email = ?,address = ?,city = ?,state = ?,zip = ?
+  WHERE id = ?`;
+  
+  db.query(sqle, [uid,name,phone,email,address,
+    city,state,zip,id], function (err, result) {
+      if (err){
+        return sendError(res, "Not Exist!");
+      };
+
+      let sql = `SELECT * FROM address WHERE id = ? `;
+
+      let query = db.query(sql,id,(err, result) => {
+        if (err){
+          return sendError(res, "Not Exist!");
+        };
+         res.send(result);
+      })
+    });
+                             
+
+};
+
+
+
+exports.getaddress = async (req, res, next) => {
+
+        let sql = `SELECT * FROM address where uid = ?`;
+
+        let query = db.query(sql,[req.params.id],(err, result) => {
+          if (err){
+            return sendError(res, "Not Exist!");
+          };
+           res.send(result);
+        })
+
+};
+
+
 
 
 

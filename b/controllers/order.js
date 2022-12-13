@@ -231,6 +231,21 @@ exports.createorder = async (req, res, next) => {
   
       let [data] = await con.execute('SELECT * FROM products WHERE id = ? ', [ orderitems[i].id ]);
       
+      //vari
+      if(orderitems[i].vari.values.length > 0){
+        let id = orderitems[i].vari.values[0].id;
+
+        if(orderitems[i].vari.values[0].quantity != null){
+          await con.execute (
+            "UPDATE varivalues SET quantity = quantity - ? WHERE id = ?", 
+            [orderitems[i].quantity,id]
+            );
+        }
+        const [varivalues] = await con.execute('SELECT * FROM varivalues WHERE id = ? ', [id]);
+        var vari = varivalues[0];
+        newitems.push({...data[0],vari});
+      }
+      //maxvari
       if(orderitems[i].mixedvari.values.length > 0){
         let id = orderitems[i].mixedvari.values[0].id;
 
@@ -242,7 +257,7 @@ exports.createorder = async (req, res, next) => {
         }
         const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE id = ? ', [id]);
         var mix = mixvalues[0];
-        newitems.push({...data[0],mix})
+        newitems.push({...data[0],mix});
       }
 
     }
@@ -255,7 +270,6 @@ exports.createorder = async (req, res, next) => {
 
     let [shiping] = await con.execute('SELECT * FROM shiping WHERE id = ? ', [req.body.shipingid]);
 
-    //console.log("couponid",req.body.couponid);
 
     if(req.body.couponid != null){
       let [cupondata] = await con.execute('SELECT * FROM coupon WHERE id = ? ', [req.body.couponid]);
@@ -266,11 +280,17 @@ exports.createorder = async (req, res, next) => {
 
     for (let i = 0; i < newitems.length; i++) {
 
-      if(newitems[i].mix.price !== null){
-        var temp = newitems[i].mix.price*orderitems[i].quantity;
-        subtotal = subtotal + temp;
-      }else{
+      if(!newitems[i].vari && !newitems[i].mix){
         var temp = newitems[i].price*orderitems[i].quantity;
+        subtotal = subtotal + temp;
+      }
+
+      if(newitems[i].vari){
+        var temp = newitems[i].vari.price*orderitems[i].quantity;
+        subtotal = subtotal + temp;
+      }
+      if(newitems[i].mix){
+        var temp = newitems[i].mix.price*orderitems[i].quantity;
         subtotal = subtotal + temp;
       }
 
@@ -278,7 +298,6 @@ exports.createorder = async (req, res, next) => {
 
     delevary = shiping[0].value;
     alltotal = (delevary+subtotal)-cuponv;
-  
   
     const resultInsert = await con.query (
       "INSERT INTO orders (email,message,name, phone,address,city,state,zip,status,customerid,sellerid,dtitle,dvalue,ctitle,cvalue,subtotal,total,ispaid,cashondelevary,paidbypaypal,paidbystripe) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
@@ -292,10 +311,12 @@ exports.createorder = async (req, res, next) => {
   
   
     for (let i = 0; i < newitems.length; i++) {
+
+      
       await con.query (
-        "INSERT INTO orderitems (pid,orderid,name,img,quantity) VALUES (?,?,?,?,?)", 
+        "INSERT INTO orderitems (pid,orderid,name,img,price,quantity) VALUES (?,?,?,?,?,?)", 
         [ 
-          newitems[i].id,resultInsert[0].insertId,newitems[i].name,newitems[i].file1,newitems[i].quantity
+          newitems[i].id,resultInsert[0].insertId,newitems[i].name,newitems[i].file1,newitems[i].price,newitems[i].quantity
         ]
       );
 

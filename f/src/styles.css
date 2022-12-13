@@ -21,7 +21,7 @@ html::-webkit-scrollbar {
 }
 
 html::-webkit-scrollbar-track {
-  background: #fff;
+  background: rgba(255, 255, 255, 0);
 }
 
 html::-webkit-scrollbar-thumb {
@@ -47,6 +47,28 @@ input.ng-dirty.ng-invalid {
 .NgxEditor{
   border: none!important;
 }
+
+
+.owlcate .owl-prev,.owlcate .owl-next{
+  position: absolute!important;
+}
+.owlcate .owl-prev{
+  left: 0!important;
+  top: 10%!important;
+    background: #99999962!important;
+    color: rgb(255, 255, 255)!important;
+    height: 42px;
+    line-height: 36px;
+}
+.owlcate .owl-next{
+  right: 0!important;
+  top: 10%!important;
+    background: #9292925d!important;
+    color: rgb(255, 255, 255)!important;
+    height: 42px;
+    line-height: 36px;
+}
+
 
 
 

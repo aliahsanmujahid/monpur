@@ -40,7 +40,7 @@
         <div class="rate">
           <ul>
             <li  *ngFor="let i of [1,2,3,4,5]" [ngClass]="review.ratting >= i ? 'ratting' : 'noratting'" (click)="setratting(i)">
-             {{i}}
+              <i class="star fa fa-star" aria-hidden="true"></i>
             </li>
           </ul>
         </div>
@@ -53,10 +53,18 @@
             minlength="20"
             [disabled]="false">
       </ngx-editor>
-          <!-- <textarea [(ngModel)]="review.review" name="" id="" cols="30" rows="10"></textarea> -->
         </div>
 
         <div class="rateimg">
+
+          <div class="margin-top">
+            <span class="upload" *ngIf="progress > 0" >
+              {{progress}}%
+            </span>
+            <span class="upload" *ngIf="message">
+              {{message}}
+            </span>
+          </div>
 
           <ul>
             <li>
@@ -126,7 +134,9 @@
           </ul>
         </div>
 
+       <div class="revbtn">
         <button (click)="createreview()">Create Review</button>
+       </div>
 
       </div>
     </div>
@@ -142,7 +152,7 @@
         <h3>{{item.status}}</h3>
         <p>Id: {{item.id}}</p>
         <p>Today: 10 pm</p>
-        <button (click)="showdetails(item)">Show Details</button>
+        <button class="dbtn" (click)="showdetails(item)">Show Details</button>
       </div>
         <div class="details" [ngClass]="item.id == selectedorder.id ? 'view' : ''">
           <div class="button">

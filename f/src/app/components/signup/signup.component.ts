@@ -14,7 +14,7 @@ export class SignupComponent implements OnInit {
   constructor(public accountService: AccountService,private router: Router) { }
 
   model: ModelS ={
-    phonenumber:null,
+    pnumber:null,
     otp:null
   };
   setaccount: UserS = {
@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
 
   otpsended: Boolean = false;
   message: string = null;
+  ownotp:Boolean = false;
   verified: Boolean = false;
   signupform:Boolean = true;
   haveac: Boolean = false;
@@ -36,6 +37,14 @@ export class SignupComponent implements OnInit {
   otpsend(){
     if(this.model.otp == null){
       this.accountService.sendotp(this.model).subscribe( res =>{
+
+        if(res.ownotp == true){
+          this.otpsended = true;
+          this.signupform = false;
+          this.message = res.message;
+          this.ownotp = true;
+        }
+
         if(res.otpsended == true){
           this.otpsended = true;
           this.signupform = false;
@@ -59,13 +68,30 @@ export class SignupComponent implements OnInit {
     }
 
   }
+
+  sendagin(){
+    if(this.model.pnumber !== null){
+      this.accountService.ownotp(this.model).subscribe(res =>{
+        console.log("sendagin---- ",res);
+        this.otpsended = true;
+        this.signupform = false;
+        this.message = res.message;
+        this.ownotp = false;
+      });
+    }
+  }
+
+
   signup(){
-    if(this.model.otp && this.model.phonenumber){
+    if(this.model.otp && this.model.pnumber){
       this.accountService.signup(this.model).subscribe(res =>{
         if(res.verified == true){
           this.verified = true;
           this.otpsended = false;
           this.signupform = false;
+          this.message = res.message;
+        }
+        if(res.nomach == false){
           this.message = res.message;
         }
         console.log("res res",res);
@@ -75,16 +101,16 @@ export class SignupComponent implements OnInit {
   }
 
   setac(){
-
-    this.setaccount.pnumber = this.model.phonenumber;
-
-    if(this.setaccount.pnumber !== null){
+    this.setaccount.pnumber = this.model.pnumber;
+    if(this.setaccount.pnumber !== null && this.setaccount.name !== "" && this.setaccount.password !== ""){
       this.accountService.setac(this.setaccount).subscribe(res =>{
         console.log("set ac",res);
         this.router.navigate(['']);
       });
+    }else{
+      this.message = "Set All Fields";
     }
-    // console.log("set ac", this.setaccount);
   }
+
 
 }

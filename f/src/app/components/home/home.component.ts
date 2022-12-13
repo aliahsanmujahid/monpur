@@ -1,5 +1,9 @@
+import { BusyService } from './../../_interceptors/busy.service';
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/_services/category.service';
+import { environment } from 'src/environments/environment';
+import { ProductService } from 'src/app/_services/product.service';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +12,14 @@ import { CategoryService } from 'src/app/_services/category.service';
 })
 export class HomeComponent implements OnInit {
 
+  imglink = environment.imgUrl;
+
   showhide = false;
   showbanner = false;
 
   params: any = {};
   category: any = [];
+  allcategory: any = [];
   scate: any = [];
   catename = '';
   cateid = 0;
@@ -20,12 +27,22 @@ export class HomeComponent implements OnInit {
 
 
 
-  constructor(public categoryService: CategoryService) { }
+  constructor(public categoryService: CategoryService,public productService: ProductService,
+    public busyService: BusyService) { }
 
   ngOnInit(): void {
     this.params = "eeeeeeeeeee";
     this.getCategoryes();
+    this.getmixedcates();
   }
+
+  getmixedcates(){
+    this.busyService.busy();
+    this.categoryService.getmixedcates().subscribe( res => {
+      this.allcategory = res;
+      this.busyService.idle();
+    })
+   }
 
   over(item){
     this.showhide = true;
@@ -52,13 +69,15 @@ export class HomeComponent implements OnInit {
   }
 
   getCategoryes(){
+    this.busyService.busy();
 
     this.categoryService.getcategoryes().subscribe( res => {
       this.category = res;
       this.showbanner = true;
+      this.busyService.idle();
       // this.scate = this.category[0].subcate;
+
       this.catelength = this.category.length;
-      console.log("this.category.length",this.category.length);
     })
 }
 
@@ -80,4 +99,34 @@ export class HomeComponent implements OnInit {
       imageAlt: 'person1',
     }
   ]
+
+  customOptions: OwlOptions = {
+    // autoplay:true,
+    // autoplayTimeout:2000,
+    // autoplayHoverPause:true,
+    loop: false,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: false,
+    navSpeed: 300,
+    navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>',
+     '<i class="fa fa-angle-right" aria-hidden="true"></i>'],
+    responsive: {
+      0: {
+        items: 3
+      },
+      400: {
+        items: 3
+      },
+      740: {
+        items: 5
+      },
+      940: {
+        items: 8
+      }
+    },
+    nav: true
+  }
+
 }

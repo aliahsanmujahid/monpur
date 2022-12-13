@@ -53,9 +53,6 @@ h3{
 }
 
 
-.padding-top{
-  padding-top:80px;
- }
 
 .column_r{
   display: block;
@@ -355,9 +352,13 @@ select::-ms-expand {
 }
 textarea{
   padding: 4px 13px;
-  border-radius: 5px;
+  border-radius: 3px;
   width:100%;
   height: 70px;
+}
+
+.det{
+  color: #008de4!important;
 }
 
 

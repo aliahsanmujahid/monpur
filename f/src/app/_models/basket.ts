@@ -14,8 +14,7 @@ export interface IBasketItem {
     pictureUrl: string;
     personalization:string;
     sku:string;
-    vari1 : Vari;
-    vari2 : Vari;
+    vari : Vari;
     mixedvari:Mixvari;
 }
 
@@ -48,7 +47,6 @@ export interface cartProduct {
   name:string,
 
   price:number,
-  tempprice:number,
   discount:number,
   quantity:number;
   sku:string,
@@ -58,8 +56,7 @@ export interface cartProduct {
 
   sellerid:number,
 
-  vari1 : Vari,
-  vari2 : Vari
+  vari : Vari,
   mixedvari : Mixvari
 }
 

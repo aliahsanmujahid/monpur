@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IProduct, Product } from '../_models/product';
+import { IProduct, Imixvari, Ivari } from '../_models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class ProductService {
 
   updateproduct(product: IProduct){
     return this.http.post(this.baseUrl + 'updateproduct',product);
-   }
+  }
 
 
   getallproducts(sortby) {
@@ -47,17 +47,18 @@ export class ProductService {
     }));
   }
 
-  getProduct(id: string) {
+  getsingleproduct(id) {
 
-    const product = [...this.productCache.values()]
+    let product = [...this.productCache.values()]
     .reduce((arr, elem) => arr.concat(elem), [])
-    .find((product: Product) => product.id === Number(id));
+    .find((product: IProduct) => product.id == id );
 
-    if (product) {
+    if(product) {
       return of(product);
     }
-    return this.http.get<Product>(this.baseUrl + 'getsingleproduct/' + Number(id));
+    return this.http.get<IProduct>(this.baseUrl + 'getsingleproduct/' + id );
   }
+
   getEditProduct(id: number) {
     return this.http.get<any>(this.baseUrl + 'getsingleproduct/' + Number(id));
   }
@@ -66,17 +67,15 @@ export class ProductService {
 
   getSellerProduct(id) {
 
-    return this.http.get<Product[]>(this.baseUrl + 'getsellerproducts/' + Number(id));
+    return this.http.get<IProduct[]>(this.baseUrl + 'getsellerproducts/' + Number(id));
   }
 
-  // getcolors(id){
-  //   return this.http.get<Colors[]>(this.baseUrl + 'getcolors/' + Number(id));
-  // }
-  // getsizes(id){
-  //   return this.http.get<Sizes[]>(this.baseUrl + 'getsizes/' + Number(id));
-  // }
-
-
+  getmixedvari(id){
+    return this.http.get<Imixvari>(this.baseUrl + 'getmixedvari/' + id);
+  }
+  getvari(id){
+    return this.http.get<Ivari>(this.baseUrl + 'getvari/' + id);
+  }
 
 
 
@@ -84,15 +83,35 @@ export class ProductService {
 
 
   searchProducts(key,sortby){
-    return this.http.get<Product>(this.baseUrl + 'searchproducts/' + key + '/' + sortby);
+    return this.http.get<IProduct>(this.baseUrl + 'searchproducts/' + key + '/' + sortby);
   }
   getcateproducts(id,sortby) {
 
-    return this.http.get<Product[]>(this.baseUrl + 'getcateproducts/' + Number(id));
+    return this.http.get<IProduct[]>(this.baseUrl + 'getcateproducts/' + Number(id));
   }
   getsubcateproducts(id,sortby) {
 
-    return this.http.get<Product[]>(this.baseUrl + 'getsubcateproducts/' + Number(id));
+    return this.http.get<IProduct[]>(this.baseUrl + 'getsubcateproducts/' + Number(id));
   }
+
+
+
+  getfavp(uid,page) {
+
+    return this.http.get<IProduct[]>(this.baseUrl + 'getfavp/' + uid + '/' + page);
+  }
+
+  isfav(uid,pid) {
+    return this.http.get<any>(this.baseUrl + 'isfav/' + uid + '/' + pid);
+  }
+
+  addfav(uid,pid){
+    return this.http.post<any>(this.baseUrl + 'addfav/'+ uid + '/' + pid,{});
+  }
+
+  removefav(uid,pid){
+    return this.http.post<any>(this.baseUrl + 'removefav/'+ uid + '/' + pid,{});
+  }
+
 
 }

@@ -19,8 +19,13 @@ const {
   fsetac,
 
 
+  getaddress,
+  updateaddress,
+  createaddress,
+
   getadminmoderator,
-  setadminmoderator
+  setadminmoderator,
+  ownotp
 
 } = require("../controllers/user");
 
@@ -41,11 +46,15 @@ const {
   getsingleproduct,
   updateproduct,
   getallproducts,
-  getcolors,
-  getsizes,
+  getmixedvari,
+  getvari,
   searchproducts,
   getcateproducts,
-  getsubcateproducts
+  getsubcateproducts,
+  addfav,
+  removefav,
+  getfavp,
+  isfav
 
 } = require("../controllers/product");
 
@@ -189,8 +198,8 @@ router.post("/imageupload",upload.single('file'), imageupload);
 router.post("/deleteimage",deleteimage);
 router.get("/getsingleproduct/:id",getsingleproduct);
 router.get("/getsellerproducts/:id",getsellerproducts);
-router.get("/getcolors/:id",getcolors);
-router.get("/getsizes/:id",getsizes);
+router.get("/getmixedvari/:id",getmixedvari);
+router.get("/getvari/:id",getvari);
 
 
 router.get("/getallproducts/:sortby",getallproducts);
@@ -211,9 +220,9 @@ router.post("/makezero",makezero);
 router.post("/createmessege",createmessege);
 router.post("/flagchat",flagchat);
 router.post("/unflagchat",unflagchat);
-router.get("/getchats/:id",getchats);
-router.get("/getflagchats/:id",getflagchats);
-router.get("/getmessages/:chatid/:userid",getmessages);
+router.get("/getchats/:id/:page",getchats);
+router.get("/getflagchats/:id/:page",getflagchats);
+router.get("/getmessages/:chatid/:userid/:page",getmessages);
 
 
 router.get("/getsellers",getsellers);
@@ -244,6 +253,7 @@ router.post("/sendotp",sendotp);
 router.post("/setac",setac);
 router.post("/fsendotp",fsendotp);
 router.post("/fsetac",fsetac);
+router.post("/ownotp",ownotp);
 
 
 router.get("/getpaymentsettings",getpaymentsettings);
@@ -280,6 +290,28 @@ router.post("/createshiping",createshiping);
 router.post("/updateshiping",updateshiping);
 
 
+
+
+
+router.get("/getfavp/:uid/:page",getfavp);
+router.get("/isfav/:uid/:pid",isfav);
+
+router.post("/addfav/:uid/:pid",addfav);
+router.post("/removefav/:uid/:pid",removefav);
+
+
+router.get("/getaddress/:id", 
+isAuth,
+getaddress
+);
+router.post("/updateaddress/", 
+isAuth,
+updateaddress
+);
+router.post("/createaddress/", 
+isAuth,
+createaddress
+);
 
 router.get("/setcod/:id", 
 isAuth,
