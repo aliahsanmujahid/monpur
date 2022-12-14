@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { ReviewService } from './../../_services/review.service';
 import { AccountService } from 'src/app/_services/account.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { OrderService } from 'src/app/_services/order.service';
@@ -14,6 +14,9 @@ import { map } from 'rxjs';
   styleUrls: ['./manageorder.component.css']
 })
 export class ManageorderComponent implements OnInit {
+
+  @Input() orderst = '';
+
   imglink = environment.imgUrl;
 
   user: User;
@@ -112,8 +115,10 @@ export class ManageorderComponent implements OnInit {
     private orderService: OrderService, private router: Router,
     private reviewService: ReviewService) { }
 
+
   ngOnInit(): void {
     window.scrollTo(0, 0);
+    console.log("this.orderst-----------",this.orderst);
 
     this.accountService.currentUser$.subscribe(res =>{
 
@@ -126,6 +131,38 @@ export class ManageorderComponent implements OnInit {
          }
 
     });
+  }
+
+
+  ngOnChanges() {
+    this.accountService.currentUser$.subscribe(res =>{
+
+      console.log("User: ",res);
+       if(res){
+        if(res.role == "admin"){
+          this.sellerid = res.userId;
+         }
+       }
+
+  });
+
+    if(this.orderst !== ''){
+      console.log("this.orderst",this.orderst);
+      this.orderService.getorderbystatus(this.sellerid,this.orderst).subscribe(res =>{
+
+        if(!res.error){
+          this.orders  = res;
+          // this.selectedorder = res[0]
+          // this.status = this.selectedorder.status;
+        }else{
+          this.orders = [];
+          this.selectedorder = [];
+        }
+
+        console.log(res)
+
+       });
+    }
   }
 
 
@@ -151,10 +188,18 @@ export class ManageorderComponent implements OnInit {
 
 
   showdetails(item){
-  this.selectedorder = item;
-  this.status = item.status;
-  console.log(item.status)
+
+  if(this.selectedorder?.id == item.id){
+    this.selectedorder = null;
+    this.status = '';
+  }else{
+    this.selectedorder = item;
+    this.status = item.status;
   }
+
+  }
+
+
   alerttoggle(){
     this.alert = !this.alert;
   }
@@ -175,8 +220,8 @@ export class ManageorderComponent implements OnInit {
 
        this.orderService.getSellerOrders(this.sellerid,this.page,"!2").subscribe(res =>{
          this.orders  = res;
-         this.selectedorder = res[0]
-         this.status = this.selectedorder.status;
+        //  this.selectedorder = res[0]
+        //  this.status = this.selectedorder.status;
          console.log(this.orders)
          if(this.orders.length === 0 || res.length < 10 ){
           this.noorder = true;

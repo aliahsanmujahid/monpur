@@ -32,6 +32,8 @@
 
 <span *ngIf="otpsended">
   <form (ngSubmit)="signup()">
+
+    <a>*{{model.pnumber}}</a>
     <label>Your OTP</label>
 
     <input
@@ -92,12 +94,20 @@
 </span>
 
   <div *ngIf="haveac" class="haveac">
-    Already Have an account? <a routerLink='/login' class='text-link'> SignIn Here </a>
+    <a>Account Exists...</a>
 
-    <div class="line"></div>
+    <br> <br>
 
     <p routerLink='/forgot'>Forgot Password</p>
 
+  </div>
+
+  <br>
+  <div class="header">
+    <a>
+      Already have an account?
+    </a>
+    <a class="f"  routerLink='/login' > Login</a>
   </div>
 
   <div class="line"></div>

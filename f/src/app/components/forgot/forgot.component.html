@@ -33,15 +33,9 @@
 
 <span *ngIf="verify">
   <form class="form" (ngSubmit)="setac()">
-    <input
-    [(ngModel)]="model.pnumber"
-    name="pnumber"
-    type = "text"
-    class="disabled"
-    disabled
-    />
 
-    <br>
+    <a>*{{model.pnumber}}</a>
+    
     <label>Your OTP</label>
     <input
     [(ngModel)]="setaccount.otp"

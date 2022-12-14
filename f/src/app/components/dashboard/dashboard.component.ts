@@ -14,20 +14,29 @@ export class DashboardComponent implements OnInit {
     private router: Router) { }
 
   producteditid:any = 0;
+  orderst:any = '';
 
-  show = 'profile';
+  show = "signup";
   view = 0;
 
   ngOnInit(): void {
 
+    this.accountService.currentUser$.subscribe(res =>{
+      this.show = "profile"
+    });
+
     this.route.params.subscribe(params => {
-
       window.scrollTo(0, 0);
-
       if (Object.keys(params).length !== 0) {
         this.producteditid = params['editproduct'];
         this.show = 'createproduct';
       }
+      if (Object.keys(params).length !== 0) {
+        this.orderst = params['order'];
+        this.show = 'manageorder';
+      }
+
+
 
     });
 

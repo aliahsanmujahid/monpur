@@ -230,7 +230,7 @@ exports.sendotp = async (req, res, next) => {
     return res.send({
       otpsended:false,
       haveac:true,
-      message:"ALREADY HAVE AN ACCOUNT"
+      message:"Already have an Account"
       });
   }
 
@@ -248,19 +248,19 @@ exports.sendotp = async (req, res, next) => {
 
         res.send({
           ownotp:true,
-          message:"ALREADY HAVE AN OTP"
+          message:"Already Sended"
           });
         
       }else{
         res.send({
           otpsended:true,
-          message:"ALREADY HAVE AN OTP,NEW OTP AFTER 4 MINITE"
+          message:"Already Sended,New OTP after 4 Miniute"
           });
       }
     }
 
     if(data.length == 0){
-      console.log("Sending otp")
+
       var random = Math.floor(1000 + Math.random() * 9000);
       let otpdata = {
         pnumber: req.body.pnumber,
@@ -368,13 +368,13 @@ exports.fsendotp = async (req, res, next) => {
         
         res.send({
           ownotp:true,
-          message:"ALREADY HAVE AN OTP"
+          message:"Already Seanded"
           });
         
       }else{
         res.send({
           otpsended:true,
-          message:"ALREADY HAVE AN OTP,NEW OTP AFTER 4 MINITE"
+          message:"Already Sended,New OTP after 4 Miniute"
           });
       }
     }

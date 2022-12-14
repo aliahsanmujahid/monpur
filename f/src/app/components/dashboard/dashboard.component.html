@@ -6,24 +6,31 @@
 <div class="row">
   <div class="column1" >
 
-    <h1 routerLink="" >View Site</h1>
+    <!-- <h1 routerLink="" >View Site</h1> -->
 
     <div class="menu">
       <a class="maina"  (click)="showgroup(1,'dash')">
-        <i class="far fa-clone pr-1"> </i>  Dashboard
+        <i class="far fa-clone pr-1"> </i> Dashboard
       </a>
-
-      <div class="submenu" [ngClass]=" view == 1 ? 'view' : ''">
-        <a href="">erferf</a>
-        <a href="">erferf</a>
-        <a href="">erferf</a>
-      </div>
-
     </div>
 
     <div class="menu">
-      <a class="maina"  (click)="showgroup(2,'profile')">
+
+      <!-- for desktop -->
+      <a *ngIf="accountService.currentUser$ | async" class="maina none"  (click)="showgroup(2,'profile')">
       <i class="far fa-clone pr-1"></i> Profile</a>
+
+      <a *ngIf="(accountService.currentUser$ | async) === null" class="maina none"  (click)="showgroup(2,'signup')">
+        <i class="far fa-clone pr-1"></i> Profile</a>
+
+      <!-- for mobile -->
+
+      <a *ngIf="accountService.currentUser$ | async" class="maina mnone" routerLink='/profile' >
+        <i class="far fa-clone pr-1"></i> Profile</a>
+
+        <a *ngIf="(accountService.currentUser$ | async) === null" class="maina mnone" routerLink='/signup'>
+          <i class="far fa-clone pr-1"></i> Profile</a>
+
     </div>
 
     <div class="menu">
@@ -44,7 +51,18 @@
     </div>
 
     <div class="menu">
-      <a class="maina"  (click)="showgroup(5,'manageorder')">manageorder</a>
+      <a class="maina" [ngClass] = "{'active': show == 'manageorder'}" (click)="showgroup(5,'manageorder')">manageorder</a>
+      <div class="submenu" [ngClass]=" view == 5 ? 'view' : ''">
+        <a [ngClass] = "{'active2': orderst == 'all'}"  [routerLink]="['/dash', {order: 'all' }]" >All</a>
+        <a [ngClass] = "{'active2': orderst == 'pending'}"  [routerLink]="['/dash', {order: 'pending' }]" >Pending</a>
+        <a [ngClass] = "{'active2': orderst == 'approved'}"  [routerLink]="['/dash', {order: 'approved' }]" >Approved</a>
+        <a [ngClass] = "{'active2': orderst == 'paid'}"  [routerLink]="['/dash', {order: 'paid' }]" >Paid</a>
+        <a [ngClass] = "{'active2': orderst == 'unpaid'}"  [routerLink]="['/dash', {order: 'unpaid' }]" >Unpaid</a>
+        <a [ngClass] = "{'active2': orderst == 'delivering'}"  [routerLink]="['/dash', {order: 'delivering' }]" >Delivering</a>
+        <a [ngClass] = "{'active2': orderst == 'confirmed'}"  [routerLink]="['/dash', {order: 'confirmed' }]" >Confirmed</a>
+        <a [ngClass] = "{'active2': orderst == 'rejected'}"  [routerLink]="['/dash', {order: 'rejected' }]" >Rejected</a>
+        <a [ngClass] = "{'active2': orderst == 'guser'}"  [routerLink]="['/dash', {order: 'guser' }]" >Guest User</a>
+      </div>
     </div>
 
     <div class="menu">
@@ -70,7 +88,27 @@
       <a class="maina"  (click)="showgroup(5,'shipingmanage')">shipingmanage</a>
     </div>
     <div class="menu">
-      <a class="maina"  (click)="showgroup(5,'shipingmanage')">Review Manage</a>
+      <a class="maina"  (click)="showgroup(6,'shipingmanage')">Review Manage</a>
+      <div class="submenu" [ngClass]=" view == 6 ? 'view' : ''">
+        <a [routerLink]="['/dash', {order: 'all' }]" >All</a>
+        <a [routerLink]="['/dash', {order: 'pending' }]" >Pending</a>
+        <a [routerLink]="['/dash', {order: 'approved' }]" >Approved</a>
+        <a [routerLink]="['/dash', {order: 'paid' }]" >Paid</a>
+        <a [routerLink]="['/dash', {order: 'unpaid' }]" >UnPaid</a>
+        <a [routerLink]="['/dash', {order: 'delivering' }]" >Delivering</a>
+        <a [routerLink]="['/dash', {order: 'confirmed' }]" >Confirmed</a>
+        <a [routerLink]="['/dash', {order: 'rejected' }]" >Rejected</a>
+        <a [routerLink]="['/dash', {order: 'guser' }]" >Guest User</a>
+      </div>
+    </div>
+
+    <div class="menu">
+      <a class="maina"  (click)="showgroup(7,'shipingmanage')">Setting</a>
+      <div class="submenu" [ngClass]=" view == 7 ? 'view' : ''">
+        <a href="">Payment</a>
+        <a href="">Footer</a>
+        <a href="">Google Auth</a>
+      </div>
     </div>
 
     <div class="logout" >
@@ -161,19 +199,22 @@
 
     </section>
 
+  <ng-container *ngIf="show !== '' ">
+
   <app-createproduct *ngIf=" show == 'createproduct' " [producteditid] = "producteditid" ></app-createproduct>
   <app-sellerproduct *ngIf=" show == 'sellerproduct' "  ></app-sellerproduct>
   <app-profile *ngIf=" show == 'profile' "  ></app-profile>
   <app-chat *ngIf=" show == 'chat' "  ></app-chat>
   <app-order *ngIf=" show == 'order' "  ></app-order>
   <app-category *ngIf=" show == 'category' "  ></app-category>
-  <app-manageorder *ngIf=" show == 'manageorder' "  ></app-manageorder>
+  <app-manageorder *ngIf=" show == 'manageorder' "  [orderst] = "orderst"></app-manageorder>
   <app-paymentmanage *ngIf=" show == 'paymentmanage' " ></app-paymentmanage>
   <app-usermanage *ngIf=" show == 'usermanage' " ></app-usermanage>
   <app-copuns *ngIf=" show == 'copuns' "  ></app-copuns>
   <app-slidermanage *ngIf=" show == 'slidermanage' " ></app-slidermanage>
   <app-footermanage *ngIf=" show == 'footermanage' " ></app-footermanage>
   <app-shiping *ngIf=" show == 'shipingmanage' " ></app-shiping>
-
+  <app-signup *ngIf=" show == 'signup' " ></app-signup>
+</ng-container>
 </div>
 </div>

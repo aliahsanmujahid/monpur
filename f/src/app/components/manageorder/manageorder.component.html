@@ -1,4 +1,4 @@
-
+<!--
 
 <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
 <div *ngIf="alert" class="alert-box">
@@ -31,14 +31,13 @@
     <div class="selectbox" >
       <div class="select">
         <select name="format" [(ngModel)]="sortby" (change)="onsortchange()" id="format">
-           <!-- <option selected disabled>Choose a book format</option> -->
            <option *ngFor="let s of sorts" value="{{ s.name }}" >{{ s.name }}</option>
         </select>
      </div>
     </div>
 
 
-  <!-- <h1>My Order</h1> -->
+  <h1>My Order</h1>
 
   <ul *ngIf="orders.length > 0">
     <li *ngFor="let item of orders" >
@@ -85,7 +84,6 @@
           <div class="footerselectbox" >
             <div class="select">
               <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
-                 <!-- <option selected disabled>Choose a book format</option> -->
                  <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
               </select>
            </div>
@@ -146,7 +144,6 @@
         <div class="footerselectbox" >
           <div class="select">
             <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
-               <!-- <option selected disabled>Choose a book format</option> -->
                <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
             </select>
          </div>
@@ -165,6 +162,78 @@
     </div>
   </div>
 </div>
+ -->
 
 
 
+<div class="row">
+
+  <div class="column" *ngFor="let item of orders" >
+    <div class="text">
+      <div class="status">
+        <h3>{{item.status}}</h3>
+        <h3 class="paid" *ngIf="item.ispaid == 1">Paid</h3>
+        <h3 class="notpaid"  *ngIf="item.ispaid == 0">Not Paid</h3>
+        <h3 class="paid" >30 minite ago</h3>
+      </div>
+      <div class="status">
+      <p>Order Id: {{item.id}}</p>
+      <p>|Total Item: {{item.orderItems.length}}</p>
+      </div>
+
+      <button *ngIf="item?.id !== selectedorder?.id" (click)="showdetails(item)" >Show Details</button>
+      <button *ngIf="item?.id == selectedorder?.id" (click)="showdetails(item)" >Hide Details</button>
+
+    </div>
+      <div class="details" [ngClass]="item?.id == selectedorder?.id ? 'view' : ''">
+        <span id="print-section">
+          <ul>
+            <li class="reviewli" *ngFor="let item of item.orderItems">
+
+                <div class="sm">
+                  <img src="{{imglink+item.img}}" alt="">
+                 </div>
+                 <div class="sm2">
+                  <div class="text2">
+                  <p>{{item.name}}</p>
+                  <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+                 </div>
+                </div>
+
+
+                <button class="reviewbtn">Add Review</button>
+            </li>
+          </ul>
+
+          <div class="footer">
+            <p>Delivary Cost: {{item.delivery}}</p>
+            <p>Subtotal: {{item.subtotal}}</p>
+            <p>Total: {{item.total}}$</p>
+          </div>
+        </span>
+
+
+      <div class="button">
+
+        <div class="footerselectbox" >
+          <div class="select">
+            <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
+               <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
+            </select>
+         </div>
+        </div>
+
+        <button class="btn">Message</button>
+
+        <button printSectionId="print-section"
+              styleSheetFile='assets/css/style.css'
+              ngxPrint>Print</button>
+
+      </div>
+
+      </div>
+
+
+  </div>
+
+</div>
