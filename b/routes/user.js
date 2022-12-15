@@ -67,7 +67,8 @@ const {
   setstripe,
   createorder,
   getSellerOrders,
-  getCustomerOrders
+  getCustomerOrders,
+  searchorder
 } = require("../controllers/order");
 
 const {
@@ -170,6 +171,10 @@ router.get("/getSellerOrders/:id/:page/:status",
 router.get("/getCustomerOrders/:id/:page/:status", 
     isAuth,
     getCustomerOrders
+);
+router.get("/searchorder/:oid/:uid", 
+    isAuth,
+    searchorder
 );
 router.get("/getorderbyid/:id", 
     isAuth,

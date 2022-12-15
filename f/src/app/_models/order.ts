@@ -28,6 +28,7 @@ export interface Order {
   message: string;
   city: string;
   state: string;
+  status: string;
   zip:string;
   sellerid:number;
 

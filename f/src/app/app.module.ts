@@ -44,6 +44,8 @@ import { ShipingComponent } from './components/shiping/shiping.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MessageboxComponent } from './components/messagebox/messagebox.component';
+import { ReviewmanageComponent } from './components/reviewmanage/reviewmanage.component';
+
 
 
 @NgModule({
@@ -78,7 +80,8 @@ import { MessageboxComponent } from './components/messagebox/messagebox.componen
     MobilecateComponent,
     FootermanageComponent,
     ShipingComponent,
-    MessageboxComponent
+    MessageboxComponent,
+    ReviewmanageComponent
   ],
   imports: [
     BrowserAnimationsModule,

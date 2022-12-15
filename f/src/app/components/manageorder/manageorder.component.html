@@ -1,173 +1,147 @@
-<!--
 
 <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
 <div *ngIf="alert" class="alert-box">
 
-    <div class="details3" *ngIf="selectedorder">
-      <div class="text">
-        <h3>Order Address</h3>
+    <div class="details" *ngIf="selectedorder || sorder">
+      <div class="text4">
+
+        <p>Changing Order Status To: {{status}}</p>
+        <p>Order Id: {{selectedorder?.id}}</p>
         <br>
-        <p>Order Id: {{selectedorder.id}}</p>
-        <p>Name: {{selectedorder.name}}</p>
-        <p>Address: {{selectedorder.address}}</p>
-        <p>City: {{selectedorder.city}}</p>
-        <p>State: {{selectedorder.state}}</p>
-        <p>Phone: {{selectedorder.phone}}</p>
-        <br>
-        <p>Delevary Charge: {{selectedorder.delivery}}</p>
-        <p>Sub Total: {{selectedorder.subtotal}}</p>
-        <p>Total: {{selectedorder.total}}</p>
-        <br>
-        <p *ngIf="selectedorder.ispaid == 1">Status: Paid</p>
-        <p *ngIf="selectedorder.ispaid == 0">Status: Not Paid</p>
+        <button (click)="changeStatus()">Continue</button> <button (click)="alerttoggle()">No</button>
+
       </div>
     </div>
 
 </div>
 
-<div class="row">
-  <div class="column">
+<div *ngIf="alert2" class="alert-box">
 
-    <div class="selectbox" >
-      <div class="select">
-        <select name="format" [(ngModel)]="sortby" (change)="onsortchange()" id="format">
-           <option *ngFor="let s of sorts" value="{{ s.name }}" >{{ s.name }}</option>
-        </select>
-     </div>
+  <div class="details" *ngIf="sorder">
+    <div class="text4">
+
+      <p>Changing Order Status To: {{status}}</p>
+      <p>Order Id: {{sorder?.id}}</p>
+      <br>
+      <button (click)="schangeStatus()">Continue</button> <button (click)="alerttoggle2()">No</button>
+
+    </div>
+  </div>
+
+</div>
+
+
+<div class="row">
+
+  <div class="header">
+
+    <div class="lefth">
+      <h1>Total Pending 34</h1>
+    </div>
+    <div>
+      <div class="flexContainer">
+        <input type="text" [(ngModel)]="search" placeholder="Type order id" class="inputField">
+        <button (click)="searchorder()">SEARCH</button>
+      </div>
     </div>
 
-
-  <h1>My Order</h1>
-
-  <ul *ngIf="orders.length > 0">
-    <li *ngFor="let item of orders" >
-      <div class="text">
-        <div class="status">
-          <h3>{{item.status}}</h3>
-          <h3 class="paid" *ngIf="item.ispaid == 1">Paid</h3>
-          <h3 class="notpaid"  *ngIf="item.ispaid == 0">Not Paid</h3>
-        </div>
-        <p>Id: {{item.id}}</p>
-        <p>Today: 10 pm</p>
-        <button (click)="showdetails(item)">Show Details</button>
-      </div>
-        <div class="details" [ngClass]="item.id == selectedorder.id ? 'view' : ''">
-          <span id="print-section">
-            <ul>
-              <li class="reviewli" *ngFor="let item of item.orderItems">
-
-                  <div class="sm">
-                    <img src="{{imglink+item.img}}" alt="">
-                   </div>
-                   <div class="sm2">
-                    <div class="text2">
-                    <p>{{item.name}}</p>
-                    <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
-                   </div>
-                  </div>
-
-
-                  <button class="reviewbtn">Add Review</button>
-              </li>
-            </ul>
-
-            <div class="footer">
-              <p>Delivary Cost: {{item.delivery}}</p>
-              <p>Subtotal: {{item.subtotal}}</p>
-              <p>Total: {{item.total}}$</p>
-            </div>
-          </span>
-
-
-        <div class="button">
-
-          <div class="footerselectbox" >
-            <div class="select">
-              <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
-                 <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
-              </select>
-           </div>
-          </div>
-
-          <button class="btn">Message</button>
-
-          <button printSectionId="print-section"
-                styleSheetFile='assets/css/style.css'
-                ngxPrint>Print</button>
-
-        </div>
-
-        </div>
-
-
-    </li>
-  </ul>
-
   </div>
-  <div class="column">
-    <div class="dcontent" *ngIf="orders.length > 0">
-      <div class="scroll">
-      <div class="details2" id="print-section">
-        <div class="text">
-          <div class="status">
-            <h3>{{selectedorder.status}}</h3>
-            <h3 class="paid"  *ngIf="selectedorder.ispaid == 1">Paid</h3>
-            <h3 class="notpaid"  *ngIf="selectedorder.ispaid == 0">Not Paid</h3>
-            <h3 class="notpaid"  *ngIf="selectedorder.ispaid == 0">Guest User</h3>
-          </div>
-          <p>Id: {{selectedorder.id}}</p>
-          <p>Today: 10 pm</p>
-        </div>
 
-        <ul>
-          <li class=""  *ngFor="let item of selectedorder.orderItems">
-              <div class="sm">
-                <img src="{{imglink+item.img}}" alt="">
-               </div>
-               <div class="sm2">
-                <div class="text2">
-                <p>{{item.name}}</p>
-                <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
-              </div>
-              </div>
-          </li>
-        </ul>
-        <div class="footer">
-          <p>Delivary Cost: {{selectedorder.delivery}}</p>
-          <p>Subtotal: {{selectedorder.subtotal}}</p>
-          <p>Total: {{selectedorder.total}}$</p>
-        </div>
+  <!-- search order -->
+
+  <ng-container *ngIf="sheader">
+
+  <div class="sheader" >
+    <h2 *ngIf="!notfound">Search Order Found</h2>
+    <h2 *ngIf="notfound">No Order Found</h2>
+    <span (click)="hideorder()" class="cross"><i class="fa fa-times" aria-hidden="true"></i></span>
+  </div>
+
+  <div class="column" *ngIf="sorder !== null">
+    <div class="text">
+      <div class="status">
+        <h3>{{sorder.status}}</h3>
+        <h3 class="paid" *ngIf="sorder.ispaid == 1">Paid</h3>
+        <h3 class="notpaid"  *ngIf="sorder.ispaid == 0">Not Paid</h3>
+        <h3 class="paid" >30 minite ago</h3>
+      </div>
+      <div class="status">
+        <p>Order Id: {{sorder.id}}</p>
+        <p>|Total Item: {{sorder.orderItems.length}}</p>
       </div>
 
-      <div class="button">
+      </div>
 
-        <div class="footerselectbox" >
-          <div class="select">
-            <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
-               <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
-            </select>
+    <div class="items view">
+
+      <div class="details" >
+
+       <div class="part">
+         <div class="text2">
+           <p>Order Id: {{sorder.id}}</p>
+           <p>Name: {{sorder.name}}</p>
+           <p>Address: {{sorder.address}}</p>
+           <p>City: {{sorder.city}}</p>
+           <p>State: {{sorder.state}}</p>
+           <p>Phone: {{sorder.phone}}</p>
+           <br>
+           <p>Delevary Charge: {{sorder.delivery}}</p>
+           <p>Sub Total: {{sorder.subtotal}}</p>
+           <p>Total: {{sorder.total}}</p>
+           <br>
+           <p *ngIf="sorder.ispaid == 1">Status: Paid</p>
+           <p *ngIf="sorder.ispaid == 0">Status: Not Paid</p>
          </div>
-        </div>
+       </div>
 
-        <button class="btn">Message</button>
+       <div class="part">
+         <div class="text2">
 
-        <button
-              printTitle="Order Details"
-              printSectionId="print-section"
-              [useExistingCss]="true"
-              ngxPrint>Print</button>
+           <div class="box" *ngFor="let item of sorder.orderItems">
+             <img src="{{imglink+item.img}}" alt="">
+             <div class="text3">
+               <p>eerer 4rc4rc4r</p>
+               <p>Sku:44f4f</p>
+               <p>Sku:44f4f Vari:wefwe wv </p>
+               <p>4c4r 4rfc4r{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+             </div>
+           </div>
+
+           <div class="footer">
+             <br>
+             <p>Delivary Cost: {{sorder.delivery}}</p>
+             <p>Subtotal: {{sorder.subtotal}}</p>
+             <p>Total: {{sorder.total}}$</p>
+           </div>
+
+         </div>
+       </div>
 
       </div>
-    </div>
-    </div>
+
+
+       <div class="handle">
+
+           <div class="select">
+             <select name="format" [(ngModel)]="status2" (change)="alerttoggle2()" id="format">
+                <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
+             </select>
+          </div>
+
+         <button class="btn">Message</button>
+
+         <button>Print</button>
+
+       </div>
+
+       </div>
+
   </div>
-</div>
- -->
+  <br>
+</ng-container>
 
 
-
-<div class="row">
-
+  <!-- main orders -->
   <div class="column" *ngFor="let item of orders" >
     <div class="text">
       <div class="status">
@@ -185,49 +159,66 @@
       <button *ngIf="item?.id == selectedorder?.id" (click)="showdetails(item)" >Hide Details</button>
 
     </div>
-      <div class="details" [ngClass]="item?.id == selectedorder?.id ? 'view' : ''">
-        <span id="print-section">
-          <ul>
-            <li class="reviewli" *ngFor="let item of item.orderItems">
-
-                <div class="sm">
-                  <img src="{{imglink+item.img}}" alt="">
-                 </div>
-                 <div class="sm2">
-                  <div class="text2">
-                  <p>{{item.name}}</p>
-                  <p>{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
-                 </div>
-                </div>
+      <div class="items" [ngClass]="item?.id == selectedorder?.id ? 'view' : ''">
 
 
-                <button class="reviewbtn">Add Review</button>
-            </li>
-          </ul>
+     <div class="details" *ngIf="item?.id == selectedorder?.id">
+
+      <div class="part">
+        <div class="text2">
+          <p>Order Id: {{selectedorder.id}}</p>
+          <p>Name: {{selectedorder.name}}</p>
+          <p>Address: {{selectedorder.address}}</p>
+          <p>City: {{selectedorder.city}}</p>
+          <p>State: {{selectedorder.state}}</p>
+          <p>Phone: {{selectedorder.phone}}</p>
+          <br>
+          <p>Delevary Charge: {{selectedorder.delivery}}</p>
+          <p>Sub Total: {{selectedorder.subtotal}}</p>
+          <p>Total: {{selectedorder.total}}</p>
+          <br>
+          <p *ngIf="selectedorder.ispaid == 1">Status: Paid</p>
+          <p *ngIf="selectedorder.ispaid == 0">Status: Not Paid</p>
+        </div>
+      </div>
+
+      <div class="part">
+        <div class="text2">
+
+          <div class="box" *ngFor="let item of selectedorder.orderItems">
+            <img src="{{imglink+item.img}}" alt="">
+            <div class="text3">
+              <p>eerer 4rc4rc4r</p>
+              <p>Sku:44f4f</p>
+              <p>Sku:44f4f Vari:wefwe wv </p>
+              <p>4c4r 4rfc4r{{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+            </div>
+          </div>
 
           <div class="footer">
-            <p>Delivary Cost: {{item.delivery}}</p>
-            <p>Subtotal: {{item.subtotal}}</p>
-            <p>Total: {{item.total}}$</p>
+            <br>
+            <p>Delivary Cost: {{selectedorder.delivery}}</p>
+            <p>Subtotal: {{selectedorder.subtotal}}</p>
+            <p>Total: {{selectedorder.total}}$</p>
           </div>
-        </span>
+
+        </div>
+      </div>
+
+     </div>
 
 
-      <div class="button">
+      <div class="handle">
 
-        <div class="footerselectbox" >
           <div class="select">
-            <select name="format" [(ngModel)]="status" (change)="changeStatus()" id="format">
+            <select name="format" [(ngModel)]="status" (change)="alerttoggle()" id="format">
                <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
             </select>
          </div>
-        </div>
 
         <button class="btn">Message</button>
 
-        <button printSectionId="print-section"
-              styleSheetFile='assets/css/style.css'
-              ngxPrint>Print</button>
+        <button>Print</button>
 
       </div>
 

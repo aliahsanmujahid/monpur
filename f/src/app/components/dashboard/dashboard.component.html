@@ -1,8 +1,6 @@
 
 <app-navbar></app-navbar>
 
-<input type="checkbox" id="check3">
-
 <div class="row">
   <div class="column1" >
 
@@ -88,17 +86,12 @@
       <a class="maina"  (click)="showgroup(5,'shipingmanage')">shipingmanage</a>
     </div>
     <div class="menu">
-      <a class="maina"  (click)="showgroup(6,'shipingmanage')">Review Manage</a>
-      <div class="submenu" [ngClass]=" view == 6 ? 'view' : ''">
-        <a [routerLink]="['/dash', {order: 'all' }]" >All</a>
-        <a [routerLink]="['/dash', {order: 'pending' }]" >Pending</a>
-        <a [routerLink]="['/dash', {order: 'approved' }]" >Approved</a>
-        <a [routerLink]="['/dash', {order: 'paid' }]" >Paid</a>
-        <a [routerLink]="['/dash', {order: 'unpaid' }]" >UnPaid</a>
-        <a [routerLink]="['/dash', {order: 'delivering' }]" >Delivering</a>
-        <a [routerLink]="['/dash', {order: 'confirmed' }]" >Confirmed</a>
-        <a [routerLink]="['/dash', {order: 'rejected' }]" >Rejected</a>
-        <a [routerLink]="['/dash', {order: 'guser' }]" >Guest User</a>
+      <a class="maina" [ngClass] = "{'active': show == 'review'}" (click)="showgroup(9,'review')">Review Manage</a>
+      <div class="submenu" [ngClass]=" view == 9 ? 'view' : ''">
+        <a  >All</a>
+        <a  >Pending</a>
+        <a  >Approved</a>
+        <a  >Rejected</a>
       </div>
     </div>
 
@@ -146,12 +139,6 @@
 
   </div>
   <div class="column2">
-
-    <div class="showhide">
-      <label for="check3">
-        <img src="../assets/bar.png" alt="">
-      </label>
-    </div>
 
     <section *ngIf="show == 'dash' " class="contact" id="contact">
 
@@ -215,6 +202,7 @@
   <app-footermanage *ngIf=" show == 'footermanage' " ></app-footermanage>
   <app-shiping *ngIf=" show == 'shipingmanage' " ></app-shiping>
   <app-signup *ngIf=" show == 'signup' " ></app-signup>
+  <app-reviewmanage *ngIf=" show == 'review' " ></app-reviewmanage>
 </ng-container>
 </div>
 </div>

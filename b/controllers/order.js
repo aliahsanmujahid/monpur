@@ -125,6 +125,33 @@ exports.changestatus = async (req, res, next) => {
 
 }
 
+
+exports.searchorder = async (req, res, next) => {
+
+  const con = await connection;
+  var data = [];
+  var oid = req.params.oid;
+  var uid = req.params.uid;
+
+  const [result] = await con.execute('SELECT * FROM orders WHERE id = ? ', [oid]);
+
+  if(result[0]){
+
+    if(result[0].sellerid.toString() !== uid){
+      return sendError(res, "Not Exist!");
+    }
+    const [orderItems] = await con.execute('SELECT * FROM orderitems WHERE orderid = ? ', [result[0].id]);
+    data.push({...result[0],orderItems});
+
+     res.send(data);  
+  } else{
+    return sendError(res, "Not Exist!");
+  }
+
+}
+
+
+
 exports.getorderbyid = async (req, res, next) => {
 
   const con = await connection;
@@ -180,7 +207,6 @@ exports.getCustomerOrders = async (req, res, next) => {
   data.push({...result[i],orderItems});
 
   }
-  
 
   res.send(data);
 

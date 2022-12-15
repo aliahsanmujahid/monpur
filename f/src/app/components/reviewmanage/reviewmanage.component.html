@@ -1,0 +1,89 @@
+
+<div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+<div *ngIf="alert" class="alert-box">
+
+    <div class="details" >
+      <div class="text4">
+
+        <p>Changing Order Status To: pending</p>
+        <p>Order Id: 4</p>
+        <br>
+        <button >Continue</button> <button >No</button>
+
+      </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+
+  <div class="header">
+
+    <div class="lefth">
+      <h1>Total Pending 34</h1>
+    </div>
+  </div>
+
+
+  <!-- main orders -->
+  <div class="column"  >
+    <div class="text">
+      <div class="status">
+        <h3>pending</h3>
+      </div>
+      <div class="status">
+      <p>Order Id: 34</p>
+      <p>|Total image: 3</p>
+      </div>
+
+      <button >Show Details</button>
+
+    </div>
+      <div class="items" >
+
+
+     <div class="details" >
+
+
+      <div class="part">
+
+          <br>
+          <p>Order Id: 4r44</p>
+          <p>Name: ededre ercer</p>
+
+          <br>
+
+          <div class="imgbox" >
+            <img src="assets/1.webp" alt="">
+            <img src="assets/1.webp" alt="">
+            <img src="assets/1.webp" alt="">
+            <img src="assets/1.webp" alt="">
+
+          </div>
+
+          <br>
+
+      </div>
+
+     </div>
+
+
+      <div class="handle">
+
+          <div class="select">
+            <select name="format" [(ngModel)]="status" (change)="alerttoggle()" id="format">
+               <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
+            </select>
+         </div>
+
+        <button class="btn">Message</button>
+
+      </div>
+
+      </div>
+
+
+  </div>
+
+</div>

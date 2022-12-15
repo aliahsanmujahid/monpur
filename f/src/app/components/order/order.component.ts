@@ -177,26 +177,8 @@ export class OrderComponent implements OnInit {
        newo.status = status;
     });
 
-   }
-
-  SearchOrder(){
-    this.orders = [];
-    this.noorder = false;
-    this.orderview = false;
-    this.stopscroll = false;
-    this.orderService.searchOrderById(this.search,this.sellerid).subscribe(res =>{
-      this.orders.push(res);
-      if(res == null){
-        this.orders = null;
-        this.noorder = true;
-        this.stopscroll = true;
-      }else{
-        this.noorder = true;
-        this.stopscroll = true;
-      }
-    });
-
   }
+
 
 
   getorders(){

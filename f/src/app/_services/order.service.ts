@@ -26,9 +26,10 @@ export class OrderService {
     return this.http.post(this.baseUrl + 'orders/ordercheck', items);
   }
 
-  searchOrderById(id: string,sellerid: number) {
-  return this.http.get<IOrder[]>(this.baseUrl + 'getOrderById/' + id +'/' + sellerid);
+  searchorder(oid,uid) {
+    return this.http.get<Order[]>(this.baseUrl + 'searchorder/' + oid +'/' + uid);
   }
+
 
 
   getOrderById(id: number) {

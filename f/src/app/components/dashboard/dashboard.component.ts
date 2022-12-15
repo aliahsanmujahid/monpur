@@ -16,13 +16,13 @@ export class DashboardComponent implements OnInit {
   producteditid:any = 0;
   orderst:any = '';
 
-  show = "signup";
+  show = "review";
   view = 0;
 
   ngOnInit(): void {
 
     this.accountService.currentUser$.subscribe(res =>{
-      this.show = "profile"
+      this.show = "review"
     });
 
     this.route.params.subscribe(params => {
@@ -30,10 +30,16 @@ export class DashboardComponent implements OnInit {
       if (Object.keys(params).length !== 0) {
         this.producteditid = params['editproduct'];
         this.show = 'createproduct';
+
       }
       if (Object.keys(params).length !== 0) {
         this.orderst = params['order'];
         this.show = 'manageorder';
+      }
+      if (Object.keys(params).length !== 0) {
+        if( params['track'] == '1'){
+          this.show = 'order';
+        }
       }
 
 

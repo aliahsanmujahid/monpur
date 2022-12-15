@@ -36,6 +36,7 @@
   overflow-x: hidden;
   scrollbar-color: rgb(233, 255, 108) rgb(255, 255, 255) !important;
   scrollbar-width: thin !important;
+  padding-bottom: 300px;
 }
 .column2::-webkit-scrollbar {
   width: 8px;
@@ -82,18 +83,6 @@ h1{
 }
 
 
-#check3:checked ~ .row .column1{
-  left: -20%;
-}
-
-#check3{
-  display: none;
-}
-
-#check3:checked ~ .row .column2{
-  width: 100%;
-  left: 0%;
-}
 img{
   z-index: 1;
   position: absolute;
@@ -212,13 +201,13 @@ a:hover{
 
 
 @media (max-width: 800px) {
-  .column1{
+  /* .column1{
     width: 100%;
     left: 0%;
   }
   .column2{
     display: none!important;
-  }
+  } */
   .none{
     display: none!important;
   }

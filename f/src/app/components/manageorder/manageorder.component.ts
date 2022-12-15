@@ -21,12 +21,14 @@ export class ManageorderComponent implements OnInit {
 
   user: User;
   noorder = false;
+  notfound = false;
+  sheader = false;
   throttle = 0;
   distance = 1;
   page:number = 1;
   orderview  = false;
   stopscroll  = false;
-  search:string;
+  search:string = null;
   neworder = false;
   isreview = false;
 
@@ -41,6 +43,7 @@ export class ManageorderComponent implements OnInit {
   }
 
   orders: any = [];
+  sorder: any = null;
   singleorder: any = [];
   selectedorder: any = null;
   sellerid: number;
@@ -48,8 +51,10 @@ export class ManageorderComponent implements OnInit {
   progress: number = null;
   message: string = null;
   alert = false;
+  alert2 = false;
 
   status = '';
+  status2 = '';
   sortby = 'All';
   sorts = [
     {
@@ -204,13 +209,32 @@ export class ManageorderComponent implements OnInit {
     this.alert = !this.alert;
   }
 
+  alerttoggle2(){
+    this.alert2 = !this.alert2;
+  }
 
 
   changeStatus(){
-   this.orderService.changeStatus(this.selectedorder.id,this.sellerid,this.status).subscribe(res => {
-      var newo =  this.orders.find(i => i.id == this.selectedorder.id,);
-      newo.status = this.status;
-   });
+
+    if(this.selectedorder !== null){
+      this.orderService.changeStatus(this.selectedorder.id,this.sellerid,this.status).subscribe(res => {
+        var newo =  this.orders.find(i => i.id == this.selectedorder.id,);
+        newo.status = this.status;
+        this.selectedorder.status = this.status;
+        this.alert = !this.alert;
+     });
+    }
+
+  }
+
+  schangeStatus(){
+
+    if(this.sorder !== null){
+      this.orderService.changeStatus(this.sorder.id,this.sellerid,this.status2).subscribe(res => {
+        this.sorder.status = this.status2;
+        this.alert2 = !this.alert2;
+     });
+    }
 
   }
 
@@ -233,6 +257,41 @@ export class ManageorderComponent implements OnInit {
        });
   }
 
+
+
+  hideorder(){
+    this.sorder = null;
+    this.notfound = false;
+    this.sheader = false;
+  }
+
+  searchorder(){
+
+    if(this.search !== null){
+
+      this.selectedorder = null;
+      this.notfound = false;
+      this.sheader = false;
+      this.sorder = null;
+      this.status2 = '';
+
+     this.orderService.searchorder(this.search,this.sellerid).subscribe(res =>{
+
+      console.log("order res",res);
+       if(res.length > 0){
+        this.sheader = true;
+        this.sorder = res[0];
+        this.status2 = this.sorder.status;
+        this.notfound = false;
+       }else{
+        this.sheader = true;
+        this.notfound = true;
+       }
+
+     });
+    }
+
+  }
 
 
 

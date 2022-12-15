@@ -146,6 +146,25 @@
 <div class="row">
   <div class="column">
 
+
+    <div class="header">
+
+      <h1>Truck Your Order</h1>
+
+      <div>
+
+        <form #SearchForm="ngForm"  class="search-form">
+          <label for="">Phone Number</label>
+          <input type="search" name="search" [(ngModel)]="search" placeholder="Phone Number" id="search-box">
+          <label for="">Order Id</label>
+          <input type="search" name="search" [(ngModel)]="search" placeholder="Order Id" id="search-box">
+          <button type="submit">Truck</button>
+        </form>
+
+      </div>
+
+    </div>
+
   <ul>
     <li *ngFor="let item of orders" >
       <div class="text">

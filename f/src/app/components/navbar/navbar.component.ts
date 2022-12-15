@@ -18,10 +18,20 @@ export class NavbarComponent implements OnInit {
   catelength = 0;
 
   btnclick:boolean = false;
+  isadmin:boolean;
 
   constructor(public categoryService: CategoryService,public accountService: AccountService,private router: Router,public basketService: BasketService) { }
 
   ngOnInit(): void {
+
+    this.accountService.currentUser$.subscribe(res =>{
+
+        if(res.role == "admin"){
+           this.isadmin = true;
+         }
+
+  });
+
     this.getCategoryes();
   }
 
