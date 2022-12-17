@@ -149,7 +149,7 @@ export class ManageorderComponent implements OnInit {
          }
        }
 
-  });
+    });
 
     if(this.orderst !== ''){
       console.log("this.orderst",this.orderst);
@@ -206,10 +206,16 @@ export class ManageorderComponent implements OnInit {
 
 
   alerttoggle(){
+    if(this.selectedorder !== null){
+      this.status = null;
+     }
     this.alert = !this.alert;
   }
 
   alerttoggle2(){
+    if(this.selectedorder !== null){
+      this.status = null;
+     }
     this.alert2 = !this.alert2;
   }
 

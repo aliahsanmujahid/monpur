@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { ReviewService } from './../../_services/review.service';
 import { AccountService } from 'src/app/_services/account.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { OrderService } from 'src/app/_services/order.service';
@@ -15,6 +15,9 @@ import { Editor } from 'ngx-editor';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
+
+  @Input() track = false;
+
   imglink = environment.imgUrl;
 
   rateditor: Editor;
@@ -30,7 +33,9 @@ export class OrderComponent implements OnInit {
   neworder = false;
 
   review = {
+    id:null,
     pid:null,
+    opid:null,
     ratting:null,
     review:'',
     image1:'',
@@ -90,23 +95,50 @@ export class OrderComponent implements OnInit {
   }
 
 
-  addreview(id){
-    if(id !== this.review.pid){
+  addreview(item){
+
       this.review = {
+        id:null,
         pid:null,
+        opid:null,
         ratting:null,
-        review:this.review.review,
-        image1:this.review.image1,
-        image2:this.review.image2,
-        image3:this.review.image3,
-        image4:this.review.image4,
+        review:'',
+        image1:'',
+        image2:'',
+        image3:'',
+        image4:'',
       }
-    }
-    console.log(id);
+
     this.rateingalert = !this.rateingalert;
-    this.review.pid = id;
+    this.review.pid = item.pid;
+    this.review.opid = item.id;
     console.log(this.selectedorder);
-    this.reviewitem = this.selectedorder.orderItems.find(x => x.id == id);
+    this.reviewitem = this.selectedorder.orderItems.find(x => x.id == item.id);
+  }
+
+
+  editreview(item){
+
+    this.rateingalert = !this.rateingalert;
+    this.reviewitem = this.selectedorder.orderItems.find(x => x.id == item.id);
+
+    this.reviewService.getreview(item.id).subscribe(res => {
+         if(res.length > 0 ){
+          this.review = {
+            id:res[0].id,
+            pid:res[0].pid,
+            opid:res[0].opid,
+            ratting:res[0].ratting,
+            review:res[0].review,
+            image1:res[0].image1,
+            image2:res[0].image2,
+            image3:res[0].image3,
+            image4:res[0].image4,
+          }
+         }
+
+    });
+
   }
 
   setratting(count){
@@ -118,9 +150,15 @@ export class OrderComponent implements OnInit {
 
     this.reviewService.createreview(this.review).subscribe( res=>{
 
-      console.log(res);
+
+      if(res.succ == true){
+        this.reviewitem.isr = 1;
+      }
+
       this.review = {
+        id:null,
         pid:null,
+        opid:null,
         ratting:null,
         review:'',
         image1:'',
@@ -133,6 +171,33 @@ export class OrderComponent implements OnInit {
     });
 
   }
+
+  updatereview(){
+
+    this.reviewService.updatereview(this.review).subscribe( res=>{
+
+
+      if(res.succ == true){
+        this.reviewitem.isr = 1;
+      }
+
+      this.review = {
+        id:null,
+        pid:null,
+        opid:null,
+        ratting:null,
+        review:'',
+        image1:'',
+        image2:'',
+        image3:'',
+        image4:'',
+      }
+      this.rateingalert = false;
+
+    });
+
+  }
+
   showdetails(item){
   this.selectedorder = item;
   }

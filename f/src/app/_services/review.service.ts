@@ -14,10 +14,27 @@ export class ReviewService {
 
 
   createreview(model) {
-    return this.http.post(this.baseUrl + 'createreview/', model);
+    return this.http.post<any>(this.baseUrl + 'createreview/', model);
   }
-  
-  getallreviews(id) {
-    return this.http.get(this.baseUrl + 'getallreviews/' + id);
+  updatereview(model) {
+    return this.http.post<any>(this.baseUrl + 'updatereview/', model);
   }
+
+  getallreviews(id,page) {
+    return this.http.get<any>(this.baseUrl + 'getallreviews/' + id  + '/' + page);
+  }
+  getreview(id) {
+    return this.http.get<any>(this.baseUrl + 'getreview/' + id);
+  }
+
+
+
+  changestatus(id,s) {
+    return this.http.post<any>(this.baseUrl + 'changestatus/' + id + '/' + s , {});
+  }
+
+  getreviewbys(s,page) {
+    return this.http.get<any>(this.baseUrl + 'getreviewbys/' + s + '/' + page);
+  }
+
 }

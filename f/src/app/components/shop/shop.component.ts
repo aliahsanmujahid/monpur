@@ -15,6 +15,8 @@ export class ShopComponent implements OnInit {
 
   @Input() filters = true;
   @Input() favh = false;
+  @Input() scateid = null;
+  @Input() pid = null;
 
   throttle = 0;
   distance = 1;
@@ -80,6 +82,7 @@ export class ShopComponent implements OnInit {
           this.products = [];
           this.getProducts();
         }else{
+          console.log("shop params component.........",params);
           this.params = params;
           this.products = [];
           this.paramsproducts(this.sortby);
@@ -158,11 +161,20 @@ export class ShopComponent implements OnInit {
 
   paramsproducts(sortby){
 
+    if(this.scateid !== null ){
+
+      this.productService.getsubcateproducts(this.scateid,sortby).subscribe( res =>{
+        this.products = res;
+        this.products = this.products.filter(item => item.id !== this.pid);
+      }),
+      error => {
+
+      };
+    }
+
     if(this.params.cate){
-      console.log("cate params",this.params.cate);
       this.productService.getcateproducts(this.params.cate,sortby).subscribe( res =>{
         this.products = res;
-        console.log("this.products",res);
       }),
       error => {
 

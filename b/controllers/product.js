@@ -313,7 +313,7 @@ exports.createproduct = async (req, res, next) => {
           file2:file2,file3:file3,file4:file4,file5:file5,file6:file6,
           file7:file7,file8:file8,
           hasvari:hasvari,
-          hasmixedvari:hasmixedvari
+          hasmixedvari:hasmixedvari,tr:0
         };
 
       let sql = 'INSERT INTO products SET ?';

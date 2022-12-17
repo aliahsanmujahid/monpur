@@ -23,7 +23,8 @@ export class ProductviewComponent implements OnInit {
 
     imglink = environment.imgUrl;
     selectedimg = '';
-    product: IProduct;
+    product: IProduct = null;
+    rpage = 0;
 
   cartProduct: cartProduct = {
     id: 0,
@@ -62,7 +63,7 @@ export class ProductviewComponent implements OnInit {
   malert = false;
   review = false;
   activeuser: User;
-  reviews: any = [];
+  reviews = [];
   images = []
 
 
@@ -75,7 +76,7 @@ export class ProductviewComponent implements OnInit {
 
 
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
 
     this.accountService.currentUser$.subscribe( res =>{
       this.activeuser = res;
@@ -83,6 +84,8 @@ export class ProductviewComponent implements OnInit {
 
     this.route.data.subscribe(data => {
       this.product = data['product'];
+
+      console.log(this.product)
 
       this.filldata();
       this.getreviews();
@@ -108,8 +111,7 @@ export class ProductviewComponent implements OnInit {
       }
 
     });
-
-
+    
   }
   //end of ngonit
 
@@ -211,11 +213,28 @@ export class ProductviewComponent implements OnInit {
       };
   }
 
+
   getreviews(){
-  this.reviewService.getallreviews(this.product.id).subscribe( res =>{
+  this.rpage = 0;
+  this.reviews = [];
+
+  this.reviewService.getallreviews(this.product.id,++this.rpage).subscribe( res =>{
+
     this.reviews = res;
+
   });
+
   }
+
+  loadreviews(){
+
+    this.reviewService.getallreviews(this.product.id,++this.rpage).subscribe( res =>{
+
+      this.reviews.push(...res);
+
+    });
+
+    }
 
   selectimg(img){
     this.selectedimg = img;

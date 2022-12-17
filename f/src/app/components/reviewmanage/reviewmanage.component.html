@@ -5,10 +5,13 @@
     <div class="details" >
       <div class="text4">
 
-        <p>Changing Order Status To: pending</p>
-        <p>Order Id: 4</p>
+        <p *ngIf="status == 0">Changing Status To: Pending</p>
+        <p *ngIf="status == 1">Changing Status To: Approved</p>
+        <p *ngIf="status == 2">Changing Status To: Rejrcted</p>
+
+        <p>Review Id: {{selectedreview.id}}</p>
         <br>
-        <button >Continue</button> <button >No</button>
+        <button (click)="changestatus()">Continue</button> <button (click)="canceltoggle()">No</button>
 
       </div>
     </div>
@@ -26,44 +29,49 @@
   </div>
 
 
-  <!-- main orders -->
-  <div class="column"  >
+  <!-- main reviews -->
+  <ng-container *ngIf="reviews">
+  <div class="column" *ngFor="let item of reviews">
     <div class="text">
       <div class="status">
-        <h3>pending</h3>
+        <h3 *ngIf="item.isa == 0">pending</h3>
+        <h3 *ngIf="item.isa == 1">Approved</h3>
+        <h3 *ngIf="item.isa == 2">Rejrcted</h3>
       </div>
       <div class="status">
-      <p>Order Id: 34</p>
-      <p>|Total image: 3</p>
+      <p>Review Id: {{item.id}}</p>
       </div>
 
-      <button >Show Details</button>
+      <button *ngIf="item?.id !== selectedreview?.id" (click)="showdetails(item)" >Show Details</button>
+      <button *ngIf="item?.id == selectedreview?.id" (click)="showdetails(item)" >Hide Details</button>
+
 
     </div>
-      <div class="items" >
+      <div class="items" [ngClass]="item?.id == selectedreview?.id ? 'view' : ''">
 
 
      <div class="details" >
 
 
       <div class="part">
-
+        <div class="text">
           <br>
-          <p>Order Id: 4r44</p>
-          <p>Name: ededre ercer</p>
+          <p>ratting: {{item.ratting}}</p>
+          <br>
 
+          <div [innerHtml]="item.review"></div>
           <br>
 
           <div class="imgbox" >
-            <img src="assets/1.webp" alt="">
-            <img src="assets/1.webp" alt="">
-            <img src="assets/1.webp" alt="">
-            <img src="assets/1.webp" alt="">
+            <img *ngIf="item.image1 !== '' " src="{{imglink+item.image1}}" alt="">
+            <img *ngIf="item.image2 !== ''" src="{{imglink+item.image2}}" alt="">
+            <img *ngIf="item.image3 !== ''" src="{{imglink+item.image3}}" alt="">
+            <img *ngIf="item.image4 !== ''" src="{{imglink+item.image4}}" alt="">
 
           </div>
 
           <br>
-
+        </div>
       </div>
 
      </div>
@@ -73,7 +81,7 @@
 
           <div class="select">
             <select name="format" [(ngModel)]="status" (change)="alerttoggle()" id="format">
-               <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
+               <option *ngFor="let s of setstatus" value="{{ s.id }}" >{{ s.name }}</option>
             </select>
          </div>
 
@@ -83,7 +91,7 @@
 
       </div>
 
-
   </div>
+</ng-container>
 
 </div>

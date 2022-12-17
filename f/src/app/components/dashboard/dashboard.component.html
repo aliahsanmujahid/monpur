@@ -40,7 +40,7 @@
     </div>
 
     <div class="menu">
-      <a class="maina"  (click)="showgroup(5,'sellerproduct')">sellerproduct</a>
+      <a class="maina"  (click)="showgroup(5,'sellerproduct')">Product</a>
     </div>
 
 
@@ -88,10 +88,11 @@
     <div class="menu">
       <a class="maina" [ngClass] = "{'active': show == 'review'}" (click)="showgroup(9,'review')">Review Manage</a>
       <div class="submenu" [ngClass]=" view == 9 ? 'view' : ''">
-        <a  >All</a>
-        <a  >Pending</a>
-        <a  >Approved</a>
-        <a  >Rejected</a>
+
+        <a [ngClass] = "{'active2': reviewst == -1}"  [routerLink]="['/dash', {review: -1 }]"  >All</a>
+        <a [ngClass] = "{'active2': reviewst == 0}"  [routerLink]="['/dash', {review: 0 }]"  >Pending</a>
+        <a [ngClass] = "{'active2': reviewst == 1}"  [routerLink]="['/dash', {review: 1 }]"  >Approved</a>
+        <a [ngClass] = "{'active2': reviewst == 2}"  [routerLink]="['/dash', {review: 2 }]"  >Rejected</a>
       </div>
     </div>
 
@@ -104,8 +105,10 @@
       </div>
     </div>
 
+    <br>
+
     <div class="logout" >
-      <a (click)="logout()">Log Out</a>
+      <a class="menu" (click)="logout()">Log Out</a>
     </div>
 
 
@@ -192,7 +195,7 @@
   <app-sellerproduct *ngIf=" show == 'sellerproduct' "  ></app-sellerproduct>
   <app-profile *ngIf=" show == 'profile' "  ></app-profile>
   <app-chat *ngIf=" show == 'chat' "  ></app-chat>
-  <app-order *ngIf=" show == 'order' "  ></app-order>
+  <app-order *ngIf=" show == 'order' "  [track] = "track"></app-order>
   <app-category *ngIf=" show == 'category' "  ></app-category>
   <app-manageorder *ngIf=" show == 'manageorder' "  [orderst] = "orderst"></app-manageorder>
   <app-paymentmanage *ngIf=" show == 'paymentmanage' " ></app-paymentmanage>
@@ -202,7 +205,7 @@
   <app-footermanage *ngIf=" show == 'footermanage' " ></app-footermanage>
   <app-shiping *ngIf=" show == 'shipingmanage' " ></app-shiping>
   <app-signup *ngIf=" show == 'signup' " ></app-signup>
-  <app-reviewmanage *ngIf=" show == 'review' " ></app-reviewmanage>
+  <app-reviewmanage *ngIf=" show == 'review' "  [reviewst] = "reviewst"></app-reviewmanage>
 </ng-container>
 </div>
 </div>

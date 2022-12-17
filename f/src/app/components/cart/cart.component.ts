@@ -277,6 +277,7 @@ export class CartComponent implements OnInit {
 
   removeBasketItem(item: IBasketItem) {
     this.basketService.removeItemFromBasket(item);
+    this.setOrderItems();
   }
 
 

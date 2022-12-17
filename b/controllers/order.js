@@ -340,9 +340,9 @@ exports.createorder = async (req, res, next) => {
 
       
       await con.query (
-        "INSERT INTO orderitems (pid,orderid,name,img,price,quantity) VALUES (?,?,?,?,?,?)", 
+        "INSERT INTO orderitems (pid,orderid,isr,name,img,price,quantity) VALUES (?,?,?,?,?,?,?)", 
         [ 
-          newitems[i].id,resultInsert[0].insertId,newitems[i].name,newitems[i].file1,newitems[i].price,newitems[i].quantity
+          newitems[i].id,resultInsert[0].insertId,0,newitems[i].name,newitems[i].file1,newitems[i].price,newitems[i].quantity
         ]
       );
 

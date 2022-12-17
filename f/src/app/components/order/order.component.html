@@ -135,7 +135,9 @@
         </div>
 
        <div class="revbtn">
-        <button (click)="createreview()">Create Review</button>
+        <button *ngIf="review.id == null" (click)="createreview()">Create Review</button>
+        <button  *ngIf="review.id !== null" (click)="updatereview()">Update Review</button>
+
        </div>
 
       </div>
@@ -147,7 +149,7 @@
   <div class="column">
 
 
-    <div class="header">
+    <div class="header" *ngIf="track">
 
       <h1>Truck Your Order</h1>
 
@@ -233,8 +235,10 @@
               </div>
               </div>
 
-              <button class="reviewbtn" (click)="addreview(item.id)" >Add Review</button>
-          </li>
+              <button *ngIf="item.isr == 0" class="reviewbtn" (click)="addreview(item)" >Add Review</button>
+              <button *ngIf="item.isr == 1" class="reviewbtn" (click)="editreview(item)" >Edit Review</button>
+
+            </li>
         </ul>
         <div class="footer">
           <p>Delivary Cost: {{selectedorder.delivery}}</p>

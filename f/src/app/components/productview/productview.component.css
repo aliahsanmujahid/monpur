@@ -32,11 +32,22 @@ h3{
   margin: 10px 0px 5px 0px;
   font-size: 15px;
 }
+.ratting{
+  display: flex;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
 .ratting i{
   color: gold;
 }
 .reviews p{
   font-size: 15px;
+}
+.rt{
+  font-size: 13px;
+    line-height: 35px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-left: 5px;
 }
 
 .reviews li{
@@ -51,7 +62,65 @@ h3{
   width: 100%;
   margin-top: 40px;
 }
+.tag{
+  border-radius: 1px;
+    border: 1px solid rgb(189, 189, 185);
+    box-shadow: 3px 3px 0px rgb(255 52 154);
+    padding: 7px 14px 7px 14px;
+    width: max-content;
+}
 
+
+
+.pop,.pop2{
+  position: relative;
+   border: none;
+   width: 86px;
+   font-size: 15px;
+   text-align: center;
+   background: rgb(255 0 128);
+   color: #fff;
+   padding: 3px;
+   border-radius: 20px 4px 5px 20px;
+   -webkit-text-stroke: 0.01rem rgb(255, 255, 255)!important;
+}
+
+.pop::before {
+ background: #fff;
+ border-radius: 10px;
+ box-shadow: inset 0 1px rgb(0 0 0 / 25%);
+ content: '';
+ height: 6px;
+ left: 8px;
+ position: absolute;
+ width: 6px;
+ top: 8px;
+}
+.pop2{
+  background: #fff;
+  color: #555555;
+  border: 1px solid rgb(224, 224, 224);
+  width: 40px;
+  height: 24px;
+  border-radius: 15px;
+}
+
+.cart{
+  color: #818181;
+  width: max-content;
+  padding: 10px 20px 10px 20px;
+  background: #FFF;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
+
+}
+.cardbtn{
+  display: flex;
+  flex-wrap: wrap;
+}
+.del{
+  text-decoration: line-through;
+}
 
 
 .column_r{
@@ -91,17 +160,12 @@ img{
 .name{
   margin-top: 20px;
 }
-.delprice{
-  position: relative;
+
+
+.price{
+  display: flex;
 }
-.delprice:after{
-  position: absolute;
-  content: '';
-  width: 110%;
-  top: 50%;
-  left: 0%;
-  border-bottom: 2px solid rgba(255, 2, 2, 0.87);
-}
+
 .price h2{
    display: inline;
    margin-right: 7px;
@@ -191,15 +255,18 @@ strong{
   margin: 0px 5px 0px 5px;
 }
 button{
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 8px;
-  margin-bottom: 18px;
-  padding: 10px;
-  cursor: pointer;
-  color: #fff;
-  border-radius: 4px;
-  background-color: #ff766ce7;
+  font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 2px;
+    background-color: #ff1f7ce7;
+    margin: 10px 7px 10px 0px;
+}
+br{
+  margin: 10px;
+  display: block;
 }
 button:hover{
   background: rgb(247, 94, 94);
@@ -412,7 +479,9 @@ textarea{
   }
 }
 
-
+.box{
+  padding: 8px;
+}
 
 @media (max-width: 700px) {
   img{

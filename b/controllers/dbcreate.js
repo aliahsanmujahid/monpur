@@ -27,7 +27,7 @@ exports.address = async (req, res) => {
 
 exports.createproduct = async (req, res) => {
     let sql = 
-       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int,cateid int,subcateid int, name VARCHAR(255), details VARCHAR(700),personalization VARCHAR(255),isp VARCHAR(255),sku VARCHAR(255),price int,discount int, quantity int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),hasvari VARCHAR(255),hasmixedvari VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE products(id int AUTO_INCREMENT,sellerid int,cateid int,subcateid int, name VARCHAR(255), details VARCHAR(700),personalization VARCHAR(255),isp VARCHAR(255),sku VARCHAR(255),price int,discount int, quantity int, file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255), file5 VARCHAR(255),file6 VARCHAR(255),file7 VARCHAR(255),file8 VARCHAR(255),hasvari VARCHAR(255),hasmixedvari VARCHAR(255),tr int,PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("product table creatd");
@@ -58,7 +58,7 @@ exports.orders = async (req, res) => {
 
 exports.orderitems = async (req, res) => {
     let sql = 
-       'CREATE TABLE orderitems(id int AUTO_INCREMENT, pid int, orderid int,name VARCHAR(255),img VARCHAR(255), price int,quantity int,totalprice int,sku VARCHAR(255),personalization VARCHAR(255),vari VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE orderitems(id int AUTO_INCREMENT, pid int, orderid int,isr int,name VARCHAR(255),img VARCHAR(255), price int,quantity int,totalprice int,sku VARCHAR(255),personalization VARCHAR(255),vari VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("orderitems table creatd");
@@ -100,7 +100,7 @@ exports.subcate = async (req, res) => {
 
 exports.reviews = async (req, res) => {
     let sql = 
-       'CREATE TABLE reviews(id int AUTO_INCREMENT, pid int,ratting int,review VARCHAR(255),image1 VARCHAR(255),image2 VARCHAR(255),image3 VARCHAR(255),image4 VARCHAR(255), PRIMARY KEY(id))';
+       'CREATE TABLE reviews(id int AUTO_INCREMENT,opid int, pid int,isa int,ratting int,review VARCHAR(255),image1 VARCHAR(255),image2 VARCHAR(255),image3 VARCHAR(255),image4 VARCHAR(255), PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("otpcheck table creatd");

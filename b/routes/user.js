@@ -86,7 +86,14 @@ const {
 
 const {
   createreview,
-  getallreviews
+  getallreviews,
+  getreview,
+  updatereview,
+  rchangestatus,
+  getreviewbys
+
+
+
 
 } = require("../controllers/review");
 
@@ -195,7 +202,23 @@ router.post("/createreview",
     createreview
 );
 
-router.get("/getallreviews/:pid", getallreviews);
+router.post("/updatereview", 
+    isAuth,
+    updatereview
+);
+
+
+router.post("/changestatus/:id/:s", 
+    isAuth,
+    rchangestatus
+);
+
+router.get("/getallreviews/:pid/:page", getallreviews);
+router.get("/getreview/:id", getreview);
+
+router.get("/getreviewbys/:s/:page", getreviewbys);
+
+
 
 
 

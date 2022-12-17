@@ -91,9 +91,11 @@
       <h1>{{product.name}}</h1>
     </div>
     <div class="price">
-      <h2 *ngIf="product.price" class="delprice">৳{{product.price}}</h2>
-      <h2 *ngIf="product.discount > 0 && product.price" class="mainprice">${{(product.price * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
-      <h2 *ngIf="product.discount > 0" style="color: rgb(255, 0, 179);">
+
+      <h2 class="del" *ngIf="product.price" >${{product.price}}</h2>
+      <h2 *ngIf="product.discount > 0 && product.price">${{(product.price * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
+
+      <h2 class="pop" *ngIf="product.discount > 0">
         {{product.discount}}% Off
       </h2>
     </div>
@@ -170,11 +172,21 @@
             </div>
 
 
-                 <button (click)="addItemToBasket()" *ngIf="product.quantity !== 0"  class="glow-on-hover" type="button">
-                    Add To Cart</button>
-                 <button *ngIf="product.quantity == 0" class="glow-on-hover" type="button">
-                    No Quantity
-                  </button>
+            <div class="cardbtn">
+
+             <button (click)="addItemToBasket()" *ngIf="product.quantity > 0"  class="cart" type="button">
+                Add To Cart</button>
+
+             <button *ngIf="product.quantity == 0" class="" type="button">
+                No Quantity
+              </button>
+
+              <button  *ngIf="product.quantity > 0">1</button>
+              <button  *ngIf="product.quantity > 0"><i class="fa fa-plus"></i></button>
+              <button *ngIf="product.quantity > 0"><i class="fa fa-minus"></i></button>
+            </div>
+
+
      </div>
 
 
@@ -190,13 +202,11 @@
 
 
       <div class="clolumn_full">
-        <h2>Reviews</h2>
+        <h2 class="tag">Reviews</h2>
         <div class="reviews" *ngFor="let r of reviews">
          <div class="ratting">
-          <h2>{{r.ratting}}<i class="fa fa-star" aria-hidden="true"></i>
-           {{r.review}}
-          </h2>
-
+          <h2 class="pop2">{{r.ratting}}<i class="fa fa-star" aria-hidden="true"></i></h2>
+          <div class="rt" [innerHtml]="r.review"></div>
          </div>
         <img *ngIf="r.image1 !== '' " class="rimg" src="{{imglink+r.image1}}" alt="" (click)="reviewtoggle(r.id)">
         <img *ngIf="r.image2 !== '' "  class="rimg" src="{{imglink+r.image2}}" alt="" (click)="reviewtoggle(r.id)">
@@ -204,17 +214,22 @@
         <img *ngIf="r.image4 !== '' "  class="rimg" src="{{imglink+r.image4}}" alt="" (click)="reviewtoggle(r.id)">
 
       </div>
-     <button>Load More</button>
+     <button (click)="loadreviews()">Load More</button>
      </div>
   </div>
 
   </div>
 
 
-<div class="row">
-    <div class="clolumn_full">
-      <h4>Related Products</h4>
-      <app-shop [filters]="false"></app-shop>
+
+
+<div class="row" *ngIf="product">
+    <div class="clolumn_full box">
+      <h2 class="tag">Related Products</h2>
+
+      <br>
+
+      <app-shop [pid]="product.id" [scateid]="product.subcateid" [filters]="false" [favh]="false"></app-shop>
 
    </div>
 </div>

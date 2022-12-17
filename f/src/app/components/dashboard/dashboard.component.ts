@@ -15,34 +15,41 @@ export class DashboardComponent implements OnInit {
 
   producteditid:any = 0;
   orderst:any = '';
+  reviewst:number = -1;
+  track:boolean;
 
-  show = "review";
+  show = "";
   view = 0;
 
   ngOnInit(): void {
 
     this.accountService.currentUser$.subscribe(res =>{
-      this.show = "review"
+      this.show = "profile"
     });
 
     this.route.params.subscribe(params => {
       window.scrollTo(0, 0);
       if (Object.keys(params).length !== 0) {
-        this.producteditid = params['editproduct'];
-        this.show = 'createproduct';
 
-      }
-      if (Object.keys(params).length !== 0) {
-        this.orderst = params['order'];
-        this.show = 'manageorder';
-      }
-      if (Object.keys(params).length !== 0) {
-        if( params['track'] == '1'){
+        if(params['editproduct']){
+
+          this.producteditid = params['editproduct'];
+          this.show = 'createproduct';
+        }
+        if(params['order']){
+          this.orderst = params['order'];
+          this.show = 'manageorder';
+        }
+        if(params['track'] == '1'){
+          this.track = true;
           this.show = 'order';
         }
+        if(params['review']){
+          this.reviewst = params['review'];
+          this.show = 'review';
+        }
+
       }
-
-
 
     });
 

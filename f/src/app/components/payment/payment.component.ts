@@ -158,7 +158,7 @@ export class PaymentComponent implements OnInit {
 
 
   stripePay(amount: any,orderid) {
-    console.log("ddddddddddd");
+    
     var submittedForm = false;
     var handler = (<any>window).StripeCheckout.configure({
       key: 'pk_test_51Lyl0HGLWGTnKxnYIxcuA0AyCOPasULLq0t9N7NrzxHiOTPajyuTisL35WWMg9oFf61yvVFqjCkP28z7SonaeBfa00I2r6zpsj',
