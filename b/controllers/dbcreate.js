@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 exports.createuser = async (req, res) => {
     let sql = 
-       'CREATE TABLE users(id int AUTO_INCREMENT, name VARCHAR(255), pnumber VARCHAR(255),image VARCHAR(255), password VARCHAR(255),isVerified VARCHAR(255),role VARCHAR(255),PRIMARY KEY(id))';
+       'CREATE TABLE users(id int AUTO_INCREMENT, name VARCHAR(255), pnumber VARCHAR(255),email VARCHAR(255),image VARCHAR(255), password VARCHAR(255),isVerified VARCHAR(255),role VARCHAR(255),PRIMARY KEY(id))';
     db.query(sql, (err, result) => {
         if(err) throw err;
         console.log("user table creatd");

@@ -8,8 +8,19 @@
   <h1 routerLink='/login'>Login</h1>
   <h1 routerLink='/signup'>SignUp</h1>
 </div>
+<!--
+<ng-container *ngIf="user !== null">
 
+  <br>
 
+  <p>{{user.name}}</p>
+  <p>{{user.email}}</p>
+
+  <button (click)="setac()">Log In</button>
+
+</ng-container> -->
+
+<ng-container>
 <form  #LoginForm="ngForm" (ngSubmit)="login()">
   <label>Phone Number</label>
   <input
@@ -49,7 +60,10 @@
 <div class="line"></div>
 
 <div class="social">
-  <img src="assets/google.png" alt="" class="google-img">
-  <span>Login with Google</span>
+
+  <asl-google-signin-button *ngIf="!loggedIn" type="standard"
+   size="large" shape="square" width="245" theme="filled_blue" ></asl-google-signin-button>
+   
 </div>
+</ng-container>
 </div>

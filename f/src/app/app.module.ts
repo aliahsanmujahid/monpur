@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import {  NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +30,6 @@ import { NgxEditorModule } from 'ngx-editor';
 import { ShopComponent } from './components/shop/shop.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ManageorderComponent } from './components/manageorder/manageorder.component';
-import { NgxPrintModule } from 'ngx-print';
 import { PaymentmanageComponent } from './components/paymentmanage/paymentmanage.component';
 import { UsermanageComponent } from './components/usermanage/usermanage.component';
 import { CopunsComponent } from './components/copuns/copuns.component';
@@ -45,6 +44,12 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MessageboxComponent } from './components/messagebox/messagebox.component';
 import { ReviewmanageComponent } from './components/reviewmanage/reviewmanage.component';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule
+} from '@abacritt/angularx-social-login';
+import { SendboxComponent } from './components/sendbox/sendbox.component';
+import { PrintComponent } from './components/print/print.component';
+import { NgxPrintModule } from 'ngx-print';
+
 
 
 
@@ -81,7 +86,9 @@ import { ReviewmanageComponent } from './components/reviewmanage/reviewmanage.co
     FootermanageComponent,
     ShipingComponent,
     MessageboxComponent,
-    ReviewmanageComponent
+    ReviewmanageComponent,
+    SendboxComponent,
+    PrintComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -95,11 +102,32 @@ import { ReviewmanageComponent } from './components/reviewmanage/reviewmanage.co
     NgxPrintModule,
     CarouselModule,
     InfiniteScrollModule,
+    SocialLoginModule,
     TimeagoModule.forRoot()
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    // {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '474827520742-8c634isin562c1dde1o9b8gikh786nak.apps.googleusercontent.com'
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }
+
+
   ],
   bootstrap: [AppComponent]
 })

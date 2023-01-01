@@ -119,15 +119,12 @@
          <p *ngIf="item.vari.values.length > 0" >
           {{item.vari.name}}: {{item.vari.values[0].name}}
          </p>
-
-
          <p *ngIf="item.mixedvari.values.length > 0" >
           {{item.mixedvari.vari1}}: <span>{{item.mixedvari.values[0].vari1name}}</span> | {{item.mixedvari.vari2}}: <span>{{item.mixedvari.values[0].vari2name}}</span>
          </p>
 
 
-
-         <p>{{item.quantity}} * {{item.price}} = {{item.quantity * item.price}}</p>
+         <p>{{item.price?.toFixed(0)}} * {{item.quantity?.toFixed(0)}} = {{(item.quantity * item.price)?.toFixed(0)}}</p>
        </div>
     </div>
 
@@ -167,7 +164,7 @@
           <span *ngIf="(basketTotal$ | async).totalqty > 1">({{(basketTotal$ | async).totalqty}} items)</span>
         </p>
 
-        <p>${{(basketTotal$ | async).subtotal}}</p>
+        <p>${{(basketTotal$ | async).subtotal?.toFixed(0)}}</p>
       </div>
 
 
@@ -183,11 +180,10 @@
         <p class="cvalue">-${{coupondata[0]?.value}}</p>
       </div>
 
-
+      <br>
+      <p> <i class="fa fa-truck"></i> Select Shiping</p>
+      
       <div class="shiping">
-
-        <p> <i class="fa fa-truck"></i> Select Shiping</p>
-
         <div class="shipto" *ngFor="let item of shipings" (click)="selectship(item)"  [ngClass]="item.value == orderCreate.shiping ? 'selected' : '' ">
           {{item.title}}
         </div>
@@ -214,8 +210,8 @@
         </p>
 
 
-        <p *ngIf="!cuponvalid">${{(basketTotal$ | async).subtotal + orderCreate.shiping }}</p>
-        <p *ngIf="cuponvalid == true">${{(basketTotal$ | async).subtotal + orderCreate.shiping - coupondata[0]?.value}}</p>
+        <p *ngIf="!cuponvalid">${{((basketTotal$ | async).subtotal + orderCreate.shiping)?.toFixed(0) }}</p>
+        <p *ngIf="cuponvalid == true">${{((basketTotal$ | async).subtotal + orderCreate.shiping - coupondata[0]?.value)?.toFixed(0)}}</p>
 
       </div>
 

@@ -1,0 +1,67 @@
+
+
+<div class="row">
+
+  <div class="head">
+
+    <h4>
+      <i *ngIf="isUserOnline(messagedUser)" class="online fa fa-user-circle" aria-hidden="true"></i>
+      <i *ngIf="!isUserOnline(messagedUser)" class="fa fa-user-circle" aria-hidden="true"></i>
+      {{messagedUser?.name}}
+      <span *ngIf="isUserOnline(messagedUser)" class="online">Online</span>
+    </h4>
+
+    <div *ngIf="messagedUser?.flag == 0"  (click)="flagit(messagedUser.chatid)" class="unflag">
+      <i class="fa fa-star" aria-hidden="true"></i>
+     </div>
+     <div  *ngIf="messagedUser?.flag == 1"  (click)="unflagchat(messagedUser.chatid)" class="flag">
+      <i class="fa fa-star" aria-hidden="true"></i>
+     </div>
+
+   </div>
+
+  <div class="body">
+
+
+    <button class="loadmore" (click)="loadmessage()">Load more...</button>
+
+    <div #content class="chat-body" *ngIf="(messageService.userMessage$ | async).length > 0">
+
+
+      <div
+      #messages
+      *ngFor="let msg of (messageService.userMessage$ | async)"
+      [ngClass]="msg.senderid == this.UserId ? 'message own' : 'message'"
+       >
+       <h4>{{msg.message}}</h4>
+       <h6 >{{msg.date | timeago}}</h6>
+      </div>
+
+    </div>
+
+
+    <div class="nomsg" *ngIf="(messageService.userMessage$ | async).length == 0">
+      <h1>No Message Yet</h1>
+    </div>
+
+
+    <div class="chat-sender" >
+
+      <form #msgForm="ngForm"   (ngSubmit)="sendmessage()" >
+        <input
+        [(ngModel)]="message.message"
+        label="Message"
+        placeholder="Write Your Message"
+        name="msg" />
+
+        <button class="send-button button" >Send</button>
+
+      </form>
+
+    </div>
+
+
+  </div>
+
+
+</div>

@@ -77,7 +77,7 @@
           <i *ngIf="isUserOnline(user)" class="online fa fa-user-circle" aria-hidden="true"></i>
           <i *ngIf="!isUserOnline(user)" class="fa fa-user-circle" aria-hidden="true"></i>
            {{user.name}}</h4>
-           
+
         <span
          (click)="loadmessage(user)" class="unread" *ngIf="user.unread >= 1" class="unread">
          {{user.unread}}</span>
@@ -109,8 +109,8 @@
       </ng-container>
 
 
-      <h3 *ngIf="(messageService.chatUser$ | async).length == 0" (click)="pgetflagchats()">No More</h3>
-      <h3 *ngIf="(messageService.chatUser$ | async).length > 0" (click)="pgetchats()">Load More</h3>
+      <h3 *ngIf="nochat == true || ((messageService.chatUser$ | async).length  < 10)">No More</h3>
+      <h3 *ngIf="nochat == false && ((messageService.chatUser$ | async).length  >= 10)" (click)="pgetchats()">Load More</h3>
 
       </ng-container>
 
@@ -158,8 +158,12 @@
 
         </ng-container>
 
-        <h3 *ngIf="(messageService.fchatUser$ | async).length  == 0" (click)="pgetflagchats()">No More</h3>
-        <h3 *ngIf="(messageService.fchatUser$ | async).length > 0" (click)="pgetflagchats()">Load More</h3>
+        <!-- <h3 *ngIf="(messageService.fchatUser$ | async).length  == 0">No More</h3>
+        <h3 *ngIf="nochat == false && ((messageService.fchatUser$ | async).length  >= 10)" (click)="pgetflagchats()">Load More</h3>
+        <h3 *ngIf="nochat == true || ((messageService.fchatUser$ | async).length  < 10)" >No More</h3> -->
+
+        <h3 *ngIf="fnochat == true || ((messageService.fchatUser$ | async).length  < 10)">No More</h3>
+        <h3 *ngIf="fnochat == false && ((messageService.fchatUser$ | async).length  >= 10)" (click)="pgetflagchats()">Load More</h3>
 
 
         </ng-container>

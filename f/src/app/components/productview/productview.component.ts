@@ -70,13 +70,20 @@ export class ProductviewComponent implements OnInit {
   selectedmixed = '';
   selectedmixed2 = 0;
   selectVari1 = 0;
-  selectVari2 = 0;
   Mixvalues1:any = [];
   Mixvalues2:any = [];
 
 
 
+  // ngOnChanges() {
+  //   window.scrollTo(0, 0);
+  //   this.selectedmixed = '';
+  //   this.selectedmixed2 = 0;
+  //   this.selectVari1 = 0;
+  // }
+
   ngOnInit(): void {
+    window.scrollTo(0, 0);
 
     this.accountService.currentUser$.subscribe( res =>{
       this.activeuser = res;
@@ -111,7 +118,7 @@ export class ProductviewComponent implements OnInit {
       }
 
     });
-    
+
   }
   //end of ngonit
 
@@ -125,7 +132,13 @@ export class ProductviewComponent implements OnInit {
       });
       }
   }
+  
   filldata(){
+
+    this.selectedmixed = '';
+    this.selectedmixed2 = 0;
+    this.selectVari1 = 0;
+
     if(this.product.file1 != ""){
       this.images.push({
         imageSrc:
@@ -395,6 +408,11 @@ export class ProductviewComponent implements OnInit {
 
 
     if(error == 0){
+
+      if(this.cartProduct.vari.values.length == 0 && this.cartProduct.mixedvari.values.length == 0){
+        this.cartProduct.price =  Number((this.product.price * ( (100-this.product.discount) / 100 )).toFixed(0));
+      }
+
       this.basketService.addItemToBasket(this.cartProduct);
     }
 
@@ -426,16 +444,17 @@ onMixedChange(){
 
 onVari1change(){
   let selected = this.product.vari.values.find( x => x.id == this.selectVari1);
-  console.log("selected1",selected,this.selectVari1)
 
   this.product.price = selected?.price;
-  this.cartProduct.price = selected.price;
+  this.cartProduct.price = Number((selected.price * ( (100-this.product.discount) / 100 )).toFixed(0));
+
 
   this.cartProduct.vari = {
     id: 0,
     name:'',
     values:[]
   },
+  this.alert = false;
 
   this.cartProduct.vari.id = this.product.vari.id;
   this.cartProduct.vari.name = this.product.vari.name;
@@ -458,8 +477,11 @@ onMixedChange2(){
   let selected = this.product.mixedvari.values.find( x => x.id == this.selectedmixed2);
 
   if(this.product.hasmixedvari == "true"){
+
     this.product.price = selected.price;
-    this.cartProduct.price = selected.price;
+
+    this.cartProduct.price = Number((selected.price * ( (100-this.product.discount) / 100 )).toFixed(0));
+
   }
 
   this.cartProduct.mixedvari.id = this.product.mixedvari.id;

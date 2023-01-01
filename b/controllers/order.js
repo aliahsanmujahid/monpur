@@ -256,7 +256,10 @@ exports.createorder = async (req, res, next) => {
     for (let i = 0; i < orderitems.length; i++) {
   
       let [data] = await con.execute('SELECT * FROM products WHERE id = ? ', [ orderitems[i].id ]);
-      
+
+      if(orderitems[i].vari.values.length == 0 && orderitems[i].mixedvari.values.length == 0){
+        newitems.push({...data[0]});
+      }
       //vari
       if(orderitems[i].vari.values.length > 0){
         let id = orderitems[i].vari.values[0].id;
@@ -286,6 +289,7 @@ exports.createorder = async (req, res, next) => {
         newitems.push({...data[0],mix});
       }
 
+
     }
 
     var delevary = 0;
@@ -303,21 +307,33 @@ exports.createorder = async (req, res, next) => {
       cuponv = cupondata[0]?.value;
     }
 
+    console.log("newitems",newitems);
 
     for (let i = 0; i < newitems.length; i++) {
 
       if(!newitems[i].vari && !newitems[i].mix){
-        var temp = newitems[i].price*orderitems[i].quantity;
+        dprice = Number((newitems[i].price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+        var temp = Number(((dprice)*orderitems[i].quantity)?.toFixed(0));
+
         subtotal = subtotal + temp;
+        console.log("price ",subtotal);
       }
 
       if(newitems[i].vari){
-        var temp = newitems[i].vari.price*orderitems[i].quantity;
+        dprice = Number((newitems[i].vari.price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+        var temp = Number(((dprice)*orderitems[i].quantity)?.toFixed(0));
+
         subtotal = subtotal + temp;
+        console.log("vari ",subtotal);
+
       }
+
       if(newitems[i].mix){
-        var temp = newitems[i].mix.price*orderitems[i].quantity;
+        dprice = Number((newitems[i].mix.price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+        var temp = Number(((dprice)*orderitems[i].quantity)?.toFixed(0));
+
         subtotal = subtotal + temp;
+        console.log("mix ",subtotal);
       }
 
     }
@@ -338,13 +354,43 @@ exports.createorder = async (req, res, next) => {
   
     for (let i = 0; i < newitems.length; i++) {
 
-      
-      await con.query (
-        "INSERT INTO orderitems (pid,orderid,isr,name,img,price,quantity) VALUES (?,?,?,?,?,?,?)", 
-        [ 
-          newitems[i].id,resultInsert[0].insertId,0,newitems[i].name,newitems[i].file1,newitems[i].price,newitems[i].quantity
-        ]
-      );
+      if(!newitems[i].vari && !newitems[i].mix){
+        let price = Number((newitems[i].price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+        await con.query (
+          "INSERT INTO orderitems (pid,orderid,isr,name,img,price,quantity) VALUES (?,?,?,?,?,?,?)", 
+          [ 
+            newitems[i].id,resultInsert[0].insertId,0,newitems[i].name,newitems[i].file1,price,orderitems[i].quantity
+          ]
+        );
+      }
+
+      if(newitems[i].vari){
+        let price = Number((newitems[i].vari.price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+        await con.query (
+          "INSERT INTO orderitems (pid,orderid,isr,name,img,price,quantity) VALUES (?,?,?,?,?,?,?)", 
+          [ 
+            newitems[i].id,resultInsert[0].insertId,0,newitems[i].name,newitems[i].file1,price,orderitems[i].quantity
+          ]
+        );
+
+      }
+
+      if(newitems[i].mix){
+
+        let price = Number((newitems[i].mix.price * ( (100-newitems[i].discount) / 100 )).toFixed(0));
+
+        await con.query (
+          "INSERT INTO orderitems (pid,orderid,isr,name,img,price,quantity) VALUES (?,?,?,?,?,?,?)", 
+          [ 
+            newitems[i].id,resultInsert[0].insertId,0,newitems[i].name,newitems[i].file1,price,orderitems[i].quantity
+          ]
+        );
+      }
+
+    
+
+
+
 
     }
   

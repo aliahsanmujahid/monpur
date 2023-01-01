@@ -56,9 +56,7 @@ exports.createchat = async (req, res, next) => {
 
 };
 
-
 exports.haschat = async (req, res, next) => {
-
 
   const con = await connection;
 

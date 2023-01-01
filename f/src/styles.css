@@ -7,7 +7,13 @@
   text-transform: capitalize;
   transition: all .2s linear;
 }
-
+br{
+  margin: 10px;
+}
+iframe{
+  width: 100%!important;
+  margin: 0!important;
+}
 html{
   font-size: 62.5%;
   overflow-x: hidden;

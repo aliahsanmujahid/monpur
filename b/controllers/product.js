@@ -254,18 +254,20 @@ exports.getsingleproduct = async (req, res, next) => {
       }
       if(data.hasmixedvari == "true"){
         const [mixedvaridata] = await con.execute('SELECT * FROM mixedvari WHERE pid = ? ', [data.id]);
-
-        const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE vid = ? ', [mixedvaridata[0].id]);
+        
+        if(mixedvaridata.length > 0){
+          const [mixvalues] = await con.execute('SELECT * FROM mixvalues WHERE vid = ? ', [mixedvaridata[0].id]);
         
 
-        mixedvari = {
-          id:mixedvaridata[0].id,
-          vari1: mixedvaridata[0].vari1,
-          vari2: mixedvaridata[0].vari2,
-          values:mixvalues
+          mixedvari = {
+            id:mixedvaridata[0].id,
+            vari1: mixedvaridata[0].vari1,
+            vari2: mixedvaridata[0].vari2,
+            values:mixvalues
+          }
+  
+          data = {...data,mixedvari,vari}
         }
-
-        data = {...data,mixedvari,vari}
      
       }
 

@@ -23,7 +23,8 @@ export class MessageComponent implements OnInit {
 
   messagedUser:any;
   tempUser:any;
-  page = 1;
+  page = 0;
+  nomsg = false;
 
 
   message: MessageSend ={
@@ -34,8 +35,9 @@ export class MessageComponent implements OnInit {
   };
 
   ngOnChanges() {
-    this.page = 1;
-    
+    this.page = 0;
+    this.nomsg = false;
+
     this.route.params.subscribe(p => {
       if(p['cid'] != undefined && p['rid'] != undefined){
         this.ChatId = p['cid'];
@@ -88,7 +90,9 @@ export class MessageComponent implements OnInit {
             }
           });
         }
-        this.messageService.loadmessage(this.ChatId,this.userid);
+
+        this.messageService.loadmessage(this.ChatId, this.userid);
+
         }
 
         //null the form
@@ -101,8 +105,9 @@ export class MessageComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.page = 1;
+  async ngOnInit(): Promise<void> {
+    this.page = 0;
+    this.nomsg = false;
 
     this.route.params.subscribe(p => {
       if(p['cid'] != undefined && p['rid'] != undefined){
@@ -163,7 +168,9 @@ export class MessageComponent implements OnInit {
         }
       });
     }
-    this.messageService.loadmessage(this.ChatId,this.userid);
+
+    this.messageService.loadmessage(this.ChatId, this.userid);
+
     }
 
    //null the form
@@ -179,7 +186,15 @@ export class MessageComponent implements OnInit {
 
   //loading more message
   loadmessage(){
-      this.messageService.ploadmessage(this.ChatId,this.userid,++this.page);
+      console.log("loading message");
+      this.messageService.ploadmessage(this.ChatId,this.userid,++this.page).subscribe( res =>{
+
+        if(res.length < 10){
+          this.nomsg = true;
+        }
+        console.log("message",res);
+
+      });
       this.scrollToTop();
       this.messages.changes.subscribe(this.scrollToTop);
   }

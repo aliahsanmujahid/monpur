@@ -86,11 +86,19 @@
 
   <div class="body">
 
-
-    <button class="loadmore" (click)="loadmessage()">Load more...</button>
-
     <div #content class="chat-body" *ngIf="(messageService.userMessage$ | async).length > 0">
 
+      
+      <ng-container *ngIf="(messageService.userMessage$ | async).length < 10">
+        <button class="loadmore">No more message</button>
+      </ng-container>
+
+      <ng-container *ngIf="(messageService.userMessage$ | async).length >= 10">
+
+        <button *ngIf="nomsg == false" class="loadmore" (click)="loadmessage()">load more</button>
+        <button *ngIf="nomsg == true" class="loadmore">No more message</button>
+
+      </ng-container>
 
       <div
       #messages

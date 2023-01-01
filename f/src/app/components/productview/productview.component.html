@@ -92,7 +92,9 @@
     </div>
     <div class="price">
 
-      <h2 class="del" *ngIf="product.price" >${{product.price}}</h2>
+      <h2 class="del" *ngIf="product.discount == null">${{product.price}}</h2>
+      <h2 class="del" *ngIf="product.discount > 0 && product.price">${{product.price}}</h2>
+
       <h2 *ngIf="product.discount > 0 && product.price">${{(product.price * ( (100-this.product.discount) / 100 )).toFixed(0)}}</h2>
 
       <h2 class="pop" *ngIf="product.discount > 0">
@@ -103,7 +105,7 @@
      <!-- vari1 sextion -->
     <div *ngIf="product.vari?.values.length > 0">
       <p>{{product.vari.name}}</p>
-      <select (change)="onVari1change()" [(ngModel)]="selectVari1" name="format" id="format">
+      <select [disabled]="product.quantity == 0" (change)="onVari1change()" [(ngModel)]="selectVari1" name="format" id="format">
         <option selected disabled value = 0>Select {{product.vari.name}}</option>
         <option *ngFor="let s of product.vari.values" value="{{ s.id }}" >{{ s.name }}</option>
      </select>
@@ -145,9 +147,9 @@
   <textarea
   (change)="inputchange()"
   (input)="inputchange()"
-  [ngModel]="cartProduct.personalization | json"
   [(ngModel)]="cartProduct.personalization"
   ></textarea>
+    <!-- [ngModel]="cartProduct.personalization | json" -->
 
   </div>
 

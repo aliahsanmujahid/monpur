@@ -71,27 +71,32 @@ export class BasketService {
     }else{
 
 
-      console.log("same product");
+      console.log("same product",item,itemToAdd);
 
       var same = 0;
 
 
       item.forEach( p => {
 
-        // if(p.mixedvari?.values?.length > 0 && itemToAdd.mixedvari?.values?.length > 0){
-        //   if(p.mixedvari?.values[0]?.id == itemToAdd.mixedvari?.values[0]?.id){
-        //     same = 1;
-        //     console.log("mixedvari same",same);
-        // }
-        // }
-        // if((p.vari1?.values?.length > 0 && itemToAdd.vari1?.values?.length > 0) && (p.vari2?.values?.length > 0 && itemToAdd.vari2?.values?.length > 0)){
-        //   if((p.vari1?.values[0]?.id == itemToAdd.vari1?.values[0]?.id) && (p.vari2?.values[0]?.id == itemToAdd.vari2?.values[0]?.id)){
-        //     same = 1;
-        //     console.log("vari same",same);
+        if((p.vari?.values?.length == 0 && itemToAdd.vari?.values?.length == 0) && (p.mixedvari?.values?.length == 0 && itemToAdd.mixedvari?.values?.length == 0)){
+          if((p.id == itemToAdd.id)){
+            same = 1;
+            console.log("only same",same);
+           }
+        }
 
-        //     console.log("vari same",p.vari1?.values[0]?.id,itemToAdd.vari1?.values[0]?.id,p.vari2?.values[0]?.id,itemToAdd.vari2?.values[0]?.id);
-        //   }
-        // }
+        if(p.mixedvari?.values?.length > 0 && itemToAdd.mixedvari?.values?.length > 0){
+          if(p.mixedvari?.values[0]?.vari1name == itemToAdd.mixedvari?.values[0]?.vari1name && p.mixedvari?.values[0]?.vari2name == itemToAdd.mixedvari?.values[0]?.vari2name){
+            same = 1;
+            console.log("mixedvari same",same);
+        }
+        }
+        if((p.vari?.values?.length > 0 && itemToAdd.vari?.values?.length > 0)){
+          if((p.vari?.values[0]?.id == itemToAdd.vari?.values[0]?.id)){
+            same = 1;
+            console.log("vari same",same);
+           }
+        }
 
       });
 

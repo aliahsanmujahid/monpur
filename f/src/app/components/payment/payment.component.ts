@@ -146,7 +146,7 @@ export class PaymentComponent implements OnInit {
   }
   setpaypal(id){
     this.orderService.setpaypal(id).subscribe(res =>{
-      console.log("payment res",res)
+      console.log("paypal payment res",res)
       if(res.success == true){
           this.order.ispaid = 1;
           this.order.paidbypaypal = 1;
@@ -158,7 +158,7 @@ export class PaymentComponent implements OnInit {
 
 
   stripePay(amount: any,orderid) {
-    
+
     var submittedForm = false;
     var handler = (<any>window).StripeCheckout.configure({
       key: 'pk_test_51Lyl0HGLWGTnKxnYIxcuA0AyCOPasULLq0t9N7NrzxHiOTPajyuTisL35WWMg9oFf61yvVFqjCkP28z7SonaeBfa00I2r6zpsj',
@@ -179,6 +179,7 @@ export class PaymentComponent implements OnInit {
     });
 
     const setstripe = (data: any) => {
+      console.log("stripe data",data)
       this.orderService.setstripe(data).subscribe((res:any) =>{
 
         console.log("stripe res",res)

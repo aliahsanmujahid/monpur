@@ -190,15 +190,12 @@ exports.setac = async (req, res, next) => {
   
   if(data.length > 0){
 
-    const resultInsert = await con.execute (
+    await con.execute (
       "UPDATE users SET name = ?, password = ? WHERE pnumber = ?", 
       [req.body.name,req.body.password,req.body.pnumber]
     );
   
-    let sql = `SELECT * FROM users WHERE pnumber = ${req.body.pnumber}`;
-
-    let query = db.query(sql, (err, result) => {
-      if(err) throw err;
+    const [result] = await con.execute('SELECT * FROM users WHERE pnumber = ? ', [ req.body.pnumber ]);
        
       const jwtToken = jwt.sign({ userId: result[0].id
         ,name: result[0].name,pnumber: result[0].pnumber,
@@ -206,9 +203,52 @@ exports.setac = async (req, res, next) => {
       
        return res.send({
           jwtToken
-        });
-    });                
+        });               
   
+  }
+
+}
+
+exports.emaillog = async (req, res, next) => {
+
+  const con = await connection;
+
+  const [data] = await con.execute('SELECT * FROM users WHERE email = ? ', [ req.body.email ]);
+
+  if(data.length > 0){
+    await con.execute (
+      "UPDATE users SET name = ? WHERE email = ?", 
+      [req.body.name,req.body.email]
+    );
+  
+    const [result] = await con.execute('SELECT * FROM users WHERE email = ? ', [ req.body.email ]);
+       
+      const jwtToken = jwt.sign({ userId: result[0].id
+        ,name: result[0].name,email: result[0].email,
+        isVerified:result[0].isVerified,role:result[0].role }, process.env.JWT_SECRET);
+      
+       return res.send({
+          jwtToken
+        });      
+  }else{
+
+    await con.query (
+      "INSERT INTO users (email,name,password,isVerified,role) VALUES (?,?,?,?,?)", 
+      [ 
+        req.body.email,req.body.name,req.body.password,'true','user'
+      ]
+    );
+  
+    const [result] = await con.execute('SELECT * FROM users WHERE email = ? ', [ req.body.email ]);
+       
+    const jwtToken = jwt.sign({ userId: result[0].id
+      ,name: result[0].name,email: result[0].email,
+      isVerified:result[0].isVerified,role:result[0].role }, process.env.JWT_SECRET);
+    
+     return res.send({
+        jwtToken
+      });
+
   }
 
 }

@@ -1,11 +1,10 @@
 
 <div class="row">
 
-  <button class="loadmore" (click)="loadmessage()">Load more...</button>
-
   <div #content class="chat-body" *ngIf="(messageService.userMessage$ | async).length > 0">
 
 
+    <button class="loadmore" (click)="loadmessage()">load more</button>
     <div
     #messages
     *ngFor="let msg of (messageService.userMessage$ | async)"

@@ -37,10 +37,12 @@
 .text4{
   width: 100%;
   padding: 10px;
-  background: rgb(255 100 100);
   text-align: center;
   border-radius: 2px;
-  color: #fff;
+  color: rgb(65, 65, 65);
+  background: #FFF;
+  border: 1px solid rgb(189, 189, 185);
+  box-shadow: 1px 2px 2px #888888;
 }
 .text2 p {
   text-align: left;
@@ -177,13 +179,15 @@ h1{
   flex-wrap: wrap;
   padding: 10px;
 }
-.handle button{
+.handle button,.btn{
   padding: 5px 10px 5px 10px;
   margin: 0px 10px;
   border-radius: 3px;
+  color: #555555;
   background: rgb(255, 255, 255);
   border: 1px solid rgb(189, 189, 185);
   box-shadow: 1px 2px 2px #888888;
+  cursor: pointer;
 }
 select {
   -webkit-appearance:none;
@@ -222,13 +226,17 @@ select {
   z-index: 1;
   background: rgba(188, 188, 199, 0.322);
 }
-.alert-box {
+.alert-box,.alert-box2 {
   position: fixed;
   width: 50%;
   top: 10vw;
   left: 0;
   right: 15px;
   margin: 0 auto;
+  z-index: 2;
+}
+.alert-box2{
+  top: 80px;
   z-index: 2;
 }
 

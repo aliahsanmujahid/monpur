@@ -1,0 +1,76 @@
+* {
+  font-family: 'Nunito', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  text-transform: capitalize;
+  transition: all .2s linear;
+}
+.row{
+  display: table;
+  word-wrap: break-word;
+  width: 700px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 40px;
+  background: #FFF;
+  font-weight: bold;
+  margin-top: 65px;
+  border: 1px solid rgb(189, 189, 185);
+}
+
+.details{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  padding-bottom: 20px;
+  text-align: left;
+  font-size:15px;
+}
+
+table{
+  width: 100%;
+}
+
+.summary,.footer{
+  text-align: center;
+  padding: 20px;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 200;
+}
+.footer{
+  padding-top: 10px;
+  background: rgba(245, 245, 245, 0.493);
+}
+.print{
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 100px;
+}
+button{
+  width: 700px;
+  margin: 0 auto;
+  padding: 9px 20px 9px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+button:hover{
+  background: rgb(221, 221, 221);
+  box-shadow: 1px 2px 2px #888888;
+}
+table{
+  border-spacing:unset;
+}
+th,td{
+  padding: 10px;
+  text-align: left;
+}
+th{
+  background: rgba(108, 155, 255, 0.685);
+}

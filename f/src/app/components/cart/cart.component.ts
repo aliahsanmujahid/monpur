@@ -299,9 +299,7 @@ export class CartComponent implements OnInit {
     const basket = JSON.parse(localStorage.getItem('basket'));
 
 
-    console.log("basket",basket)
-
-
+    if(basket){
     this.orderCreate.sellerid = basket.sellerid;
 
     basket.items.forEach(item =>{
@@ -341,12 +339,8 @@ export class CartComponent implements OnInit {
       this.orderCreate.orderItems.push(orderItem);
 
     });
-
-
-
   }
-
-
+  }
 
 }
 

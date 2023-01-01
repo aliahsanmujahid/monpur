@@ -1,5 +1,6 @@
 
 <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
+<div (click)="msgtoggle()"  *ngIf="alert3" class="backdrop "></div>
 <div *ngIf="alert" class="alert-box">
 
     <div class="details" *ngIf="selectedorder || sorder">
@@ -27,6 +28,13 @@
 
     </div>
   </div>
+
+</div>
+
+
+<div *ngIf="alert3 && msgsendid !== null" class="alert-box2">
+
+  <app-sendbox [ReceiverId]="msgsendid"></app-sendbox>
 
 </div>
 
@@ -128,9 +136,9 @@
              </select>
           </div>
 
-         <button class="btn">Message</button>
+         <button class="btn" (click)="msgtoggle()">Message</button>
 
-         <button>Print</button>
+         <a class="btn"  routerLink="/print/{{sorder.id}}" target="_blank">Print</a>
 
        </div>
 
@@ -216,9 +224,9 @@
             </select>
          </div>
 
-        <button class="btn">Message</button>
+        <a class="btn" (click)="msgtoggle(item.customerid)">Message</a>
 
-        <button>Print</button>
+        <a class="btn"  routerLink="/print/{{item.id}}" target="_blank">Print</a>
 
       </div>
 

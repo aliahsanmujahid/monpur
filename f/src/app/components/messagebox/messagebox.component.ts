@@ -74,7 +74,12 @@ export class MessageboxComponent implements OnInit {
 
   //loading more message
   loadmessage(){
-    this.messageService.ploadmessage(this.chatid,this.userid,++this.page);
+    console.log("loading message");
+    this.messageService.ploadmessage(this.chatid,this.userid,++this.page).subscribe( res =>{
+
+      console.log("message",res);
+
+    });
     this.scrollToTop();
     this.messages.changes.subscribe(this.scrollToTop);
   }

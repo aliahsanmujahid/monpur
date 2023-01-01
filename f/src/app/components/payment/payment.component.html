@@ -4,15 +4,13 @@
 <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
 <div *ngIf="alert" class="alert-box">
 
-
  <div class="text">
+  <br><br>
   <button (click)="setcod(order.id)" >Set Order</button>
   <br><br>
   <h3>*Pay When Product Delevared</h3>
+  <br><br>
  </div>
-
-
-
 
 </div>
 
@@ -22,7 +20,7 @@
     <div class="details">
       <div class="text">
         <h1 *ngIf="order.ispaid == 0">Make Payment</h1>
-        <br>
+        <br *ngIf="order.ispaid == 0">
         <p *ngIf="order.cashondelevary == 0 && order.ispaid == 0">Select A Payment Method</p>
         <p *ngIf="order.paidbypaypal == 1 ">Paid By: Paypal</p>
         <p *ngIf="order.paidbystripe == 1 ">Paid By: Credit / Debit Card</p>
@@ -37,11 +35,23 @@
       <ngx-paypal [config]="payPalConfig"></ngx-paypal>
     </div>
 
-  <h2 *ngIf="order.ispaid == 0" (click)="stripePay(order.total,order.id)" >Credit / Debit Card</h2>
+  <h2 *ngIf="order.ispaid == 0" (click)="stripePay(order.total,order.id)" ><i class="fa fa-credit-card-alt" aria-hidden="true"></i> Credit / Debit Card</h2>
   <h2 *ngIf="order.cashondelevary == 0 && order.ispaid == 0"  (click)="alerttoggle()"   >Cash On Delevary</h2>
 
-  <h2 class="paid" *ngIf="order.ispaid== 1"  >Order is Paid</h2>
-  <h2 class="paid" routerLink="/dash" *ngIf="order.ispaid== 1"  >View Order</h2>
+
+
+  <div class="details" *ngIf="order.ispaid== 1">
+    <div class="text paidbox">
+      <div class="center">
+        <div class="check">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </div>
+        <br>
+        <p>Payment Successful</p>
+      </div>
+      <button class="vbtn" [routerLink]="['/dash', {sorder: 0 }]" *ngIf="order.ispaid== 1"  >View Order</button>
+    </div>
+  </div>
 
 
   </div>
@@ -56,13 +66,19 @@
         <p>City: {{order.city}}</p>
         <p>State: {{order.state}}</p>
         <p>Phone: {{order.phone}}</p>
+
         <br>
-        <p>Delevary Charge: {{order.dvalue}}</p>
-        <p>Sub Total: {{order.subtotal}}</p>
-        <p>Total: {{order.total}}</p>
+        <p>Delevary: {{order.dtitle}}</p>
+        <p *ngIf="order.cvalue">Coupon: {{order.ctitle}}</p>
         <br>
-        <p *ngIf="order.ispaid == 1">Status: Paid</p>
-        <p *ngIf="order.ispaid == 0">Status: Not Paid</p>
+
+        <p>Sub Total: ${{order.subtotal}}</p>
+        <p>Delevary Charge: ${{order.dvalue}}</p>
+        <p *ngIf="order.cvalue">Coupon Value: {{order.cvalue}}</p>
+        <p>Total: ${{order.total}}</p>
+        <br>
+        <p *ngIf="order.ispaid == 1">Status: <span class="paid">Paid</span></p>
+        <p *ngIf="order.ispaid == 0">Status: <span class="npaid"> Not Paid</span></p>
       </div>
     </div>
 
@@ -73,7 +89,7 @@
       <img src="{{imglink+item.img}}" alt="">
       <div class="box">
         <p>{{item.name | slice:0:15}}...</p>
-        <p>Total: {{item.price }}*{{item.quantity}}= ৳{{item.price * item.quantity}}</p>
+        <p>Total: {{item.price }}*{{item.quantity}} = ${{item.price * item.quantity}}</p>
       </div>
     </div>
 

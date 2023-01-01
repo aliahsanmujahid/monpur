@@ -1,0 +1,93 @@
+
+<div *ngIf="order !== null" id="print-section" >
+<div class="row">
+
+  <div class="details">
+    <div>
+      <p>invoicde {{order.id}}</p>
+    </div>
+    <div>
+      <p>10/23/22</p>
+    </div>
+  </div>
+
+  <div class="details">
+    <div>
+      <h2>Shiping Address</h2>
+      <p>Name: {{order.name}}</p>
+      <p>Address: {{order.address}}</p>
+      <p>City: {{order.city}}</p>
+      <p>State: {{order.state}}</p>
+      <p>Phone: {{order.phone}}</p>
+    </div>
+  </div>
+
+  <div class="details">
+
+<table id="customers">
+  <tr>
+
+    <th>SL</th>
+    <th>Name</th>
+    <th>Unit Price</th>
+    <th>Qty</th>
+    <th>Total</th>
+
+  </tr>
+  <tr *ngFor="let item of order.orderItems">
+    <td>1</td>
+    <td>{{item.name}}
+      <br>
+      variation: m l
+    </td>
+    <td>{{item.price }}</td>
+    <td>{{item.quantity }}</td>
+    <td>{{item.price }}*{{item.quantity}}= ${{item.price * item.quantity}}</td>
+  </tr>
+</table>
+  </div>
+
+
+  <div class="details">
+    <div>
+      <p>Payment details</p>
+      <p>paid , 22-11-20</p>
+      <p>Delivery info</p>
+      <p>Self delivery</p>
+      <p>Delivery man name : Will Smith</p>
+      <p>Delivery man phone : 1234567890</p>
+    </div>
+
+    <div>
+      <p>Payment details</p>
+      <p>paid , 22-11-20</p>
+      <p>Delivery info</p>
+      <p>Delivary Cost: {{order.delivery}}</p>
+      <p>Subtotal: {{order.subtotal}}</p>
+      <p>Total: {{order.total}}$</p>
+    </div>
+  </div>
+
+  <div class="summary">
+    <p>If you require any assistance or have feedback or suggestions about our site you</p>
+    <p>Can email us at Copy@6amtech.com</p>
+  </div>
+
+  <div class="footer">
+   <p>Phone : 000000000</p>
+   <p>Email : Copy@6amtech.com</p>
+   <p>https://6valley.6amtech.com</p>
+   <p>All copy right reserved © 2022 6valley</p>
+  </div>
+</div>
+</div>
+
+<div class="print">
+  <button
+  styleSheetFile="assets/css/print.css"
+  printSectionId="print-section"
+  ngxPrint
+  >Print</button>
+
+</div>
+

@@ -101,6 +101,7 @@ export class MessageService {
 
   sendmsg(model,receiverId){
 
+    console.log("receiverId",receiverId)
 
       this.http.post(this.baseUrl + 'createmessege/',model ).pipe(
         map((data: any) => {
@@ -130,7 +131,8 @@ export class MessageService {
     this.userMessage.next([]);
   }
 
-  loadmessage(chatid,userid,page = 1){
+  async loadmessage(chatid,userid,page = 1){
+    console.log("message load-----");
     this.userMessage.next([]);
     this.activechat = chatid;
 
@@ -161,7 +163,7 @@ export class MessageService {
           }
         })
 
-
+        return data;
       })
     ).subscribe();
   }
@@ -195,9 +197,10 @@ export class MessageService {
           }
         })
 
+        return data;
 
       })
-    ).subscribe();
+    );
   }
 
 
@@ -298,17 +301,17 @@ export class MessageService {
   }
 
   pgetConversation(id,page){
-    this.http.get(this.baseUrl + 'getchats/' + id + '/' + page).pipe(
+    return this.http.get(this.baseUrl + 'getchats/' + id + '/' + page).pipe(
       map((data: any) => {
-        console.log("pchat---",data);
         data.forEach(e => {
           const receiverid = e.senderid == id ? e.receiverid : e.senderid;
 
           this.getUsers(receiverid,e.id,e.date,e.flag,e.unread);
         });
 
+        return data;
       })
-    ).subscribe();
+    );
   }
 
   getflagConversation(id,page = 1){
@@ -327,15 +330,16 @@ export class MessageService {
     ).subscribe();
   }
   pgetflagConversation(id,page = 1){
-    this.http.get(this.baseUrl + 'getflagchats/' + id + '/' + page).pipe(
+    return this.http.get(this.baseUrl + 'getflagchats/' + id + '/' + page).pipe(
       map((data: any) => {
-        console.log("pfchat---",data);
         data.forEach(e => {
           const receiverid = e.senderid == id ? e.receiverid : e.senderid;
           this.fgetUsers(receiverid,e.id,e.date,e.flag,e.unread);
         });
+
+        return data;
       })
-    ).subscribe();
+    );
   }
 
   getUsers(id,chatid,date,flag,unread){

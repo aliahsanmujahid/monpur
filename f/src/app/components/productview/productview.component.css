@@ -91,7 +91,7 @@ h3{
  box-shadow: inset 0 1px rgb(0 0 0 / 25%);
  content: '';
  height: 6px;
- left: 8px;
+ left: 6px;
  position: absolute;
  width: 6px;
  top: 8px;
@@ -106,7 +106,7 @@ h3{
 }
 
 .cart{
-  color: #818181;
+  color: #292828;
   width: max-content;
   padding: 10px 20px 10px 20px;
   background: #FFF;
@@ -220,9 +220,6 @@ input:checked ~ .checkmark  {
 
 }
 
-/* div#addcart{
-  width:100%;
- } */
 
  .alert {
   padding: 15px 0px 15px 0px;
@@ -383,7 +380,7 @@ select {
   font-size: 20px;
   font-weight: bold;
   font-family: 'Open Sans', sans-serif;
-  border-radius: 5px;
+  border-radius: 2px;
   border: 1px solid rgb(189, 189, 185);
   box-shadow: 1px 2px 2px #888888;
 }
@@ -396,7 +393,7 @@ select::-ms-expand {
   justify-content: flex-start;
 }
 .price{
-  margin: 10px 0px;
+  margin: 5px 0px 0px 0px;
 }
 
 .pdetails,.personalization{
@@ -413,15 +410,16 @@ select::-ms-expand {
 .editor{
   width: 70%;
   margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
   border: 1px solid rgb(189, 189, 185);
   box-shadow: 1px 2px 2px #888888;
 }
 textarea{
   padding: 4px 13px;
-  border-radius: 3px;
+  border-radius: 2px;
   width:100%;
-  height: 70px;
+  height: 100px;
+  resize: none;
 }
 
 .det{

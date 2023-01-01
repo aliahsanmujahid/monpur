@@ -102,7 +102,7 @@ h1{
   color:rgb(15, 15, 15);
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
-  border-radius: 5px;
+  border-radius: 2px;
   border: 1px solid rgb(189, 189, 185);
   box-shadow: 1px 2px 2px #888888;
   display: flex;
@@ -110,7 +110,6 @@ h1{
   height: 2.3em;
   line-height: 2.3;
   overflow: hidden;
-  border-radius: .25em;
   margin: 10px 0px 10px 0px;
 }
 select{
@@ -131,7 +130,7 @@ select::-ms-expand {
 ul{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 }
 ul li{
   text-decoration: none;
@@ -211,7 +210,7 @@ img{
   min-height: 400px;
   margin: 0 auto;
   z-index: 2;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 .alert-details{
   width: 100%;
@@ -243,7 +242,7 @@ img{
 }
 .button{
   padding: 10px 15px 10px 15px;
-  border-radius: 5px;
+  border-radius: 2px;
   background: #FFF;
   border: 1px solid rgb(194, 194, 194);
 }
@@ -351,6 +350,36 @@ button{
 }
 
 
+
+.toast{
+  height: 50px;
+  border-radius: 2px;
+  text-align: center;
+  display: flex;
+  align-content: stretch;
+  justify-content: space-evenly;
+  flex-direction: column;
+  flex-wrap: wrap;
+  background: #ff0863;
+  border: 1px solid rgb(228, 228, 228);
+  color: rgb(255, 255, 255);
+}
+.success{
+  height: 50px;
+  border-radius: 2px;
+  text-align: center;
+  display: flex;
+  align-content: stretch;
+  justify-content: space-evenly;
+  flex-direction: column;
+  flex-wrap: wrap;
+  background: #08ff14;
+  border: 1px solid rgb(233, 233, 233);
+  color: rgb(255, 255, 255);
+}
+.hidetoast{
+display: none;
+}
 
 
 @media (max-width: 900px) {

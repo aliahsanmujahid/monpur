@@ -16,6 +16,9 @@
   flex-wrap: wrap;
   float: left;
 }
+br{
+  margin: 10px;
+}
 
 
 .column2{
@@ -193,8 +196,10 @@ button{
 
 .shiping{
   width: 100%;
-  margin-top: 20px;
-  display: table;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 .notvalid{
   color: #ff597d;
@@ -215,10 +220,8 @@ button{
 
 .shipto{
   width: 46%;
-  float: left;
   text-align: center;
   background: #130f40;
-  margin: 2%;
   padding: 6px;
   color: #fff;
   cursor: pointer;
@@ -230,9 +233,6 @@ button{
 .shipto:hover{
   color: rgb(255, 255, 255);
   background: #ff597d;
-}
-.shiping p {
-  margin: 2%;
 }
 
 .inputField {
@@ -274,7 +274,8 @@ button{
   border: 3px solid rgb(252, 255, 104);
 
   overflow-y: scroll;
-  height: 100%;
+  height: 95vh;
+  background: #fff;
   padding-bottom: 200px;
 }
 .backdrop{

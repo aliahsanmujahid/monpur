@@ -24,10 +24,14 @@ export class ChatComponent implements OnInit {
   page = 0;
   flag = true;
   unflag = false;
+  nochat = false;
+  fnochat = false;
 
 
 
   ngOnInit(): void {
+
+        this.page = 0;
 
         //getting userid
         this.accountService.currentUser$.subscribe( user => {
@@ -74,19 +78,27 @@ export class ChatComponent implements OnInit {
     this.getflagchats();
   }
   getchats(){
-    this.page = 1;
-    this.messageService.getConversation(this.UserId,this.page);
+    this.page = 0;
+    this.messageService.getConversation(this.UserId,++this.page);
   }
   pgetchats(){
-    this.messageService.pgetConversation(this.UserId,++this.page);
+    this.messageService.pgetConversation(this.UserId,++this.page).subscribe(res => {
+      if(res.length < 10){
+       this.nochat = true;
+      }
+    });
   }
 
   getflagchats(){
-    this.page = 1;
-    this.messageService.getflagConversation(this.UserId,this.page);
+    this.page = 0;
+    this.messageService.getflagConversation(this.UserId,++this.page);
   }
   pgetflagchats(){
-    this.messageService.pgetflagConversation(this.UserId,++this.page);
+    this.messageService.pgetflagConversation(this.UserId,++this.page).subscribe(res => {
+      if(res.length < 10){
+       this.fnochat = true;
+      }
+    });
   }
 
 

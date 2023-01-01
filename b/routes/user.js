@@ -25,7 +25,8 @@ const {
 
   getadminmoderator,
   setadminmoderator,
-  ownotp
+  ownotp,
+  emaillog
 
 } = require("../controllers/user");
 
@@ -279,6 +280,7 @@ router.post("/detetesubcate",detetesubcate);
 router.post("/signup",signup);
 router.post("/sendotp",sendotp);
 router.post("/setac",setac);
+router.post("/emaillog",emaillog);
 router.post("/fsendotp",fsendotp);
 router.post("/fsetac",fsetac);
 router.post("/ownotp",ownotp);

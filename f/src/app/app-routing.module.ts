@@ -1,3 +1,4 @@
+import { PrintComponent } from './components/print/print.component';
 import { MessageboxComponent } from './components/messagebox/messagebox.component';
 import { MobilecateComponent } from './components/mobilecate/mobilecate.component';
 import { ShopComponent } from './components/shop/shop.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
   {path: 'shop',  component: ShopComponent},
   {path: 'cart',  component: CartComponent},
   {path: 'payment/:id',  component: PaymentComponent},
+  {path: 'print/:id',  component: PrintComponent},
 
   {path: 'product/:id',  component: ProductviewComponent, resolve: {product: ProductDetailedResolver}},
 ];

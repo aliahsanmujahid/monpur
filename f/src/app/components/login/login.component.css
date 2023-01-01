@@ -116,20 +116,13 @@ input[type=number] {
 
 .social{
   display: flex;
-  padding: 10px;
-  background: rgb(255, 255, 255);
-  border-radius: 5px;
-  line-height: 20px;
-  font-size: 15px;
-  font-weight: 700;
-  justify-content: center;
-  border: 1px solid rgb(189, 189, 185);
-  box-shadow: 1px 2px 2px #888888;
-  cursor: pointer;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 256px;
+  margin: 0 auto;
 }
-.social img{
-  height: 20px;
-  width: 20px;
-  object-fit: cover;
-  margin-right: 10px;
+
+asl-google-signin-button{
+  width: 256px;
+  margin: 0 auto;
 }

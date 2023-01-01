@@ -160,45 +160,37 @@ a{
   width: 100%;
   background: #fff;
   cursor: pointer;
-  /* border-radius: 20px; */
 }
 .maina{
   background: #ffffff;
   color: rgb(105, 105, 105);
   margin-top: 5px;
-  /* border-bottom: 1px solid rgb(255, 249, 198); */
 }
 .menu{
-   width:90%;
+   width:100%;
    margin: 0 auto;
 }
 .submenu{
   display: none;
-  /* border-bottom: 2px solid rgb(173, 173, 173); */
 }
 .submenu a{
-    /* margin-top: 5px; */
     background: rgba(160, 160, 160, 0.18);
-    /* border-bottom: 1px solid rgb(194, 194, 194); */
     padding: 8px;
-    color: rgb(148, 148, 148);
+    color: rgb(56, 56, 56);
     border-radius:0px!important;
-    /* text-align: center; */
 }
 .maina:hover{
-  color: rgb(148, 148, 148)!important;
-  background: rgba(203, 224, 255, 0.753)!important;
-  /* box-shadow: 0px 3px 8px rgb(49, 47, 47); */
+  color: rgb(255, 255, 255)!important;
+  background: rgba(4, 104, 255, 0.664)!important;
 }
 
 .active{
-  color: rgba(69, 150, 255, 0.856)!important;
-  background: rgba(203, 224, 255, 0.753)!important;
-  /* box-shadow: 0px 3px 8px rgb(49, 47, 47); */
+  color: rgba(255, 255, 255, 0.856)!important;
+  background: rgb(35, 123, 255)!important;
 }
 .active2{
   color: rgba(69, 150, 255, 0.856);
-  background: rgb(255, 254, 244)!important;
+  background: rgb(255, 255, 255)!important;
   box-shadow: 0px 3px 8px rgb(177, 177, 177);
 }
 .view{

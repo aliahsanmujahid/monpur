@@ -1,7 +1,7 @@
 import { ProductService } from './../../_services/product.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { map } from 'rxjs';
+import { interval, map, timer } from 'rxjs';
 import { AccountService } from 'src/app/_services/account.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -23,6 +23,7 @@ export class CreateproductComponent implements OnInit {
   editor2: Editor;
   html: '';
   alert = false;
+  createsucc = false;
 
   imglink = environment.imgUrl;
 
@@ -129,12 +130,19 @@ export class CreateproductComponent implements OnInit {
     sku: '',
 };
 
+
+tvari1 : Ivari = {
+  id:0,
+  name:'',
+  values:[]
+};
 tempmixedvari: Imixvari = {
   id: 0,
   vari1:'',
   vari2:'',
   values:[]
 }
+temppersonalize = '';
 
 Math: any;
 
@@ -143,17 +151,19 @@ Math: any;
 
   constructor(public accountService: AccountService,private http: HttpClient,
     private route: ActivatedRoute,public categoryService: CategoryService,
-    public productService: ProductService,private router: Router) {
-       //Router subscriber
-       this.router.events.subscribe((event) => {
+    public productService: ProductService,private router: Router) {}
 
+    messageSuccess:any;
 
-        this.nullValues();
-
-      });
+    ngOnChanges() {
+      this.nullValues();
     }
 
   ngOnInit(): void {
+
+    this.nullValues();
+    this.createsucc = false;
+
     this.UserId = this.accountService.getuserid()
     this.editor = new Editor();
     this.editor2 = new Editor();
@@ -161,13 +171,15 @@ Math: any;
 
     if(this.producteditid !== 0){
       this.productService.getEditProduct(this.producteditid).subscribe(res =>{
+
+        console.log("edit product",res);
         this.product = res;
 
         if(this.product.personalization != ''){
           this.showpersonalization = true
         }
 
-        if(this.product.vari.values.length > 0){
+        if(this.product.vari?.values.length > 0){
            console.log("setting vari1",this.vari1);
            this.vari1 = res.vari;
            this.vari1added = true;
@@ -175,7 +187,7 @@ Math: any;
 
         }
 
-        if(this.product.mixedvari.values.length > 0){
+        if(this.product.mixedvari?.values.length > 0){
           console.log("setting mixedvari",this.vari1);
 
           this.mixedvari = res.mixedvari;
@@ -229,6 +241,7 @@ Math: any;
 
   inputchange(){
     this.tempmixedvari = this.mixedvari;
+    this.tvari1 = this.vari1;
   }
 
   discountchange(){
@@ -254,9 +267,21 @@ Math: any;
   deletevariname1(){
     this.disabledbtn = false;
     this.vari1added = false;
+    this.vari2added = false;
     this.vari1 = {
       id:0,
       name:'',
+      values:[]
+    }
+    this.vari2 = {
+      id:0,
+      name:'',
+      values:[]
+    }
+    this.mixedvari = {
+      id:0,
+      vari1:'',
+      vari2:'',
       values:[]
     }
   }
@@ -353,8 +378,8 @@ deletevariname2(){
     console.log("$event.target.value",$event.target.value);
     if ($event.target.checked){
       if($event.target.value == 'personalization'){
-        this.product.isp = "false";
         this.showpersonalization = true;
+        this.product.personalization = this.temppersonalize;
       }
       if($event.target.value == 'ispersonalization'){
         this.product.isp = "true";
@@ -362,8 +387,11 @@ deletevariname2(){
     }
     else{
       if($event.target.value == 'personalization'){
-        this.product.isp = "false";
+
+        this.temppersonalize =  this.product.personalization;
+        this.product.personalization = "";
         this.showpersonalization = false;
+
       }
       if($event.target.value == 'ispersonalization'){
         this.product.isp = "false";
@@ -494,60 +522,107 @@ if(val == 8){
     ).subscribe();
    }
 
-   createProduct(){
 
+
+
+  //  createProduct
+   createProduct(pform){
+
+    if(pform.invalid){
+      this.messageSuccess = true;
+
+  setTimeout(()=>{
+      this.messageSuccess = false;
+  }, 2000);
+    }else{
 
     if(this.vari1.values.length > 0 && this.mixedvari.values.length == 0){
-     this.product.vari = this.vari1;
-     this.product.price = this.vari1.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-     this.product.quantity  = this.vari1.values.reduce((a, b) => (b.quantity) + a, 0);
+      this.product.vari = this.vari1;
+      this.product.price = this.vari1.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
+      this.product.quantity  = this.vari1.values.reduce((a, b) => (b.quantity) + a, 0);
 
-     this.product.hasvari = "true";
-     this.product.hasmixedvari = "";
+      this.product.hasvari = "true";
+      this.product.hasmixedvari = "";
 
-     this.product.mixedvari = {
-      id:0,
-      vari1:'',
-      vari2:'',
-      values:[]
-    }
-    }
-    if(this.mixedvari.values.length > 0){
-      this.product.mixedvari = this.mixedvari;
-      this.product.price = this.mixedvari.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
-      this.product.quantity  = this.mixedvari.values.reduce((a, b) => (b.quantity) + a, 0);
-
-      this.product.hasvari = "";
-      this.product.hasmixedvari = "true";
-
+      this.product.mixedvari = {
+       id:0,
+       vari1:'',
+       vari2:'',
+       values:[]
+     }
+     }else{
+      this.product.hasvari="";
       this.product.vari = {
         id:0,
         name:'',
         values:[]
       }
-    }
+     }
+     if(this.mixedvari.values.length > 0){
+       this.product.mixedvari = this.mixedvari;
+       this.product.price = this.mixedvari.values.sort((a, b) => Number(a.price) - Number(b.price))[0].price;
+       this.product.quantity  = this.mixedvari.values.reduce((a, b) => (b.quantity) + a, 0);
 
+       this.product.hasvari = "";
+       this.product.hasmixedvari = "true";
 
-    if(this.product.id == 0){
-      if(this.product.file1 !== ''){
-
-          this.productService.createproduct(this.product).subscribe( res =>{
-            console.log("createproduct res",res);
-         }),
-         error => {
-
-         };
-
-      }else{
+       this.product.vari = {
+         id:0,
+         name:'',
+         values:[]
+       }
+     }else{
+      this.product.hasmixedvari="";
+      this.product.mixedvari = {
+        id:0,
+        vari1:'',
+        vari2:'',
+        values:[]
       }
-    }else{
+     }
 
-        this.productService.updateproduct(this.product).subscribe( res =>{
+
+
+     if(this.product.id == 0){
+       if(this.product.file1 !== '' && this.product.file2 !== ''){
+
+        console.log("createproduct res",this.product);
+
+           this.productService.createproduct(this.product).subscribe( res =>{
+
+             if(res.success == true){
+              this.createsucc = true;
+             }
+          });
+       }else{
+        this.messageSuccess = true;
+
+  setTimeout(()=>{
+      this.messageSuccess = false;
+  }, 2000);
+       }
+     }else{
+
+
+         if(this.product.file1 !== '' && this.product.file2 !== ''){
+
+          console.log("updateproduct res",this.product);
+
+          this.productService.updateproduct(this.product).subscribe( res =>{
             console.log("update res",res);
-       }),
-       error => {
+            if(res.success == true){
+             this.createsucc = true;
+            }
+         });
+         }else{
+          this.messageSuccess = true;
 
-       };
+          setTimeout(()=>{
+              this.messageSuccess = false;
+          }, 2000);
+         }
+
+     }
 
     }
 
@@ -611,6 +686,37 @@ if(val == 8){
         values:[]
       }
     };
+
+    this.disabledbtn = false;
+    this.vari1added = false;
+    this.vari2added = false;
+    this.vari1 = {
+      id:0,
+      name:'',
+      values:[]
+    }
+    this.tvari1 = {
+      id:0,
+      name:'',
+      values:[]
+    }
+    this.vari2 = {
+      id:0,
+      name:'',
+      values:[]
+    }
+    this.mixedvari = {
+      id:0,
+      vari1:'',
+      vari2:'',
+      values:[]
+    }
+    this.tempmixedvari = {
+      id:0,
+      vari1:'',
+      vari2:'',
+      values:[]
+    }
 
   }
 

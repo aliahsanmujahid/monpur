@@ -48,6 +48,10 @@ export class AccountService {
     );
   }
 
+  emaillog(model) {
+    return this.http.post<any>(this.baseUrl + 'emaillog', model);
+  }
+
   sendotp(model) {
     return this.http.post(this.baseUrl + 'sendotp', model).pipe(
       map((res: any) => {
@@ -105,7 +109,7 @@ setCurrentUser(token: any) {
     var id;
     this.currentUser$.subscribe(user => {
       if(user){
-        id =  user.userId
+        id = user.userId
       }
     })
     return id

@@ -1,5 +1,6 @@
 
 
+
  <div (click)="alerttoggle()"  *ngIf="alert" class="backdrop "></div>
  <div *ngIf="alert" class="alert-box">
 
@@ -100,6 +101,9 @@
 
 
 
+<ng-container>
+<form #pform="ngForm" >
+
 
 <!-- Variations Section -->
   <div class="column">
@@ -135,8 +139,9 @@
               <input
               [(ngModel)]="vari1.values[i].price"
               required
-              placeholder="Original Price"
-              name="orgprice"
+              (change)="inputchange()"
+              placeholder="Price"
+              name="{{'Price'+i}}"
               oninput="this.value =
               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
               type="number" />
@@ -145,8 +150,9 @@
               <input
           [(ngModel)]="vari1.values[i].quantity"
           required
-          placeholder="Original Price"
-          name="orgprice"
+          (change)="inputchange()"
+          placeholder="quantity"
+          name="{{'quantity'+i}}"
           oninput="this.value =
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
           type="number" />
@@ -155,8 +161,9 @@
           <input
           [(ngModel)]="vari1.values[i].sku"
           required
-          placeholder="hassku1"
-          name="hassku1"
+          (change)="inputchange()"
+          placeholder="sku"
+          name="{{'sku'+i}}"
           type="text" />
             </td>
           </tr>
@@ -191,8 +198,8 @@
               (change)="inputchange()"
               [(ngModel)]="mixedvari.values[i].price"
               required
-              placeholder="Original Price"
-              name="orgprice"
+              placeholder="Price"
+              name="{{'Price'+i}}"
               oninput="this.value =
               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
               type="number" />
@@ -202,8 +209,8 @@
             (change)="inputchange()"
             [(ngModel)]="mixedvari.values[i].quantity"
           required
-          placeholder="Original Price"
-          name="orgprice"
+          placeholder="quantity"
+          name="{{'quantity'+i}}"
           oninput="this.value =
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
           type="number" />
@@ -214,7 +221,7 @@
               [(ngModel)]="mixedvari.values[i].sku"
             required
             placeholder="sku"
-            name="sku"
+            name="{{'sku'+i}}"
             type="text" />
               </td>
           </tr>
@@ -257,8 +264,8 @@
 
 
       <ng-container *ngIf="vari1.values.length == 0 && vari2.values.length == 0 && mixedvari.values.length == 0">
-        <label>Price</label>
-      <input
+          <label>Price</label>
+          <input
           [(ngModel)]="product.price"
           required
           placeholder="Original Price"
@@ -294,6 +301,7 @@
         <input
                 [(ngModel)]="product.sku"
                 placeholder="sku"
+                required
                 name="sku"
                 type="text" />
       </ng-container>
@@ -335,7 +343,6 @@
           <label>Set Discount</label>
           <input
                     [(ngModel)]="product.discount"
-                    required
                     (change)="discountchange()"
                     (input)="discountchange()"
                     placeholder="Discount"
@@ -438,7 +445,7 @@
 
       <div class="inputs"  *ngIf="showpersonalization">
         <input type="checkbox" (change)="onFeatureToggle($event)" [checked]="product.isp == 'true' " value="ispersonalization" id="ispersonalization" name="ispersonalization">
-        <label  class="lables" for="ispersonalization">Optional</label>
+        <label  class="lables" for="ispersonalization">Recuired</label>
       </div>
 
       <div class="editor" *ngIf="showpersonalization">
@@ -678,13 +685,27 @@
   </div>
 
 
+  <div class="column">
+    <div [ngClass]=" messageSuccess == true ? 'toast' : 'hidetoast' ">
+      <p>Required Field Missing</p>
+    </div>
+  </div>
+  <ng-container *ngIf="createsucc == true">
+    <div class="column">
+      <div class="success">
+        <p>Product Successfully Inserted</p>
+      </div>
+    </div>
+  </ng-container>
 
   <div class="column">
-    <button *ngIf="product.id == 0" (click)="createProduct()" >Create Product</button>
-    <button *ngIf="product.id !== 0"  (click)="createProduct()" >Update Product</button>
+    <button   *ngIf="createsucc == true">View Product</button>
+    <button   *ngIf="product.id == 0 && createsucc == false" (click)="createProduct(pform)" >Create Product</button>
+    <button  *ngIf="product.id !== 0 && createsucc == false"  (click)="createProduct(pform)" >Update Product</button>
   </div>
 
-
+</form>
+</ng-container>
 
 
 </div>

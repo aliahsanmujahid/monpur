@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.accountService.currentUser$.subscribe(res =>{
-      this.show = "profile"
+      this.show = "createproduct"
     });
 
     this.route.params.subscribe(params => {
@@ -36,6 +36,11 @@ export class DashboardComponent implements OnInit {
           this.producteditid = params['editproduct'];
           this.show = 'createproduct';
         }
+
+        if(params['sorder']){
+          this.show = 'order';
+        }
+
         if(params['order']){
           this.orderst = params['order'];
           this.show = 'manageorder';

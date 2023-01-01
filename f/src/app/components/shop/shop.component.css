@@ -134,13 +134,17 @@
 
 .products .box-container .box {
   width: 22%;
-  border-radius: .5rem;
+  border-radius: 1.6px;
   overflow: hidden;
   position: relative;
   -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
           box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   border: 0.1rem solid rgba(0, 0, 0, 0.3);
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .products .box-container .box.hide {

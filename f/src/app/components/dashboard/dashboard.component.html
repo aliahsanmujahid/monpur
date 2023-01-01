@@ -1,10 +1,10 @@
 
-<app-navbar></app-navbar>
+<!-- <app-navbar></app-navbar> -->
 
 <div class="row">
   <div class="column1" >
 
-    <!-- <h1 routerLink="" >View Site</h1> -->
+    <h1 routerLink="" >View Site</h1>
 
     <div class="menu">
       <a class="maina"  (click)="showgroup(1,'dash')">
@@ -45,7 +45,7 @@
 
 
     <div class="menu">
-      <a class="maina"  (click)="showgroup(5,'order')">order</a>
+      <a class="maina" [ngClass] = "{'active': show == 'order'}"  (click)="showgroup(4,'order')">order</a>
     </div>
 
     <div class="menu">

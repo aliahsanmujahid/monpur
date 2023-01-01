@@ -26,7 +26,7 @@ export class ProductService {
   }
 
   updateproduct(product: IProduct){
-    return this.http.post(this.baseUrl + 'updateproduct',product);
+    return this.http.post<any>(this.baseUrl + 'updateproduct',product);
   }
 
 

@@ -18,6 +18,7 @@ export class ManageorderComponent implements OnInit {
   @Input() orderst = '';
 
   imglink = environment.imgUrl;
+  msgsendid = null;
 
   user: User;
   noorder = false;
@@ -52,6 +53,7 @@ export class ManageorderComponent implements OnInit {
   message: string = null;
   alert = false;
   alert2 = false;
+  alert3 = false;
 
   status = '';
   status2 = '';
@@ -297,6 +299,16 @@ export class ManageorderComponent implements OnInit {
      });
     }
 
+  }
+
+
+  msgtoggle(id = null){
+    if(id !== null){
+      this.msgsendid = id;
+      this.alert3 = !this.alert3;
+    }else{
+      this.alert3 = false;
+    }
   }
 
 

@@ -100,10 +100,10 @@ export class SignupComponent implements OnInit {
     console.log("this.model",this.model);
   }
 
-  setac(){
+  async setac(){
     this.setaccount.pnumber = this.model.pnumber;
     if(this.setaccount.pnumber !== null && this.setaccount.name !== "" && this.setaccount.password !== ""){
-      this.accountService.setac(this.setaccount).subscribe(res =>{
+      (await this.accountService.setac(this.setaccount)).subscribe(res =>{
         console.log("set ac",res);
         this.router.navigate(['']);
       });
